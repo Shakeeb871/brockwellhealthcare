@@ -120,6 +120,39 @@
       nums.forEach(function (n) { io.observe(n); });
     })();
 
+    // About stat rings: count the number up AND fill the green ring together.
+    (function () {
+      var rings = document.querySelectorAll('.about__ring[data-ring]');
+      if (!rings.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function set(ring, n) {
+        var val = ring.querySelector('.val');
+        if (val) val.textContent = n;          // number
+        ring.style.setProperty('--p', n);      // green arc (same value → locked in sync)
+      }
+      function run(ring) {
+        var target = parseInt(ring.getAttribute('data-value'), 10) || 0;
+        if (reduce) { set(ring, target); return; }
+        var start = null, dur = 1600;
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          set(ring, Math.round(eased * target));
+          if (p < 1) requestAnimationFrame(step); else set(ring, target);
+        }
+        requestAnimationFrame(step);
+      }
+      if (!('IntersectionObserver' in window)) { rings.forEach(run); return; }
+      rings.forEach(function (r) { set(r, 0); });   // start empty
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { run(en.target); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.4 });
+      rings.forEach(function (r) { io.observe(r); });
+    })();
+
     // Mega-menu hover intent: keep it open while moving from trigger to panel.
     (function () {
       var hm = document.querySelector('.has-mega');
