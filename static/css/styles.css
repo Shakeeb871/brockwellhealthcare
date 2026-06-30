@@ -136,9 +136,14 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 /* Category bar */
 .catbar { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-.catbar__inner { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; }
-.catbar__item { position: relative; }
-.catbar__link { display: inline-flex; align-items: center; gap: .25rem; padding: .85rem 1.05rem; color: var(--navy-800); font-weight: 500; font-size: .92rem; }
+.catbar__inner {
+  max-width: 1400px; margin-inline: auto; padding-inline: 26px;
+  display: flex; align-items: stretch; justify-content: space-between;
+  flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+}
+.catbar__inner::-webkit-scrollbar { display: none; }
+.catbar__item { position: relative; flex: 0 0 auto; }
+.catbar__link { display: inline-flex; align-items: center; gap: .3rem; padding: .85rem .55rem; color: var(--navy-800); font-weight: 500; font-size: .9rem; white-space: nowrap; }
 .catbar__link:hover { color: var(--teal-600); }
 .catbar__item .caret { font-size: .62rem; }
 .catbar__item.has-dd::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 10px; }
