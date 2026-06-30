@@ -66,14 +66,26 @@
   {% include "partials/footer.html" %}
 
   <script>
-    // Lightweight, dependency-free mobile nav toggle.
+    // Lightweight, dependency-free nav interactions.
     document.addEventListener('click', function (e) {
+      // Mobile menu open/close
       var t = e.target.closest('[data-nav-toggle]');
       if (t) {
         var nav = document.getElementById('site-nav');
         if (nav) {
           var open = nav.classList.toggle('is-open');
           t.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        return;
+      }
+      // Mobile services accordion (category expand/collapse)
+      var mt = e.target.closest('[data-mega-toggle]');
+      if (mt) {
+        e.preventDefault();
+        var col = mt.closest('.mega__col');
+        if (col) {
+          var isOpen = col.classList.toggle('is-open');
+          mt.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         }
       }
     });

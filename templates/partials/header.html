@@ -20,10 +20,19 @@
           <div class="container mega__grid">
             {% for cat in nav_categories %}
             <div class="mega__col">
-              <a class="mega__head" href="{{ cat.get_absolute_url }}">{{ cat.icon }} {{ cat.name }}</a>
-              {% for s in cat.published_services %}
-              <a class="mega__link" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
-              {% endfor %}
+              <div class="mega__colhead">
+                <a class="mega__head" href="{{ cat.get_absolute_url }}">{{ cat.icon }} {{ cat.name }}</a>
+                {% if cat.published_services %}
+                <button class="mega__toggle" data-mega-toggle aria-label="Show {{ cat.name }} services" aria-expanded="false">▾</button>
+                {% endif %}
+              </div>
+              {% if cat.published_services %}
+              <div class="mega__links">
+                {% for s in cat.published_services %}
+                <a class="mega__link" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
+                {% endfor %}
+              </div>
+              {% endif %}
             </div>
             {% endfor %}
           </div>
