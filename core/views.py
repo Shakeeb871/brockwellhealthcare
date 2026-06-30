@@ -5,9 +5,10 @@ from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
 from django.http import Http404
+from django.db.models import Q
 
 from events.models import Event
-from services.models import ServiceCategory
+from services.models import Service, ServiceCategory
 from team.models import Doctor
 
 from . import seo
@@ -78,6 +79,31 @@ def page(request, slug):
         ),
     ]
     return render(request, "core/page.html", {"meta": meta, "jsonld": jsonld, "page": obj})
+
+
+def search(request):
+    """Simple service search used by the header 'Search Service' box."""
+    region = request.region
+    q = (request.GET.get("q") or "").strip()
+    services = []
+    if q:
+        services = list(
+            Service.objects.filter(region=region["code"], is_published=True)
+            .filter(Q(name__icontains=q) | Q(summary__icontains=q) | Q(description__icontains=q))[:30]
+        )
+    meta = seo.build_meta(
+        request,
+        title=f"Search results for “{q}”" if q else "Search our services",
+        description="Search stem cell and regenerative services at "
+        f"{settings.BRAND_NAME} in {region['name']}.",
+        path="/search/",
+        robots="noindex, follow",
+    )
+    return render(
+        request,
+        "core/search.html",
+        {"meta": meta, "jsonld": [], "q": q, "services": services},
+    )
 
 
 def about(request):

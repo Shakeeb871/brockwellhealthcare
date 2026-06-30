@@ -26,6 +26,7 @@ _ICONS = {
     "mail": '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/>',
     "arrow": '<path d="M5 12h13M13 6l6 6-6 6"/>',
     "chevron": '<path d="M9 6l6 6-6 6"/>',
+    "search": '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
     "check": '<path d="M5 12.5l4.5 4.5L19 7"/>',
     "shield": '<path d="M12 3l7.5 3v5.5c0 4.5-3.2 7.6-7.5 9.5-4.3-1.9-7.5-5-7.5-9.5V6z"/><path d="M9 12l2 2 4-4.5"/>',
     "users": '<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 6 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 6"/><path d="M20.5 20a5.5 6 0 0 0-3.5-5.4"/>',

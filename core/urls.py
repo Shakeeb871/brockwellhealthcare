@@ -8,6 +8,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
     path("contact/", views.contact, name="contact"),
+    path("search/", views.search, name="search"),
     # Legal / content pages (editable in admin via the Page model).
     path("privacy-policy/", views.page, {"slug": "privacy-policy"}, name="privacy"),
     path("terms-conditions/", views.page, {"slug": "terms-conditions"}, name="terms"),

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load region_tags icons %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>Search</span>
+    </nav>
+    <h1>{% if q %}Results for “{{ q }}”{% else %}Search our services{% endif %}</h1>
+    <form class="search search--page" action="{% rurl 'core:search' %}" method="get" role="search">
+      <span class="search__ico">{% icon 'search' %}</span>
+      <input type="search" name="q" value="{{ q }}" placeholder="Search Service" aria-label="Search services">
+      <button class="btn" type="submit">Search</button>
+    </form>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if q and services %}
+    <div class="grid grid--3">
+      {% for s in services %}
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">{% icon 'plus' %}</div>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.summary }}</p>
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more {% icon 'arrow' 'ico' %}</a>
+      </article>
+      {% endfor %}
+    </div>
+    {% elif q %}
+    <p class="text-center muted">No services matched “{{ q }}”. Try another term or <a href="{% rurl 'services:list' %}">browse all services</a>.</p>
+    {% else %}
+    <p class="text-center muted">Type a treatment or service name above to search.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

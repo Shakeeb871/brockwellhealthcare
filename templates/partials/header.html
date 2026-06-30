@@ -34,28 +34,27 @@
         <img class="brand__logo" src="{% static 'img/brockwell-healthcare-logo.png' %}" alt="{{ BRAND_NAME }}" width="180" height="44">
       </a>
 
-      <button class="nav-toggle" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
-        <span class="nav-toggle__bar"></span><span class="sr-only">Menu</span>
-      </button>
-
-      <nav id="site-nav" class="site-nav" aria-label="Primary">
-        <a href="{% rurl 'core:home' %}">Home</a>
-        <a href="{% rurl 'services:list' %}">Services</a>
-        <a href="{% rurl 'team:list' %}">Our Team</a>
-        <a href="{% rurl 'events:list' %}">Events</a>
-        <a href="{% rurl 'core:about' %}">About</a>
-        <a href="{% rurl 'core:contact' %}">Contact</a>
-
-        {# Mobile-only: service categories as quick links #}
-        <div class="m-cats">
-          <span class="m-cats__label">Our Services</span>
-          {% for cat in nav_categories %}
-          <a href="{{ cat.get_absolute_url }}">{% category_icon cat.slug 'mega-sub-ico' %}<span>{{ cat.name }}</span></a>
-          {% endfor %}
-        </div>
-
-        <a class="btn nav-cta" href="{% rurl 'core:contact' %}">Book Consultation</a>
+      {% with ns=request.resolver_match.namespace un=request.resolver_match.url_name %}
+      <nav class="navpill" aria-label="Primary">
+        <a href="{% rurl 'core:home' %}" class="{% if ns == 'core' and un == 'home' %}is-active{% endif %}">Home</a>
+        <a href="{% rurl 'services:list' %}" class="{% if ns == 'services' %}is-active{% endif %}">Services</a>
+        <a href="{% rurl 'team:list' %}" class="{% if ns == 'team' %}is-active{% endif %}">Our Team</a>
+        <a href="{% rurl 'events:list' %}" class="{% if ns == 'events' %}is-active{% endif %}">Events</a>
+        <a href="{% rurl 'core:about' %}" class="{% if ns == 'core' and un == 'about' %}is-active{% endif %}">About</a>
+        <a href="{% rurl 'core:contact' %}" class="{% if ns == 'core' and un == 'contact' %}is-active{% endif %}">Contact</a>
       </nav>
+      {% endwith %}
+
+      <div class="mainbar__right">
+        <form class="search" action="{% rurl 'core:search' %}" method="get" role="search">
+          <span class="search__ico">{% icon 'search' %}</span>
+          <input type="search" name="q" placeholder="Search Service" aria-label="Search services">
+        </form>
+        <button class="icon-btn search-toggle" data-nav-toggle aria-controls="site-nav" aria-label="Search">{% icon 'search' %}</button>
+        <button class="nav-toggle" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
+          <span class="nav-toggle__bar"></span><span class="sr-only">Menu</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -81,4 +80,33 @@
     </div>
   </div>
   {% endif %}
+
+  {# ---------- Mobile slide-down menu ---------- #}
+  <div id="site-nav" class="mobile-menu" aria-label="Mobile menu">
+    <form class="search search--mobile" action="{% rurl 'core:search' %}" method="get" role="search">
+      <span class="search__ico">{% icon 'search' %}</span>
+      <input type="search" name="q" placeholder="Search Service" aria-label="Search services">
+    </form>
+    <nav class="mobile-menu__nav" aria-label="Primary mobile">
+      <a href="{% rurl 'core:home' %}">Home</a>
+      <a href="{% rurl 'services:list' %}">Services</a>
+      <a href="{% rurl 'team:list' %}">Our Team</a>
+      <a href="{% rurl 'events:list' %}">Events</a>
+      <a href="{% rurl 'core:about' %}">About</a>
+      <a href="{% rurl 'core:contact' %}">Contact</a>
+    </nav>
+    {% if nav_categories %}
+    <div class="m-cats">
+      <span class="m-cats__label">Our Services</span>
+      {% for cat in nav_categories %}
+      <a href="{{ cat.get_absolute_url }}">{% category_icon cat.slug 'mega-sub-ico' %}<span>{{ cat.name }}</span></a>
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="mobile-menu__contact">
+      <a href="tel:{{ region.phone }}">{% icon 'phone' 'ico-inline' %}{{ region.phone }}</a>
+      <a href="https://wa.me/{{ region.phone|cut:'+'|cut:' ' }}">{% social 'whatsapp' 'soc-sm' %}WhatsApp</a>
+      <span>{% icon 'pin' 'ico-inline' %}{{ region.address }}</span>
+    </div>
+  </div>
 </header>
