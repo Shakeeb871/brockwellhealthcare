@@ -1,0 +1,101 @@
+{% load region_tags icons %}
+{# =========================================================================
+   About / Medical Center Introduction — reusable home section.
+   Image areas are sage placeholders with a medical icon; to use a real photo,
+   replace the .about-shape__ph span with: <img src="..." alt="..." loading="lazy">
+   ========================================================================= #}
+<section class="section about" aria-labelledby="about-title">
+  <div class="container">
+
+    {# ---------- 1. Top introduction ---------- #}
+    <header class="about__head">
+      <span class="eyebrow">Welcome to {{ BRAND_NAME }}</span>
+      <h2 id="about-title">The Heart and Science of Medical Care</h2>
+    </header>
+
+    <div class="about__intro">
+      <div class="about__media">
+        <figure class="about-shape about-shape--a" aria-label="Clinicians at work">
+          <span class="about-shape__ph" aria-hidden="true">{% icon 'microscope' %}</span>
+        </figure>
+        <figure class="about-shape about-shape--b" aria-label="Modern laboratory">
+          <span class="about-shape__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>
+        </figure>
+        <div class="about-float">
+          <span class="about-float__ic" aria-hidden="true">{% icon 'plus' %}</span>
+          <div>
+            <strong>Inpatient Services</strong>
+            <p>Round-the-clock, consultant-led care in a calm, modern setting.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about__content">
+        <p class="about__lead">There are many regenerative and medical programmes tailored to each
+          patient. Our specialists combine advanced science with compassionate, personalised care —
+          so every treatment plan is built around you.</p>
+
+        <ul class="about__features">
+          {% for f in about_features %}
+          <li class="about__feature">
+            <span class="about__feature-ic" aria-hidden="true">{% icon f.icon %}</span>
+            <span>{{ f.text }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+
+        <div class="about__appt">
+          <span class="about__appt-ic" aria-hidden="true">{% icon 'phone' %}</span>
+          <div class="about__appt-text">
+            <span class="about__appt-label">Book Appointment</span>
+            <a class="about__appt-num" href="tel:+12122555511">+1 (212) 255-5511</a>
+          </div>
+        </div>
+
+        <a class="btn btn--primary about__cta" href="{% rurl 'core:contact' %}">Learn More {% icon 'arrow' 'ico' %}</a>
+      </div>
+    </div>
+
+    {# ---------- 2. Stats content area ---------- #}
+    <div class="about__stats-row">
+      <div class="about__stats-text">
+        <span class="eyebrow">Welcome to {{ BRAND_NAME }}</span>
+        <h3 class="about__stats-title">Joining Hands With Techno Easement</h3>
+        <p>Pairing experienced clinicians with the latest medical technology to deliver
+          measurable, trusted outcomes for every patient we care for.</p>
+
+        <div class="about__stats" role="list">
+          {% for s in about_stats %}
+          <div class="about__stat" role="listitem">
+            <div class="about__ring" style="--p: {{ s.value }}">
+              <div class="about__ring-inner">
+                <div class="stat__num" data-count="{{ s.value }}"><span class="val">{{ s.value }}</span><span class="suffix">%</span></div>
+              </div>
+            </div>
+            <p class="about__stat-label">{{ s.label }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="about__stats-media">
+        <figure class="about-shape about-shape--lg" aria-label="Advanced medical research">
+          <span class="about-shape__ph" aria-hidden="true">{% icon 'dna' %}</span>
+        </figure>
+        <span class="about__deco" aria-hidden="true">{% icon 'plus' %}</span>
+        <span class="about__deco about__deco--2" aria-hidden="true">{% icon 'plus' %}</span>
+      </div>
+    </div>
+
+    {# ---------- 3. Partner / logo strip ---------- #}
+    <ul class="about__partners" aria-label="Our partners">
+      {% for p in about_partners %}
+      <li class="about__partner">
+        <span class="about__partner-ic" aria-hidden="true">{% icon p.icon %}</span>
+        <span class="about__partner-name">{{ p.name }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+</section>

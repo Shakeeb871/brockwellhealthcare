@@ -17,6 +17,27 @@ from .models import FAQ, Page
 from .regions import region_path
 
 
+# Dummy content for the home "About / Medical Center Introduction" section.
+# Replace text/icons later, or move to a model/admin if it should be editable.
+ABOUT_FEATURES = [
+    {"icon": "heart", "text": "Women’s health services, including one-stop breast care centre."},
+    {"icon": "users", "text": "Internationally acclaimed, multi-disciplinary consultants."},
+    {"icon": "shield", "text": "Expert-led teams with rigorous safety standards."},
+]
+ABOUT_STATS = [
+    {"value": 85, "label": "Client Satisfaction"},
+    {"value": 95, "label": "Medical Success"},
+    {"value": 100, "label": "Client Referral"},
+]
+ABOUT_PARTNERS = [
+    {"name": "HealthCare", "icon": "plus"},
+    {"name": "Applo Medic", "icon": "stethoscope"},
+    {"name": "Infi-Health", "icon": "heart"},
+    {"name": "Medicalo", "icon": "shield"},
+    {"name": "HealthyLife", "icon": "leaf"},
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -51,6 +72,9 @@ def home(request):
             "upcoming_events": upcoming,
             "doctors": doctors,
             "faqs": faqs,
+            "about_features": ABOUT_FEATURES,
+            "about_stats": ABOUT_STATS,
+            "about_partners": ABOUT_PARTNERS,
         },
     )
 
