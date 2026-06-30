@@ -167,8 +167,14 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   display: flex; align-items: stretch; justify-content: space-between;
   flex-wrap: nowrap;   /* single row; overflow stays visible so dropdowns show */
 }
-.catbar__item { position: relative; flex: 0 0 auto; }
-.catbar__link { display: inline-flex; align-items: center; gap: .3rem; padding: .85rem .55rem; color: var(--navy-800); font-weight: 500; font-size: .9rem; white-space: nowrap; transition: color .2s ease; }
+.catbar__item { position: relative; flex: 1 1 0; min-width: 0; display: flex; }
+.catbar__item + .catbar__item { border-left: 1px solid var(--line); }
+.catbar__link { flex: 1; display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: .3rem; padding: .85rem .5rem; color: var(--navy-800); font-weight: 500; font-size: .88rem; white-space: nowrap; transition: color .2s ease; }
+/* keep edge dropdowns inside the viewport */
+.catbar__item:first-child .dd { left: 0; transform: translateX(0) translateY(10px); }
+.catbar__item:first-child.has-dd:hover .dd { transform: translateX(0) translateY(0); }
+.catbar__item:last-child .dd { left: auto; right: 0; transform: translateX(0) translateY(10px); }
+.catbar__item:last-child.has-dd:hover .dd { transform: translateX(0) translateY(0); }
 .catbar__link:hover { color: var(--teal-600); }
 .catbar__item .caret { transition: transform .2s ease; }
 .catbar__item.has-dd:hover .caret { transform: rotate(180deg); }
