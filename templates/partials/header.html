@@ -1,60 +1,84 @@
 {% load region_tags static icons %}
 <header class="site-header">
-  <div class="container site-header__inner">
-    <a class="brand" href="{% rurl 'core:home' %}" aria-label="{{ BRAND_NAME }} home">
-      <img class="brand__logo" src="{% static 'img/brockwell-healthcare-logo.png' %}" alt="{{ BRAND_NAME }}" width="180" height="44">
-    </a>
 
-    <button class="nav-toggle" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
-      <span class="nav-toggle__bar"></span>
-      <span class="sr-only">Menu</span>
-    </button>
-
-    <nav id="site-nav" class="site-nav" aria-label="Primary">
-      <a href="{% rurl 'core:home' %}">Home</a>
-
-      <div class="has-mega">
-        <a href="{% rurl 'services:list' %}" class="has-mega__trigger">Services <span class="caret" aria-hidden="true">▾</span></a>
-        <div class="mega">
-          <div class="container mega__grid">
-            {% for cat in nav_categories %}
-            <div class="mega__col">
-              <div class="mega__colhead">
-                <a class="mega__head" href="{{ cat.get_absolute_url }}">
-                  <span class="mega__head-ico">{% category_icon cat.slug %}</span>
-                  <span>{{ cat.name }}</span>
-                </a>
-                {% if cat.published_services %}
-                <button class="mega__toggle" data-mega-toggle aria-label="Show {{ cat.name }} services" aria-expanded="false">▾</button>
-                {% endif %}
-              </div>
-              {% if cat.published_services %}
-              <div class="mega__links">
-                {% for s in cat.published_services %}
-                <a class="mega__link" href="{{ s.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ s.name }}</span></a>
-                {% endfor %}
-              </div>
-              {% endif %}
-            </div>
-            {% endfor %}
-          </div>
-        </div>
+  {# ---------- Top utility bar ---------- #}
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <div class="topbar__contacts">
+        <a class="topbar__item" href="tel:{{ region.phone }}">
+          <span class="topbar__ic">{% icon 'phone' %}</span>
+          <span class="topbar__txt"><small>Cellphone</small><b>{{ region.phone }}</b></span>
+        </a>
+        <a class="topbar__item" href="https://wa.me/{{ region.phone|cut:'+'|cut:' ' }}" target="_blank" rel="noopener">
+          <span class="topbar__ic">{% social 'whatsapp' %}</span>
+          <span class="topbar__txt"><small>WhatsApp</small><b>{{ region.phone }}</b></span>
+        </a>
+        <span class="topbar__item topbar__item--addr">
+          <span class="topbar__ic">{% icon 'pin' %}</span>
+          <span class="topbar__txt"><small>Address</small><b>{{ region.address }}</b></span>
+        </span>
       </div>
-
-      <a href="{% rurl 'events:list' %}">Events</a>
-      <a href="{% rurl 'team:list' %}">Our Team</a>
-      <a href="{% rurl 'core:about' %}">About</a>
-      <a href="{% rurl 'core:contact' %}">Contact</a>
-
-      {% if enabled_regions|length > 1 %}
-      <div class="region-switch" aria-label="Choose region">
-        {% for r in enabled_regions %}
-        <a href="{% region_home r.code %}" class="{% if r.code == region_code %}is-active{% endif %}">{{ r.short }}</a>
-        {% endfor %}
+      <div class="topbar__social" aria-label="Social links">
+        <a href="#" aria-label="Instagram">{% social 'instagram' %}</a>
+        <a href="#" aria-label="Facebook">{% social 'facebook' %}</a>
+        <a href="#" aria-label="X">{% social 'x' %}</a>
+        <a href="#" aria-label="YouTube">{% social 'youtube' %}</a>
       </div>
-      {% endif %}
-
-      <a class="btn btn--primary nav-cta" href="{% rurl 'core:contact' %}">Book Consultation</a>
-    </nav>
+    </div>
   </div>
+
+  {# ---------- Main bar ---------- #}
+  <div class="mainbar">
+    <div class="container mainbar__inner">
+      <a class="brand" href="{% rurl 'core:home' %}" aria-label="{{ BRAND_NAME }} home">
+        <img class="brand__logo" src="{% static 'img/brockwell-healthcare-logo.png' %}" alt="{{ BRAND_NAME }}" width="180" height="44">
+      </a>
+
+      <button class="nav-toggle" data-nav-toggle aria-controls="site-nav" aria-expanded="false">
+        <span class="nav-toggle__bar"></span><span class="sr-only">Menu</span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="{% rurl 'core:home' %}">Home</a>
+        <a href="{% rurl 'services:list' %}">Services</a>
+        <a href="{% rurl 'team:list' %}">Our Team</a>
+        <a href="{% rurl 'events:list' %}">Events</a>
+        <a href="{% rurl 'core:about' %}">About</a>
+        <a href="{% rurl 'core:contact' %}">Contact</a>
+
+        {# Mobile-only: service categories as quick links #}
+        <div class="m-cats">
+          <span class="m-cats__label">Our Services</span>
+          {% for cat in nav_categories %}
+          <a href="{{ cat.get_absolute_url }}">{% category_icon cat.slug 'mega-sub-ico' %}<span>{{ cat.name }}</span></a>
+          {% endfor %}
+        </div>
+
+        <a class="btn nav-cta" href="{% rurl 'core:contact' %}">Book Consultation</a>
+      </nav>
+    </div>
+  </div>
+
+  {# ---------- Category bar (desktop dropdowns) ---------- #}
+  {% if nav_categories %}
+  <div class="catbar">
+    <div class="container catbar__inner">
+      {% for cat in nav_categories %}
+      <div class="catbar__item{% if cat.published_services %} has-dd{% endif %}">
+        <a class="catbar__link" href="{{ cat.get_absolute_url }}">
+          {{ cat.name }}{% if cat.published_services %} <span class="caret" aria-hidden="true">▾</span>{% endif %}
+        </a>
+        {% if cat.published_services %}
+        <div class="dd">
+          <div class="dd__head">{% category_icon cat.slug 'mega-sub-ico' %}<span>{{ cat.name }}</span></div>
+          {% for s in cat.published_services %}
+          <a class="dd__link" href="{{ s.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ s.name }}</span></a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </header>

@@ -45,12 +45,28 @@ _CATEGORY = {
 }
 
 
+# Filled brand/social glyphs (fill style, not stroke).
+_SOCIAL = {
+    "whatsapp": '<path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.2 14c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.7-.1-.4-.1-1-.3-1.6-.6-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8 0-1.3.7-2 .9-2.2.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .6l-.4.5c-.1.2-.3.3-.1.6.1.3.7 1.1 1.4 1.7.9.8 1.6 1.1 1.9 1.2.2.1.4.1.6-.1l.7-.8c.2-.2.4-.2.6-.1l1.7.9c.3.1.4.2.5.3.1.3.1.8-.1 1.3z"/>',
+    "instagram": '<rect x="3" y="3" width="18" height="18" rx="5.4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3.8" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/>',
+    "facebook": '<path fill="currentColor" d="M13.4 21v-7.4h2.5l.4-2.9h-2.9V8.8c0-.8.3-1.4 1.5-1.4H16V4.8c-.3 0-1.2-.1-2.2-.1-2.2 0-3.7 1.3-3.7 3.8v2.2H7.6v2.9h2.5V21z"/>',
+    "x": '<path fill="currentColor" d="M17.5 3h3l-6.5 7.4L21.7 21h-5.9l-4.1-5.4L6.9 21H3.9l7-8L2.6 3h6l3.7 4.9zM16.4 19.2h1.7L7.7 4.7H5.9z"/>',
+    "youtube": '<path fill="currentColor" d="M21.6 7.2a2.6 2.6 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.6 2.6 0 0 0 2.4 7.2 27 27 0 0 0 2 12a27 27 0 0 0 .4 4.8 2.6 2.6 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.6 2.6 0 0 0 1.8-1.8A27 27 0 0 0 22 12a27 27 0 0 0-.4-4.8zM10 14.7V9.3l4.7 2.7z"/>',
+}
+
+
 def _svg(body, cls):
     return mark_safe(
         f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
         f'stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" '
         f'aria-hidden="true" focusable="false">{body}</svg>'
     )
+
+
+@register.simple_tag
+def social(name, cls="soc"):
+    body = _SOCIAL.get(name, "")
+    return mark_safe(f'<svg class="{cls}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">{body}</svg>')
 
 
 @register.simple_tag
