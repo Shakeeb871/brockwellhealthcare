@@ -6,8 +6,12 @@ written WITHOUT the region segment. Infrastructure routes (admin, sitemap,
 robots, llms, the Stripe webhook) are region-exempt.
 """
 
+import re
+
+from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.static import serve as media_serve
 
 from core import views as core_views
 from core.sitemaps import sitemaps
@@ -15,6 +19,13 @@ from django.contrib.sitemaps.views import sitemap
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Serve user-uploaded media (e.g. service card images). Kept lightweight so
+    # it works under cPanel/Passenger where WhiteNoise only handles static.
+    re_path(
+        r"^%s(?P<path>.*)$" % re.escape(settings.MEDIA_URL.lstrip("/")),
+        media_serve,
+        {"document_root": settings.MEDIA_ROOT},
+    ),
     # Technical SEO endpoints (region-exempt).
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("robots.txt", core_views.robots_txt, name="robots"),

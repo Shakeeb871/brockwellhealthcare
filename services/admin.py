@@ -20,7 +20,7 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     inlines = [ServiceInline]
     fieldsets = (
-        (None, {"fields": ("region", "name", "slug", "icon", "summary", "order", "is_published")}),
+        (None, {"fields": ("region", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description",)}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
     )

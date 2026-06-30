@@ -13,11 +13,17 @@
     </div>
 
     <div class="svc-slider" data-svc-slider>
+      <button type="button" class="svc-arrow svc-arrow--prev" data-svc-prev aria-label="Previous services">{% icon 'chevron-left' %}</button>
+
       <ul class="svc-track" data-svc-track>
         {% for c in categories %}
         <li class="svc-card">
           <article class="card">
+            {% if c.image %}
+            <div class="card__media"><img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy"></div>
+            {% else %}
             <div class="card__icon" aria-hidden="true">{% category_icon c.slug %}</div>
+            {% endif %}
             <h3>{{ c.name }}</h3>
             <p>{{ c.summary }}</p>
             <a class="card__link" href="{{ c.get_absolute_url }}">Explore {% icon 'arrow' 'ico' %}</a>
@@ -26,8 +32,10 @@
         {% endfor %}
       </ul>
 
-      <div class="svc-bars" data-svc-bars role="tablist" aria-label="Service slides"></div>
+      <button type="button" class="svc-arrow svc-arrow--next" data-svc-next aria-label="Next services">{% icon 'chevron' %}</button>
     </div>
+
+    <div class="svc-bars" data-svc-bars role="tablist" aria-label="Service slides"></div>
   </div>
 </section>
 {% endif %}

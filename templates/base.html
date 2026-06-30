@@ -172,7 +172,9 @@
       var slider = document.querySelector('[data-svc-slider]');
       if (!slider) return;
       var track = slider.querySelector('[data-svc-track]');
-      var bars = slider.querySelector('[data-svc-bars]');
+      var bars = slider.parentNode.querySelector('[data-svc-bars]');
+      var prev = slider.querySelector('[data-svc-prev]');
+      var next = slider.querySelector('[data-svc-next]');
       var cards = Array.prototype.slice.call(track.querySelectorAll('.svc-card'));
       if (!cards.length || !bars) return;
 
@@ -203,6 +205,9 @@
         Array.prototype.forEach.call(bars.children, function (b, i) {
           b.classList.toggle('is-active', i === page);
         });
+        var n = pageCount();
+        if (prev) prev.disabled = page <= 0;
+        if (next) next.disabled = page >= n - 1;
       }
       function go(p) {
         var n = pageCount();
@@ -215,6 +220,8 @@
         var b = e.target.closest('.svc-bar');
         if (b) go(parseInt(b.getAttribute('data-page'), 10));
       });
+      if (prev) prev.addEventListener('click', function () { go(page - 1); });
+      if (next) next.addEventListener('click', function () { go(page + 1); });
       // Keep the active bar in sync when the user swipes/scrolls manually.
       var raf;
       track.addEventListener('scroll', function () {

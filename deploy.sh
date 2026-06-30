@@ -16,6 +16,9 @@ git reset --hard origin/main
 PYBIN=$(ls -d "$HOME"/virtualenv/brockwellhealthcare/*/bin/python 2>/dev/null | head -1)
 [ -z "$PYBIN" ] && PYBIN=python
 
+echo "==> Installing/updating Python dependencies..."
+"$PYBIN" -m pip install -r requirements.txt
+
 echo "==> Applying database migrations..."
 "$PYBIN" manage.py migrate --noinput
 

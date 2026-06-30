@@ -15,6 +15,11 @@ class ServiceCategory(TimeStamped):
     name = models.CharField(max_length=160)
     slug = models.SlugField(max_length=180)
     icon = models.CharField(max_length=8, default="🧬", help_text="Emoji shown on cards.")
+    image = models.ImageField(
+        upload_to="services/", blank=True, null=True,
+        help_text="Optional card image. If set, it is shown on the home 'Our Services' "
+        "slider instead of the icon.",
+    )
     summary = models.CharField(max_length=255, help_text="One-line description for cards & meta.")
     description = models.TextField(
         blank=True, help_text="Full intro. Separate paragraphs with a blank line."
