@@ -119,6 +119,17 @@
       }, { threshold: 0.4 });
       nums.forEach(function (n) { io.observe(n); });
     })();
+
+    // Mega-menu hover intent: keep it open while moving from trigger to panel.
+    (function () {
+      var hm = document.querySelector('.has-mega');
+      if (!hm || window.matchMedia('(max-width: 720px)').matches) return;
+      var timer;
+      hm.addEventListener('mouseenter', function () { clearTimeout(timer); hm.classList.add('is-open'); });
+      hm.addEventListener('mouseleave', function () {
+        timer = setTimeout(function () { hm.classList.remove('is-open'); }, 240);
+      });
+    })();
   </script>
   {% block body_extra %}{% endblock %}
 </body>

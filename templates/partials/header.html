@@ -20,7 +20,10 @@
             {% for cat in nav_categories %}
             <div class="mega__col">
               <div class="mega__colhead">
-                <a class="mega__head" href="{{ cat.get_absolute_url }}">{% category_icon cat.slug 'mega-ico' %}{{ cat.name }}</a>
+                <a class="mega__head" href="{{ cat.get_absolute_url }}">
+                  <span class="mega__head-ico">{% category_icon cat.slug %}</span>
+                  <span>{{ cat.name }}</span>
+                </a>
                 {% if cat.published_services %}
                 <button class="mega__toggle" data-mega-toggle aria-label="Show {{ cat.name }} services" aria-expanded="false">▾</button>
                 {% endif %}
@@ -28,7 +31,7 @@
               {% if cat.published_services %}
               <div class="mega__links">
                 {% for s in cat.published_services %}
-                <a class="mega__link" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
+                <a class="mega__link" href="{{ s.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ s.name }}</span></a>
                 {% endfor %}
               </div>
               {% endif %}

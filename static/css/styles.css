@@ -81,24 +81,22 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 }
 
 /* ---------------------------------------------------------------- Buttons */
+/* Site-wide button style: sharp 1px-bordered rectangles, theme colours */
 .btn {
   --btn-bg: var(--teal-600); --btn-fg: #fff;
   display: inline-flex; align-items: center; gap: .5rem;
-  font-weight: 600; font-size: .98rem; padding: .8rem 1.5rem;
-  border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+  font-weight: 500; font-size: 1rem; padding: 12px 22px;
+  border-radius: 0; border: 1px solid var(--btn-bg); cursor: pointer;
   background: var(--btn-bg); color: var(--btn-fg);
-  transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
-  box-shadow: 0 8px 20px -10px rgba(46,125,70,.7);
+  transition: transform .15s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  box-shadow: none;
 }
-.btn:hover { transform: translateY(-2px); color: #fff; box-shadow: 0 14px 28px -12px rgba(46,125,70,.85); }
-.btn--primary { background: var(--teal-600); }
-.btn--light { background: #fff; color: var(--navy-800); box-shadow: var(--shadow); }
-.btn--light:hover { color: var(--navy-800); }
-.btn--ghost {
-  background: transparent; color: var(--navy-800);
-  border-color: var(--line); box-shadow: none;
-}
-.btn--ghost:hover { background: var(--bg-soft); color: var(--navy-800); box-shadow: none; }
+.btn:hover { transform: translateY(-2px); color: #fff; background: var(--teal-500); border-color: var(--teal-500); }
+.btn--primary { background: var(--teal-600); border-color: var(--teal-600); }
+.btn--light { background: #fff; color: var(--teal-600); border-color: #fff; box-shadow: var(--shadow); }
+.btn--light:hover { color: var(--teal-600); background: #fff; border-color: var(--teal-600); }
+.btn--ghost { background: transparent; color: var(--teal-600); border-color: var(--teal-600); box-shadow: none; }
+.btn--ghost:hover { background: var(--teal-600); color: #fff; border-color: var(--teal-600); }
 /* Outlined button for dark/hero backgrounds (theme-coloured) */
 .btn--outline-light { background: transparent; color: #fff; border-color: rgba(255,255,255,.55); box-shadow: none; }
 .btn--outline-light:hover { background: rgba(255,255,255,.14); color: #fff; border-color: #fff; box-shadow: none; transform: translateY(-2px); }
@@ -345,26 +343,47 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 .grid--4 { grid-template-columns: repeat(4, 1fr); }
 
-/* ---- Mega menu ---- */
+/* ---- Mega menu (modern, professional) ---- */
 .has-mega { position: static; }
-.has-mega__trigger { display: inline-flex; align-items: center; gap: .3rem; }
+.has-mega__trigger { position: relative; display: inline-flex; align-items: center; gap: .3rem; }
+/* Invisible bridge so the menu doesn't vanish in the gap below the trigger. */
+.has-mega__trigger::after { content: ""; position: absolute; left: -14px; right: -14px; top: 100%; height: 26px; }
 .has-mega .caret { font-size: .7rem; transition: transform .2s ease; }
 .mega {
   display: none; position: absolute; left: 0; right: 0; top: 100%;
-  background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  box-shadow: var(--shadow-lg); padding: 1.8rem 0; z-index: 90;
+  background: #fff; border-top: 1px solid var(--line);
+  box-shadow: var(--shadow-lg); padding: 2.2rem 0 2.4rem; z-index: 90;
 }
-.has-mega:hover .mega, .has-mega:focus-within .mega { display: block; }
-.has-mega:hover .caret { transform: rotate(180deg); }
-.mega__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem 2.4rem; }
+.has-mega:hover .mega,
+.has-mega:focus-within .mega,
+.has-mega.is-open .mega { display: block; }
+.has-mega:hover .caret,
+.has-mega.is-open .caret { transform: rotate(180deg); }
+
+.mega__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem 2.6rem; }
 .mega__col { align-content: start; }
-.mega__colhead { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
-.mega__head { font-family: var(--font-display); font-weight: 600; color: var(--navy-800); font-size: 1rem; margin-bottom: .3rem; }
+.mega__colhead {
+  display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+  border-bottom: 1px solid var(--line); padding-bottom: .7rem; margin-bottom: .8rem;
+}
+.mega__head { display: inline-flex; align-items: center; font-family: var(--font-display); font-weight: 600; color: var(--navy-800); font-size: 1rem; }
 .mega__head:hover { color: var(--teal-600); }
+.mega__head-ico {
+  display: inline-grid; place-items: center; width: 32px; height: 32px;
+  border-radius: 9px; background: var(--mint-50); color: var(--teal-600);
+  margin-right: .6rem; flex: none;
+}
+.mega__head-ico svg { width: 18px; height: 18px; }
 .mega__toggle { display: none; background: none; border: 0; color: var(--teal-600); font-size: 1rem; cursor: pointer; }
-.mega__links { display: grid; gap: .35rem; }
-.mega__link { color: var(--slate-600); font-size: .92rem; padding: .12rem 0; }
-.mega__link:hover { color: var(--teal-600); }
+.mega__links { display: grid; gap: .15rem; }
+.mega__link {
+  display: flex; align-items: center; gap: .45rem;
+  color: var(--slate-600); font-size: .9rem; padding: .42rem .55rem;
+  border-radius: 7px; transition: background .15s ease, color .15s ease;
+}
+.mega__link:hover { background: var(--mint-50); color: var(--teal-600); }
+.mega-sub-ico { width: 14px; height: 14px; color: var(--teal-400); flex: none; transition: color .15s ease, transform .15s ease; }
+.mega__link:hover .mega-sub-ico { color: var(--teal-600); transform: translateX(2px); }
 
 /* ---- Services overview ---- */
 .stack-xl > * + * { margin-top: 2.8rem; }
@@ -414,7 +433,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .mega { display: block; position: static; box-shadow: none; border: 0; padding: .2rem 0 .6rem; }
   .mega__grid { grid-template-columns: 1fr; gap: 0; padding: 0; }
   .mega__col { border-bottom: 1px solid var(--line); padding: .15rem 0; }
-  .mega__colhead { padding: .35rem 0; }
+  .mega__colhead { padding: .55rem 0; margin-bottom: 0; border-bottom: 0; }
   .mega__head { margin-bottom: 0; }
   .mega__toggle { display: inline-grid; place-items: center; width: 38px; height: 38px; transition: transform .2s ease; }
   .mega__col.is-open .mega__toggle { transform: rotate(180deg); }
