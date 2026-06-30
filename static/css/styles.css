@@ -425,12 +425,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* =========================================================================
    Doctor Spotlight section
    ========================================================================= */
-.spotlight { position: relative; background: var(--bg-soft); overflow: hidden; }
-.spotlight::before {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(620px 320px at 92% 4%, var(--mint-50), transparent 70%);
-  opacity: .6;
-}
+.spotlight { position: relative; overflow: hidden; }
 .spotlight .container { position: relative; z-index: 1; }
 
 .spotlight__grid { display: grid; grid-template-columns: 290px 1fr; gap: 2.5rem; align-items: start; }
