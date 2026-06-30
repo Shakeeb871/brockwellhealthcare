@@ -17,6 +17,23 @@ from .models import FAQ, Page
 from .regions import region_path
 
 
+# Dummy data for the Home Care carousel — replace images/text later, or move
+# to a model/admin if you want it client-editable. "image" can be a static
+# URL like "/static/img/hourly.jpg"; leave blank to show an icon placeholder.
+HOMECARE_SERVICES = [
+    {"title": "Hourly Home Care", "icon": "clock", "image": "",
+     "desc": "Flexible, by-the-hour support whenever you need it."},
+    {"title": "Daily Home Care", "icon": "calendar", "image": "",
+     "desc": "Consistent daily assistance for everyday wellbeing."},
+    {"title": "Hospital to Home Care", "icon": "heart", "image": "",
+     "desc": "A smooth, supported transition after a hospital stay."},
+    {"title": "Respite Home Care", "icon": "shield", "image": "",
+     "desc": "Short-term relief care for families and caregivers."},
+    {"title": "Specialized Care", "icon": "stethoscope", "image": "",
+     "desc": "Tailored clinical care for complex health needs."},
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -51,6 +68,7 @@ def home(request):
             "upcoming_events": upcoming,
             "doctors": doctors,
             "faqs": faqs,
+            "homecare_services": HOMECARE_SERVICES,
         },
     )
 
