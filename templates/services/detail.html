@@ -7,6 +7,7 @@
     <nav class="breadcrumbs" aria-label="Breadcrumb">
       <a href="{% rurl 'core:home' %}">Home</a> /
       <a href="{% rurl 'services:list' %}">Services</a> /
+      <a href="{{ category.get_absolute_url }}">{{ category.name }}</a> /
       <span>{{ service.name }}</span>
     </nav>
     <h1>{{ service.name }}</h1>
@@ -33,9 +34,7 @@
         <h3>Interested in {{ service.name }}?</h3>
         <p class="muted">Speak with our specialists to find out if this treatment is right for you.</p>
         <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
-        <p class="stack" style="margin-top:1rem">
-          <a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a>
-        </p>
+        <p class="stack" style="margin-top:1rem"><a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a></p>
       </div>
     </aside>
   </div>
@@ -56,12 +55,12 @@
 </section>
 {% endif %}
 
-{% if others %}
+{% if siblings %}
 <section class="section">
   <div class="container">
-    <div class="section__head"><span class="eyebrow">More</span><h2>Other services</h2></div>
-    <div class="grid grid--3">
-      {% for s in others %}
+    <div class="section__head"><span class="eyebrow">{{ category.name }}</span><h2>Related services</h2></div>
+    <div class="grid grid--4">
+      {% for s in siblings %}
       <article class="card">
         <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
         <h3>{{ s.name }}</h3>

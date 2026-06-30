@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "services",
     "events",
     "payments",
+    "team",
 ]
 
 MIDDLEWARE = [

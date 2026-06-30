@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import ContactLead, FAQ
+from .models import ContactLead, FAQ, Page
 
 
 @admin.register(ContactLead)
@@ -20,6 +20,14 @@ class FAQAdmin(admin.ModelAdmin):
     list_editable = ("order", "is_published")
 
 
-admin.site.site_header = "Stem Cell — Site Administration"
-admin.site.site_title = "Site Admin"
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = ("title", "slug", "region", "is_published")
+    list_filter = ("region", "is_published")
+    search_fields = ("title", "body")
+    prepopulated_fields = {"slug": ("title",)}
+
+
+admin.site.site_header = "Brockwell Healthcare — Site Administration"
+admin.site.site_title = "Brockwell Admin"
 admin.site.index_title = "Manage your website content"

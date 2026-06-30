@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> /
+      <a href="{% rurl 'team:list' %}">Our Team</a> /
+      <span>{{ doctor.name }}</span>
+    </nav>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split" style="align-items:flex-start">
+    <div>
+      <div class="doctor-profile">
+        <div class="doctor-profile__media">
+          {% if doctor.photo %}<img src="{{ doctor.photo }}" alt="{{ doctor.name }}">{% else %}<span class="avatar avatar--xl">{{ doctor.initials }}</span>{% endif %}
+        </div>
+        <div>
+          <h1>{{ doctor.name }}</h1>
+          <p class="doctor-card__title">{{ doctor.title }}</p>
+          {% if doctor.credentials %}<p class="muted">{{ doctor.credentials }}</p>{% endif %}
+        </div>
+      </div>
+
+      <article class="prose mt-2">
+        {% for para in doctor.bio_paragraphs %}<p>{{ para }}</p>{% endfor %}
+      </article>
+    </div>
+
+    <aside>
+      {% if doctor.specialty_list %}
+      <div class="card">
+        <h3>Areas of expertise</h3>
+        <ul class="checklist">
+          {% for s in doctor.specialty_list %}<li>{{ s }}</li>{% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      <div class="card mt-1">
+        <h3>Book with {{ doctor.name }}</h3>
+        <p class="muted">Request a consultation with our team.</p>
+        <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% if others %}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head"><span class="eyebrow">Our Team</span><h2>Other specialists</h2></div>
+    <div class="grid grid--3">
+      {% for d in others %}
+      <article class="doctor-card">
+        <a href="{{ d.get_absolute_url }}" class="doctor-card__media" aria-label="{{ d.name }}">
+          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy">{% else %}<span class="avatar">{{ d.initials }}</span>{% endif %}
+        </a>
+        <h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
+        <p class="doctor-card__title">{{ d.title }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

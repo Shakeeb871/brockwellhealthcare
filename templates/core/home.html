@@ -35,18 +35,17 @@
   <div class="container">
     <div class="section__head">
       <span class="eyebrow">Our Services</span>
-      <h2>Advanced therapies, tailored to you</h2>
-      <p>From regenerative treatments to expert consultations, every programme is designed around your individual health goals.</p>
+      <h2>Comprehensive regenerative care</h2>
+      <p>From regenerative wellness and medicine to longevity, aesthetics and advanced diagnostics — explore our full range of treatments.</p>
     </div>
-    {% if services %}
+    {% if categories %}
     <div class="grid grid--3">
-      {% for s in services %}
+      {% for c in categories %}
       <article class="card">
-        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
-        <h3>{{ s.name }}</h3>
-        <p>{{ s.summary }}</p>
-        {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
-        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+        <div class="card__icon" aria-hidden="true">{{ c.icon }}</div>
+        <h3>{{ c.name }}</h3>
+        <p>{{ c.summary }}</p>
+        <a class="card__link" href="{{ c.get_absolute_url }}">Explore →</a>
       </article>
       {% endfor %}
     </div>
@@ -121,9 +120,34 @@
 </section>
 {% endif %}
 
+<!-- Team preview -->
+{% if doctors %}
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Our Team</span>
+      <h2>Care from experienced specialists</h2>
+      <p>Our multidisciplinary team brings together leading expertise in regenerative medicine and longevity.</p>
+    </div>
+    <div class="grid grid--4">
+      {% for d in doctors %}
+      <article class="doctor-card">
+        <a href="{{ d.get_absolute_url }}" class="doctor-card__media" aria-label="{{ d.name }}">
+          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy">{% else %}<span class="avatar">{{ d.initials }}</span>{% endif %}
+        </a>
+        <h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
+        <p class="doctor-card__title">{{ d.title }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-2"><a class="btn btn--ghost" href="{% rurl 'team:list' %}">Meet the full team</a></div>
+  </div>
+</section>
+{% endif %}
+
 <!-- FAQ -->
 {% if faqs %}
-<section class="section">
+<section class="section section--soft">
   <div class="container">
     <div class="section__head">
       <span class="eyebrow">Questions, Answered</span>

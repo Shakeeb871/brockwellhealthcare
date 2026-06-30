@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>Our Team</span>
+    </nav>
+    <h1>Our Team</h1>
+    <p class="muted" style="max-width:64ch">Meet the experienced clinicians and specialists behind {{ BRAND_NAME }} — dedicated to your regenerative health and longevity.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if doctors %}
+    <div class="grid grid--3">
+      {% for d in doctors %}
+      <article class="doctor-card doctor-card--lg">
+        <a href="{{ d.get_absolute_url }}" class="doctor-card__media" aria-label="{{ d.name }}">
+          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy">{% else %}<span class="avatar">{{ d.initials }}</span>{% endif %}
+        </a>
+        <h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
+        <p class="doctor-card__title">{{ d.title }}</p>
+        {% if d.credentials %}<p class="muted" style="font-size:.85rem">{{ d.credentials }}</p>{% endif %}
+        <p>{{ d.short_bio }}</p>
+        <a class="card__link" href="{{ d.get_absolute_url }}">View profile →</a>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center muted">Our team will be introduced here soon.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

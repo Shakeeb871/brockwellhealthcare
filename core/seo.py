@@ -115,13 +115,29 @@ def breadcrumb_schema(items):
     }
 
 
+def category_schema(category, region):
+    """A main service area — MedicalSpecialty/CollectionPage entry point."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": category.name,
+        "description": category.summary,
+        "url": region_absolute(region["code"], "services:category", category=category.slug),
+        "about": {"@type": "MedicalSpecialty", "name": category.name},
+        "provider": {"@id": f"https://{settings.SITE_DOMAIN}/{region['code']}/#organization"},
+    }
+
+
 def service_schema(service, region):
     data = {
         "@context": "https://schema.org",
         "@type": "MedicalProcedure",
         "name": service.name,
         "description": service.summary,
-        "url": region_absolute(region["code"], "services:detail", slug=service.slug),
+        "url": region_absolute(
+            region["code"], "services:detail",
+            category=service.category.slug, slug=service.slug,
+        ),
         "provider": {"@id": f"https://{settings.SITE_DOMAIN}/{region['code']}/#organization"},
         "areaServed": region["name"],
     }
@@ -132,6 +148,34 @@ def service_schema(service, region):
             "priceCurrency": region["currency"],
         }
     return data
+
+
+def doctor_schema(doctor, region):
+    data = {
+        "@context": "https://schema.org",
+        "@type": "Physician",
+        "name": doctor.name,
+        "description": doctor.short_bio,
+        "url": region_absolute(region["code"], "team:detail", slug=doctor.slug),
+        "jobTitle": doctor.title,
+        "worksFor": {"@id": f"https://{settings.SITE_DOMAIN}/{region['code']}/#organization"},
+        "areaServed": region["name"],
+    }
+    if doctor.photo:
+        data["image"] = doctor.photo
+    if doctor.specialty_list:
+        data["knowsAbout"] = doctor.specialty_list
+    return data
+
+
+def page_schema(page, region):
+    return {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": page.title,
+        "url": absolute(f"/{region['code']}/{page.slug}/"),
+        "publisher": {"@id": f"https://{settings.SITE_DOMAIN}/{region['code']}/#organization"},
+    }
 
 
 def event_schema(event, region):

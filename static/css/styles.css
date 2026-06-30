@@ -305,3 +305,78 @@ p { margin: 0 0 1rem; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* =========================================================================
+   Phase 2 components: mega-menu, service chips, team cards, legal pages
+   ========================================================================= */
+
+.grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ---- Mega menu ---- */
+.has-mega { position: static; }
+.has-mega__trigger { display: inline-flex; align-items: center; gap: .3rem; }
+.has-mega .caret { font-size: .7rem; transition: transform .2s ease; }
+.mega {
+  display: none; position: absolute; left: 0; right: 0; top: 100%;
+  background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-lg); padding: 1.8rem 0; z-index: 90;
+}
+.has-mega:hover .mega, .has-mega:focus-within .mega { display: block; }
+.has-mega:hover .caret { transform: rotate(180deg); }
+.mega__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem 2.4rem; }
+.mega__col { display: grid; gap: .35rem; align-content: start; }
+.mega__head { font-family: var(--font-display); font-weight: 600; color: var(--navy-800); font-size: 1rem; margin-bottom: .3rem; }
+.mega__head:hover { color: var(--teal-600); }
+.mega__link { color: var(--slate-600); font-size: .92rem; padding: .12rem 0; }
+.mega__link:hover { color: var(--teal-600); }
+
+/* ---- Services overview ---- */
+.stack-xl > * + * { margin-top: 2.8rem; }
+.cat-block { border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem; background: #fff; }
+.cat-block__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.2rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.cat-block__head h2 { margin: .3rem 0 .2rem; }
+.cat-block__icon { font-size: 1.6rem; }
+.chip-grid { display: flex; flex-wrap: wrap; gap: .6rem; }
+.chip {
+  display: inline-block; padding: .5rem 1rem; border-radius: 999px;
+  background: var(--bg-soft); border: 1px solid var(--line); color: var(--navy-700);
+  font-size: .92rem; font-weight: 500; transition: all .18s ease;
+}
+.chip:hover { background: var(--mint-50); border-color: var(--teal-400); color: var(--teal-600); transform: translateY(-2px); }
+
+/* ---- Doctor cards & profile ---- */
+.doctor-card { text-align: center; }
+.doctor-card--lg { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1.8rem; transition: transform .2s ease, box-shadow .2s ease; }
+.doctor-card--lg:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.doctor-card__media { display: block; margin: 0 auto 1rem; width: 130px; height: 130px; }
+.doctor-card__media img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; }
+.doctor-card h3 { margin: .2rem 0; font-size: 1.15rem; }
+.doctor-card h3 a { color: var(--navy-800); }
+.doctor-card h3 a:hover { color: var(--teal-600); }
+.doctor-card__title { color: var(--teal-600); font-weight: 600; font-size: .92rem; margin-bottom: .4rem; }
+.doctor-card p { color: var(--slate-600); font-size: .95rem; }
+
+.avatar {
+  display: grid; place-items: center; width: 130px; height: 130px; border-radius: 50%;
+  background: linear-gradient(160deg, var(--navy-700), var(--teal-600)); color: #fff;
+  font-family: var(--font-display); font-size: 2.4rem; font-weight: 600; margin-inline: auto;
+}
+.avatar--xl { width: 170px; height: 170px; font-size: 3rem; }
+
+.doctor-profile { display: flex; gap: 1.8rem; align-items: center; flex-wrap: wrap; }
+.doctor-profile__media img { width: 170px; height: 170px; border-radius: 24px; object-fit: cover; }
+.doctor-profile__media .avatar--xl { border-radius: 24px; }
+
+@media (max-width: 920px) {
+  .grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .mega__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .grid--4 { grid-template-columns: 1fr 1fr; }
+  /* On mobile the mega menu becomes a simple inline list. */
+  .mega { display: block; position: static; box-shadow: none; border: 0; padding: .4rem 0 .8rem 1rem; }
+  .mega__grid { grid-template-columns: 1fr; gap: 1rem; }
+  .has-mega__trigger .caret { display: none; }
+  .cat-block__head { flex-direction: column; }
+}

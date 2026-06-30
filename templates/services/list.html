@@ -8,22 +8,34 @@
       <a href="{% rurl 'core:home' %}">Home</a> / <span>Services</span>
     </nav>
     <h1>Our Services</h1>
-    <p class="muted" style="max-width:62ch">Explore our range of stem cell and regenerative medicine treatments, each delivered with expert clinical care in {{ region.name }}.</p>
+    <p class="muted" style="max-width:64ch">A complete spectrum of regenerative wellness, medicine, longevity, aesthetics and diagnostics — delivered with expert clinical care in {{ region.name }}.</p>
   </div>
 </div>
 
 <section class="section">
   <div class="container">
-    {% if services %}
-    <div class="grid grid--3">
-      {% for s in services %}
-      <article class="card">
-        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
-        <h3>{{ s.name }}</h3>
-        <p>{{ s.summary }}</p>
-        {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
-        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
-      </article>
+    {% if categories %}
+    <div class="stack-xl">
+      {% for cat in categories %}
+      <div class="cat-block">
+        <div class="cat-block__head">
+          <div>
+            <span class="cat-block__icon" aria-hidden="true">{{ cat.icon }}</span>
+            <h2>{{ cat.name }}</h2>
+            <p class="muted">{{ cat.summary }}</p>
+          </div>
+          <a class="btn btn--ghost" href="{{ cat.get_absolute_url }}">View {{ cat.name }}</a>
+        </div>
+        {% with subs=cat.published_services %}
+        {% if subs %}
+        <div class="chip-grid">
+          {% for s in subs %}
+          <a class="chip" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+      </div>
       {% endfor %}
     </div>
     {% else %}

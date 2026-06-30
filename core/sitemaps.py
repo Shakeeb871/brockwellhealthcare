@@ -3,8 +3,10 @@
 from django.contrib.sitemaps import Sitemap
 
 from events.models import Event
-from services.models import Service
+from services.models import Service, ServiceCategory
+from team.models import Doctor
 
+from .models import Page
 from .regions import enabled_regions, region_path
 
 
@@ -14,7 +16,10 @@ class StaticViewSitemap(Sitemap):
     protocol = "https"
 
     def items(self):
-        pages = ["core:home", "core:about", "core:contact", "services:list", "events:list"]
+        pages = [
+            "core:home", "core:about", "core:contact",
+            "services:list", "events:list", "team:list",
+        ]
         return [
             (region["code"], name)
             for region in enabled_regions()
@@ -25,8 +30,24 @@ class StaticViewSitemap(Sitemap):
         region_code, name = item
         return region_path(region_code, name)
 
-    def priority_for(self, name):
-        return 1.0 if name.endswith("home") else 0.8
+
+def _codes():
+    return [r["code"] for r in enabled_regions()]
+
+
+class CategorySitemap(Sitemap):
+    changefreq = "monthly"
+    priority = 0.8
+    protocol = "https"
+
+    def items(self):
+        return list(ServiceCategory.objects.filter(region__in=_codes(), is_published=True))
+
+    def location(self, obj):
+        return obj.get_absolute_url()
+
+    def lastmod(self, obj):
+        return obj.updated_at
 
 
 class ServiceSitemap(Sitemap):
@@ -35,8 +56,22 @@ class ServiceSitemap(Sitemap):
     protocol = "https"
 
     def items(self):
-        codes = [r["code"] for r in enabled_regions()]
-        return list(Service.objects.filter(region__in=codes, is_published=True))
+        return list(Service.objects.filter(region__in=_codes(), is_published=True))
+
+    def location(self, obj):
+        return obj.get_absolute_url()
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+
+class DoctorSitemap(Sitemap):
+    changefreq = "monthly"
+    priority = 0.6
+    protocol = "https"
+
+    def items(self):
+        return list(Doctor.objects.filter(region__in=_codes(), is_published=True))
 
     def location(self, obj):
         return obj.get_absolute_url()
@@ -51,8 +86,7 @@ class EventSitemap(Sitemap):
     protocol = "https"
 
     def items(self):
-        codes = [r["code"] for r in enabled_regions()]
-        return list(Event.objects.filter(region__in=codes, is_published=True))
+        return list(Event.objects.filter(region__in=_codes(), is_published=True))
 
     def location(self, obj):
         return obj.get_absolute_url()
@@ -61,8 +95,26 @@ class EventSitemap(Sitemap):
         return obj.updated_at
 
 
+class PageSitemap(Sitemap):
+    changefreq = "yearly"
+    priority = 0.3
+    protocol = "https"
+
+    def items(self):
+        return list(Page.objects.filter(region__in=_codes(), is_published=True))
+
+    def location(self, obj):
+        return f"/{obj.region}/{obj.slug}/"
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+
 sitemaps = {
     "static": StaticViewSitemap,
+    "categories": CategorySitemap,
     "services": ServiceSitemap,
+    "team": DoctorSitemap,
     "events": EventSitemap,
+    "pages": PageSitemap,
 }

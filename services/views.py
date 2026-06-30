@@ -5,19 +5,22 @@ from core import seo
 from core.models import FAQ
 from core.regions import region_path
 
-from .models import Service
+from .models import Service, ServiceCategory
 
 
-def service_list(request):
+def service_overview(request):
     region = request.region
-    services = Service.objects.filter(region=region["code"], is_published=True)
+    categories = (
+        ServiceCategory.objects.filter(region=region["code"], is_published=True)
+        .prefetch_related("services")
+    )
 
     meta = seo.build_meta(
         request,
-        title=f"Stem Cell & Regenerative Services in {region['name']}",
+        title=f"Our Services in {region['name']}",
         description=(
-            f"Explore stem cell therapies and regenerative treatments offered by "
-            f"{settings.BRAND_NAME} in {region['name']} — personalised, evidence-based care."
+            f"Explore regenerative wellness, regenerative medicine, longevity, anti-aging "
+            f"aesthetics and advanced diagnostics at {settings.BRAND_NAME} in {region['name']}."
         ),
         path="/services/",
     )
@@ -30,18 +33,48 @@ def service_list(request):
     return render(
         request,
         "services/list.html",
-        {"meta": meta, "jsonld": [crumbs], "services": services},
+        {"meta": meta, "jsonld": [crumbs], "categories": categories},
     )
 
 
-def service_detail(request, slug):
+def category_detail(request, category):
     region = request.region
-    service = get_object_or_404(
-        Service, region=region["code"], slug=slug, is_published=True
+    cat = get_object_or_404(
+        ServiceCategory, region=region["code"], slug=category, is_published=True
     )
-    others = Service.objects.filter(
-        region=region["code"], is_published=True
-    ).exclude(pk=service.pk)[:3]
+    services = cat.services.filter(is_published=True)
+
+    title = cat.seo_title or f"{cat.name} in {region['name']}"
+    description = cat.seo_description or cat.summary
+    meta = seo.build_meta(
+        request, title=title, description=description, path=f"/services/{cat.slug}/"
+    )
+    jsonld = [
+        seo.category_schema(cat, region),
+        seo.breadcrumb_schema(
+            [
+                ("Home", seo.absolute(region_path(region["code"], "core:home"))),
+                ("Services", seo.absolute(region_path(region["code"], "services:list"))),
+                (cat.name, meta["canonical"]),
+            ]
+        ),
+    ]
+    return render(
+        request,
+        "services/category.html",
+        {"meta": meta, "jsonld": jsonld, "category": cat, "services": services},
+    )
+
+
+def service_detail(request, category, slug):
+    region = request.region
+    cat = get_object_or_404(
+        ServiceCategory, region=region["code"], slug=category, is_published=True
+    )
+    service = get_object_or_404(
+        Service, region=region["code"], category=cat, slug=slug, is_published=True
+    )
+    siblings = cat.services.filter(is_published=True).exclude(pk=service.pk)[:4]
     faqs = list(FAQ.objects.filter(region=region["code"], is_published=True)[:6])
 
     title = service.seo_title or f"{service.name} in {region['name']}"
@@ -50,7 +83,7 @@ def service_detail(request, slug):
         request,
         title=title,
         description=description,
-        path=f"/services/{service.slug}/",
+        path=f"/services/{cat.slug}/{service.slug}/",
         og_type="article",
     )
     jsonld = [
@@ -59,6 +92,7 @@ def service_detail(request, slug):
             [
                 ("Home", seo.absolute(region_path(region["code"], "core:home"))),
                 ("Services", seo.absolute(region_path(region["code"], "services:list"))),
+                (cat.name, seo.absolute(region_path(region["code"], "services:category", category=cat.slug))),
                 (service.name, meta["canonical"]),
             ]
         ),
@@ -73,8 +107,9 @@ def service_detail(request, slug):
         {
             "meta": meta,
             "jsonld": jsonld,
+            "category": cat,
             "service": service,
-            "others": others,
+            "siblings": siblings,
             "faqs": faqs,
         },
     )

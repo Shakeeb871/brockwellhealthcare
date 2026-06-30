@@ -4,22 +4,34 @@
     <div class="site-footer__brand">
       <span class="brand__name">{{ BRAND_NAME }}</span>
       <p>{{ BRAND_TAGLINE }} in {{ region.name }}.</p>
+      <p class="stack" style="margin-top:1rem">
+        <a href="tel:{{ region.phone }}">{{ region.phone }}</a><br>
+        <a href="mailto:{{ region.email }}">{{ region.email }}</a><br>
+        <span class="muted">{{ region.address }}</span>
+      </p>
     </div>
 
-    <nav class="site-footer__col" aria-label="Footer">
-      <h4>Explore</h4>
-      <a href="{% rurl 'services:list' %}">Services</a>
-      <a href="{% rurl 'events:list' %}">Events</a>
-      <a href="{% rurl 'core:about' %}">About</a>
-      <a href="{% rurl 'core:contact' %}">Contact</a>
+    <nav class="site-footer__col" aria-label="Services">
+      <h4>Services</h4>
+      {% for cat in nav_categories %}
+      <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+      {% endfor %}
     </nav>
 
-    <div class="site-footer__col">
-      <h4>Contact</h4>
-      <a href="tel:{{ region.phone }}">{{ region.phone }}</a>
-      <a href="mailto:{{ region.email }}">{{ region.email }}</a>
-      <p class="muted">{{ region.address }}</p>
-    </div>
+    <nav class="site-footer__col" aria-label="Company">
+      <h4>Company</h4>
+      <a href="{% rurl 'team:list' %}">Our Team</a>
+      <a href="{% rurl 'events:list' %}">Events</a>
+      <a href="{% rurl 'core:about' %}">About Us</a>
+      <a href="{% rurl 'core:contact' %}">Contact Us</a>
+    </nav>
+
+    <nav class="site-footer__col" aria-label="Legal">
+      <h4>Legal</h4>
+      <a href="{% rurl 'core:privacy' %}">Privacy Policy</a>
+      <a href="{% rurl 'core:terms' %}">Terms &amp; Conditions</a>
+      <a href="{% rurl 'core:cookies' %}">Cookies</a>
+    </nav>
   </div>
 
   <div class="container site-footer__bottom">

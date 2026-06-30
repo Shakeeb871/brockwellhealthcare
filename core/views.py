@@ -4,21 +4,25 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
+from django.http import Http404
+
 from events.models import Event
-from services.models import Service
+from services.models import ServiceCategory
+from team.models import Doctor
 
 from . import seo
 from .forms import ContactForm
-from .models import FAQ
+from .models import FAQ, Page
 from .regions import region_path
 
 
 def home(request):
     region = request.region
     code = region["code"]
-    services = Service.objects.filter(region=code, is_published=True)[:6]
+    categories = ServiceCategory.objects.filter(region=code, is_published=True)[:6]
     events = Event.objects.filter(region=code, is_published=True).order_by("start")
     upcoming = [e for e in events if e.is_upcoming][:3]
+    doctors = Doctor.objects.filter(region=code, is_published=True)[:4]
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
 
     meta = seo.build_meta(
@@ -42,11 +46,38 @@ def home(request):
         {
             "meta": meta,
             "jsonld": jsonld,
-            "services": services,
+            "categories": categories,
             "upcoming_events": upcoming,
+            "doctors": doctors,
             "faqs": faqs,
         },
     )
+
+
+def page(request, slug):
+    """Render an editable content page (privacy, terms, cookies)."""
+    region = request.region
+    try:
+        obj = Page.objects.get(region=region["code"], slug=slug, is_published=True)
+    except Page.DoesNotExist:
+        raise Http404("Page not found")
+
+    meta = seo.build_meta(
+        request,
+        title=obj.seo_title or obj.title,
+        description=obj.seo_description or f"{obj.title} — {settings.BRAND_NAME}.",
+        path=f"/{slug}/",
+    )
+    jsonld = [
+        seo.page_schema(obj, region),
+        seo.breadcrumb_schema(
+            [
+                ("Home", seo.absolute(region_path(region["code"], "core:home"))),
+                (obj.title, meta["canonical"]),
+            ]
+        ),
+    ]
+    return render(request, "core/page.html", {"meta": meta, "jsonld": jsonld, "page": obj})
 
 
 def about(request):

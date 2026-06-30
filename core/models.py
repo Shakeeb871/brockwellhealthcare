@@ -53,3 +53,37 @@ class FAQ(TimeStamped):
 
     def __str__(self):
         return self.question
+
+
+class Page(TimeStamped):
+    """A simple content page (Privacy Policy, Terms, Cookies), editable in admin."""
+
+    region = models.CharField(max_length=8, choices=REGION_CHOICES, default="uae")
+    slug = models.SlugField(max_length=80, help_text="e.g. privacy-policy, terms, cookies")
+    title = models.CharField(max_length=160)
+    body = models.TextField(help_text="Use a blank line between paragraphs. Lines ending with ':' render as headings.")
+    is_published = models.BooleanField(default=True)
+
+    seo_title = models.CharField(max_length=70, blank=True)
+    seo_description = models.CharField(max_length=170, blank=True)
+
+    class Meta:
+        ordering = ["title"]
+        unique_together = ("region", "slug")
+
+    def __str__(self):
+        return f"{self.title} [{self.region}]"
+
+    @property
+    def blocks(self):
+        """Split body into (kind, text) blocks: 'heading' or 'para'."""
+        out = []
+        for chunk in self.body.split("\n\n"):
+            chunk = chunk.strip()
+            if not chunk:
+                continue
+            if chunk.endswith(":") and len(chunk) < 80:
+                out.append(("heading", chunk.rstrip(":")))
+            else:
+                out.append(("para", chunk))
+        return out
