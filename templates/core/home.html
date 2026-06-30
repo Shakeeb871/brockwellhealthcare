@@ -2,15 +2,16 @@
 {% load region_tags static icons %}
 
 {% block content %}
-<section class="hero">
+<section class="hero" style="background-image:url('{% static 'img/brockwell-healthcare.webp' %}')">
   <div class="container hero__inner">
-    <div>
+    <div class="hero__content">
       <span class="eyebrow">Regenerative Medicine · {{ region.short }}</span>
       <h1>{{ BRAND_TAGLINE }}</h1>
       <p class="lead">Personalised stem cell and regenerative therapies delivered by experienced clinicians in {{ region.name }} — grounded in science, centred on you.</p>
-    </div>
-    <div class="hero__media">
-      <img src="{% static 'img/brockwell-healthcare.webp' %}" alt="{{ BRAND_NAME }} — regenerative medicine in {{ region.name }}" width="640" height="540" fetchpriority="high">
+      <div class="hero__cta">
+        <a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
+        <a class="btn btn--outline-light btn--lg" href="{% rurl 'services:list' %}">Explore Services {% icon 'arrow' 'ico' %}</a>
+      </div>
     </div>
   </div>
 </section>
