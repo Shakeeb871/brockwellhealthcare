@@ -2,13 +2,14 @@
 {% if homecare_services %}
 <section class="section homecare" aria-labelledby="homecare-title">
   <div class="container">
-    <div class="homecare__head">
-      <div class="homecare__intro">
-        <span class="eyebrow">Home Care Services</span>
-        <h2 id="homecare-title">Would you rather stay at home than go into a health care facility or nursing home?</h2>
+    <h2 id="homecare-title" class="homecare__title">Would you rather stay at home than go into a health care facility or nursing home?</h2>
+
+    <div class="homecare__row">
+      <div class="homecare__lead">
+        <span class="homecare__rule" aria-hidden="true"></span>
         <p>We provide a wide range of home health care programs at flexible schedules and cost-friendly service rates.</p>
       </div>
-      <a class="btn btn--primary homecare__cta" href="{% rurl 'services:list' %}">View Care Services {% icon 'arrow' 'ico' %}</a>
+      <a class="btn btn--primary homecare__cta" href="{% rurl 'services:list' %}">View Care Services</a>
     </div>
 
     <div class="hc-carousel" data-hc-carousel>
@@ -23,12 +24,8 @@
             {% else %}
               <span class="hc-card__ph" aria-hidden="true">{% icon s.icon %}</span>
             {% endif %}
-            <span class="hc-card__badge" aria-hidden="true">{% icon s.icon %}</span>
           </div>
-          <div class="hc-card__body">
-            <h3>{{ s.title }}</h3>
-            {% if s.desc %}<p>{{ s.desc }}</p>{% endif %}
-          </div>
+          <h3 class="hc-card__title">{{ s.title }}</h3>
         </li>
         {% endfor %}
       </ul>
