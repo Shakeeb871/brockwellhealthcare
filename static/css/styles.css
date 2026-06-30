@@ -433,13 +433,13 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 }
 .spotlight .container { position: relative; z-index: 1; }
 
-.spotlight__grid { display: grid; grid-template-columns: 290px 1fr; gap: 2.5rem; align-items: stretch; }
+.spotlight__grid { display: grid; grid-template-columns: 290px 1fr; gap: 2.5rem; align-items: start; }
 
-/* Selector — name-only chips, equal height column, vertical scroll */
-.spotlight__selector { display: flex; flex-direction: column; gap: .6rem; overflow-y: auto; padding-right: .3rem; }
+/* Selector — name-only chips, capped to spotlight height, vertical scroll */
+.spotlight__selector { display: flex; flex-direction: column; gap: .6rem; max-height: 540px; overflow-y: auto; padding-right: .4rem; }
 .docchip {
   display: flex; align-items: center; width: 100%; text-align: left; cursor: pointer; position: relative;
-  flex: 1 0 auto; min-height: 58px;
+  flex: 0 0 auto; min-height: 56px;
   padding: .7rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm);
   background: #fff; transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
 }

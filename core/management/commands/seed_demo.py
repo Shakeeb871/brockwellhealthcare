@@ -98,25 +98,23 @@ SERVICE_SUMMARIES = {
     "Ultrasound Diagnostics": "High-resolution diagnostic ultrasound for accurate, real-time assessment.",
 }
 
+# (name, photo). Details (title/bio/specialties) are placeholder; edit in admin.
 DOCTORS = [
-    (
-        "Dr. Sarah Al Mansoori", "Regenerative Medicine Specialist", "MD, PhD",
-        "Leads our regenerative medicine programme with a focus on evidence-based, patient-centred care.",
-        "Stem Cell Therapy\nRegenerative Orthopedics\nExosome Therapy",
-        "15+ years", "English, Arabic", True,
-    ),
-    (
-        "Dr. James Carter", "Longevity & Functional Medicine Physician", "MD, IFMCP",
-        "Specialises in longevity and functional medicine, helping patients optimise healthspan.",
-        "Longevity Medicine\nFunctional Medicine\nGenomics Medicine",
-        "20+ years", "English", True,
-    ),
-    (
-        "Dr. Layla Hassan", "Aesthetic & Wellness Physician", "MBBS, MSc",
-        "Combines aesthetic expertise with a holistic approach to wellness and natural rejuvenation.",
-        "Anti-Aging Aesthetics\nPure Plasma\nIV & Wellness Therapies",
-        "12+ years", "English, Arabic, French", False,
-    ),
+    ("Dr. Hasnain Haider-Shah", "/static/img/dr-shah-brockwell-health-care.webp"),
+    ("Dr. Nigel Beejay", ""),
+    ("Dr. Adeel Khan, MD", ""),
+    ("Dr. Sabine Hazan, MD", ""),
+    ("Dr. Salman Gilani", ""),
+    ("Shirley D'Souza", ""),
+    ("Jean-Francois Tremblay", ""),
+    ("Shahnawaz Hussein Khan, PhD", ""),
+    ("Dr. Nameer Haider", ""),
+    ("Prof. Dato' Sri Dr. Mike Chan", ""),
+    ("Dr. Rozina Badal Munir", ""),
+    ("Dr. Summer Beattie", ""),
+    ("Rachel Tan Garcia", ""),
+    ("Oscar Tellez", ""),
+    ("Dr Don Buford", ""),
 ]
 
 LEGAL_PAGES = [
@@ -219,20 +217,16 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"Seeded {n_cat} categories and {n_sub} sub-services."))
 
         # Doctors
-        for order, (name, title, creds, short_bio, specialties, experience, languages, available) in enumerate(DOCTORS, start=1):
-            Doctor.objects.update_or_create(
-                region=REGION, slug=slugify(name),
-                defaults={
-                    "name": name, "title": title, "credentials": creds, "short_bio": short_bio,
-                    "specialties": specialties, "order": order, "is_published": True,
-                    "experience": experience, "languages": languages, "available_today": available,
-                    "full_bio": (
-                        f"{short_bio}\n\n"
-                        f"{name} is part of the multidisciplinary team at Brockwell Healthcare, dedicated "
-                        f"to delivering safe, effective and personalised care. (Placeholder biography — "
-                        f"replace with the doctor's full profile.)"
-                    ),
-                },
+        Doctor.objects.filter(region=REGION).delete()
+        for order, (name, photo) in enumerate(DOCTORS, start=1):
+            Doctor.objects.create(
+                region=REGION, slug=slugify(name), name=name, title="Specialist",
+                photo=photo, order=order, is_published=True,
+                short_bio="Part of the expert medical team at Brockwell Healthcare.",
+                full_bio=(
+                    "Part of the expert medical team at Brockwell Healthcare. "
+                    "(Add this specialist's full profile, specialties and photo in the admin.)"
+                ),
             )
         self.stdout.write(self.style.SUCCESS(f"Seeded {len(DOCTORS)} doctors."))
 
