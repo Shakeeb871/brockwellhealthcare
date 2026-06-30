@@ -16,13 +16,7 @@
         <button type="button" class="docchip{% if forloop.first %} is-active{% endif %}"
                 role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
                 aria-controls="docpanel-{{ forloop.counter0 }}" data-index="{{ forloop.counter0 }}">
-          <span class="docchip__avatar">
-            {% if d.photo %}<img src="{{ d.photo }}" alt="" loading="lazy">{% else %}<span aria-hidden="true">{{ d.initials }}</span>{% endif %}
-          </span>
-          <span class="docchip__meta">
-            <b>{{ d.name }}</b>
-            <small>{{ d.title }}</small>
-          </span>
+          <span class="docchip__name">{{ d.name }}</span>
         </button>
         {% endfor %}
       </div>
@@ -47,9 +41,6 @@
               <span class="avatar avatar--xl" aria-hidden="true">{{ d.initials }}</span>
             {% endif %}
             {% if d.available_today %}<span class="badge-avail"><span class="dot"></span>Available Today</span>{% endif %}
-            {% for t in d.specialty_list|slice:":2" %}
-            <span class="float-tag float-tag--{{ forloop.counter }}">{{ t }}</span>
-            {% endfor %}
           </div>
 
           <div class="docpanel__body">
@@ -70,8 +61,7 @@
             {% endif %}
 
             <div class="docpanel__cta">
-              <a class="btn btn--ghost" href="{{ d.get_absolute_url }}">View Profile</a>
-              <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book Appointment</a>
+              <a class="btn btn--primary" href="{{ d.get_absolute_url }}">View Full Profile {% icon 'arrow' 'ico' %}</a>
             </div>
           </div>
         </article>
