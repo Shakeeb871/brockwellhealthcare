@@ -1,0 +1,29 @@
+{% load region_tags %}
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__brand">
+      <span class="brand__name">{{ BRAND_NAME }}</span>
+      <p>{{ BRAND_TAGLINE }} in {{ region.name }}.</p>
+    </div>
+
+    <nav class="site-footer__col" aria-label="Footer">
+      <h4>Explore</h4>
+      <a href="{% rurl 'services:list' %}">Services</a>
+      <a href="{% rurl 'events:list' %}">Events</a>
+      <a href="{% rurl 'core:about' %}">About</a>
+      <a href="{% rurl 'core:contact' %}">Contact</a>
+    </nav>
+
+    <div class="site-footer__col">
+      <h4>Contact</h4>
+      <a href="tel:{{ region.phone }}">{{ region.phone }}</a>
+      <a href="mailto:{{ region.email }}">{{ region.email }}</a>
+      <p class="muted">{{ region.address }}</p>
+    </div>
+  </div>
+
+  <div class="container site-footer__bottom">
+    <p>&copy; {% now "Y" %} {{ BRAND_NAME }}. All rights reserved.</p>
+    <p class="muted">Information provided is for educational purposes and is not a substitute for professional medical advice.</p>
+  </div>
+</footer>

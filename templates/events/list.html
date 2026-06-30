@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>Events</span>
+    </nav>
+    <h1>Events &amp; Seminars</h1>
+    <p class="muted" style="max-width:62ch">Join our educational seminars and clinics in {{ region.name }}. Learn from specialists and reserve your place online.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if upcoming %}
+    <div class="grid grid--3">
+      {% for e in upcoming %}
+      <article class="card">
+        <span class="tag">{{ e.start|date:"d M Y · H:i" }}</span>
+        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <p>{{ e.summary }}</p>
+        <p class="muted" style="font-size:.9rem">📍 {{ e.location }}</p>
+        <p class="card__price">{% if e.is_free %}Free{% else %}{{ region.currency_symbol }} {{ e.price }}{% endif %}</p>
+        <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking →</a>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center muted">No upcoming events right now. <a href="{% rurl 'core:contact' %}">Contact us</a> to be notified of future events.</p>
+    {% endif %}
+
+    {% if past %}
+    <div class="section__head" style="margin-top:3.5rem"><h2>Past events</h2></div>
+    <div class="grid grid--3">
+      {% for e in past %}
+      <article class="card" style="opacity:.7">
+        <span class="tag">{{ e.start|date:"d M Y" }}</span>
+        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <p>{{ e.summary }}</p>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>Services</span>
+    </nav>
+    <h1>Our Services</h1>
+    <p class="muted" style="max-width:62ch">Explore our range of stem cell and regenerative medicine treatments, each delivered with expert clinical care in {{ region.name }}.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if services %}
+    <div class="grid grid--3">
+      {% for s in services %}
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.summary }}</p>
+        {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center muted">Services are being added. Please check back soon or <a href="{% rurl 'core:contact' %}">contact us</a>.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="cta-band">
+      <h2>Not sure which treatment is right for you?</h2>
+      <p>Book a consultation and our specialists will guide you.</p>
+      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

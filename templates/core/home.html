@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero__inner">
+    <div>
+      <span class="eyebrow">Regenerative Medicine · {{ region.short }}</span>
+      <h1>{{ BRAND_TAGLINE }}</h1>
+      <p class="lead">Personalised stem cell and regenerative therapies delivered by experienced clinicians in {{ region.name }} — grounded in science, centred on you.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation</a>
+        <a class="btn btn--light btn--lg" href="{% rurl 'services:list' %}">Explore Services</a>
+      </div>
+      <div class="hero__stats">
+        <div><span class="num">15+</span><span class="lbl">Years of expertise</span></div>
+        <div><span class="num">5,000+</span><span class="lbl">Patients cared for</span></div>
+        <div><span class="num">98%</span><span class="lbl">Would recommend</span></div>
+      </div>
+    </div>
+    <aside class="hero__card">
+      <h3>Why patients choose us</h3>
+      <ul>
+        <li>Board-certified regenerative medicine specialists</li>
+        <li>Evidence-based, personalised treatment plans</li>
+        <li>State-of-the-art, accredited facilities</li>
+        <li>Transparent guidance at every step</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Our Services</span>
+      <h2>Advanced therapies, tailored to you</h2>
+      <p>From regenerative treatments to expert consultations, every programme is designed around your individual health goals.</p>
+    </div>
+    {% if services %}
+    <div class="grid grid--3">
+      {% for s in services %}
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.summary }}</p>
+        {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-2"><a class="btn btn--ghost" href="{% rurl 'services:list' %}">View all services</a></div>
+    {% else %}
+    <p class="text-center muted">Our services will be listed here soon.</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Process -->
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">How It Works</span>
+      <h2>A clear path to better health</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Consultation</h3><p>We listen to your history and goals in a thorough one-to-one assessment.</p></div>
+      <div class="step"><h3>Personalised Plan</h3><p>Our specialists design a treatment plan tailored to your needs.</p></div>
+      <div class="step"><h3>Treatment</h3><p>Care is delivered safely in our accredited, modern facilities.</p></div>
+      <div class="step"><h3>Follow-up</h3><p>We support your recovery and track progress every step of the way.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Why us / trust -->
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="eyebrow">Science First</span>
+      <h2>Regenerative care you can trust</h2>
+      <p class="muted">We combine the latest advances in cellular medicine with rigorous clinical standards, so you receive care that is both innovative and safe.</p>
+      <ul class="checklist mt-1">
+        <li>Treatments guided by current clinical evidence</li>
+        <li>Fully accredited laboratory and clinical partners</li>
+        <li>Ethical, transparent and patient-centred practice</li>
+        <li>Dedicated care team throughout your journey</li>
+      </ul>
+    </div>
+    <div class="hero__card" style="background:var(--bg-soft);border-color:var(--line);">
+      <h3 style="color:var(--navy-800)">Speak to a specialist</h3>
+      <p class="muted">Have questions about whether regenerative therapy is right for you? Our team is here to help.</p>
+      <p class="stack" style="margin:0">
+        <a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a><br>
+        <a href="mailto:{{ region.email }}">{{ region.email }}</a>
+      </p>
+      <a class="btn btn--primary mt-1" href="{% rurl 'core:contact' %}">Request a callback</a>
+    </div>
+  </div>
+</section>
+
+<!-- Upcoming events -->
+{% if upcoming_events %}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Upcoming Events</span>
+      <h2>Seminars &amp; clinics near you</h2>
+    </div>
+    <div class="grid grid--3">
+      {% for e in upcoming_events %}
+      <article class="card">
+        <span class="tag">{{ e.start|date:"d M Y" }}</span>
+        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <p>{{ e.summary }}</p>
+        <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking →</a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- FAQ -->
+{% if faqs %}
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Questions, Answered</span>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq">
+      {% for faq in faqs %}
+      <details {% if forloop.first %}open{% endif %}>
+        <summary>{{ faq.question }}</summary>
+        <p>{{ faq.answer }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="cta-band">
+      <h2>Begin your regenerative journey</h2>
+      <p>Book a confidential consultation with our specialists in {{ region.name }} today.</p>
+      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

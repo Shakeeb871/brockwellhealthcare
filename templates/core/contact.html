@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>Contact</span>
+    </nav>
+    <h1>Contact us</h1>
+    <p class="muted" style="max-width:60ch">We're here to answer your questions and help you take the next step. Reach our {{ region.name }} team below.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split">
+    <div>
+      <span class="eyebrow">Send a message</span>
+      <h2>Request a consultation</h2>
+      <form class="form" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.website }}
+        <div class="field">
+          <label for="{{ form.name.id_for_label }}">Full name</label>
+          {{ form.name }}{{ form.name.errors }}
+        </div>
+        <div class="grid grid--2">
+          <div class="field">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}{{ form.email.errors }}
+          </div>
+          <div class="field">
+            <label for="{{ form.phone.id_for_label }}">Phone</label>
+            {{ form.phone }}{{ form.phone.errors }}
+          </div>
+        </div>
+        <div class="field">
+          <label for="{{ form.subject.id_for_label }}">Subject</label>
+          {{ form.subject }}{{ form.subject.errors }}
+        </div>
+        <div class="field">
+          <label for="{{ form.message.id_for_label }}">Message</label>
+          {{ form.message }}{{ form.message.errors }}
+        </div>
+        <button class="btn btn--primary btn--lg" type="submit">Send message</button>
+      </form>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>Get in touch</h3>
+        <p class="stack" style="margin:0">
+          <span class="muted">Phone</span><br><a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a>
+        </p>
+        <p class="stack" style="margin-top:1rem">
+          <span class="muted">Email</span><br><a href="mailto:{{ region.email }}">{{ region.email }}</a>
+        </p>
+        <p class="stack" style="margin-top:1rem">
+          <span class="muted">Address</span><br>{{ region.address }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

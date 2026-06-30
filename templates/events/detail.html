@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> /
+      <a href="{% rurl 'events:list' %}">Events</a> /
+      <span>{{ event.title }}</span>
+    </nav>
+    <h1>{{ event.title }}</h1>
+    <div class="meta-row">
+      <span>🗓 <strong>{{ event.start|date:"l, d M Y" }}</strong> at {{ event.start|date:"H:i" }}</span>
+      <span>📍 <strong>{{ event.location }}</strong></span>
+      <span>🎟 <strong>{% if event.is_free %}Free{% else %}{{ region.currency_symbol }} {{ event.price }}{% endif %}</strong></span>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split" style="align-items:flex-start">
+    <article class="prose">
+      <p class="lead muted">{{ event.summary }}</p>
+      {% for para in event.paragraphs %}<p>{{ para }}</p>{% endfor %}
+    </article>
+
+    <aside>
+      <div class="card">
+        {% if event.is_sold_out %}
+          <h3>Sold out</h3>
+          <p class="muted">This event has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
+        {% else %}
+          <h3>Reserve your place</h3>
+          {% if event.seats_left %}<p class="muted" style="font-size:.9rem">{{ event.seats_left }} seats remaining</p>{% endif %}
+          <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
+            {% csrf_token %}
+            {{ form.website }}
+            <div class="field">
+              <label for="{{ form.name.id_for_label }}">Full name</label>
+              {{ form.name }}{{ form.name.errors }}
+            </div>
+            <div class="field">
+              <label for="{{ form.email.id_for_label }}">Email</label>
+              {{ form.email }}{{ form.email.errors }}
+            </div>
+            <div class="field">
+              <label for="{{ form.phone.id_for_label }}">Phone</label>
+              {{ form.phone }}{{ form.phone.errors }}
+            </div>
+            <button class="btn btn--primary btn--lg" type="submit">
+              {% if event.is_free %}Register free{% else %}Pay {{ region.currency_symbol }} {{ event.price }}{% endif %}
+            </button>
+            {% if not event.is_free %}<p class="muted" style="font-size:.82rem;margin:0">Secure payment powered by Stripe.</p>{% endif %}
+          </form>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

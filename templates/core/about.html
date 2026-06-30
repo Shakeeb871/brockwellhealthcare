@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> / <span>About</span>
+    </nav>
+    <h1>About {{ BRAND_NAME }}</h1>
+    <p class="muted" style="max-width:60ch">A regenerative medicine practice committed to advancing health through science, integrity and compassionate care in {{ region.name }}.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split">
+    <div class="prose">
+      <span class="eyebrow">Our Mission</span>
+      <h2>Pioneering regenerative care</h2>
+      <p>At {{ BRAND_NAME }}, we believe the future of medicine lies in helping the body heal itself. Our team brings together leading specialists in regenerative and cellular medicine to deliver therapies that are innovative, ethical and evidence-based.</p>
+      <p>Every patient who walks through our doors receives a personalised plan, clear guidance, and the attention of a dedicated care team — from first consultation through to recovery.</p>
+      <h2>What sets us apart</h2>
+    </div>
+    <div>
+      <ul class="checklist">
+        <li><strong>Expertise</strong> — clinicians with deep experience in regenerative medicine.</li>
+        <li><strong>Safety</strong> — accredited facilities and rigorous clinical standards.</li>
+        <li><strong>Transparency</strong> — honest advice and clear expectations.</li>
+        <li><strong>Care</strong> — a patient-first approach at every stage.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="cta-band">
+      <h2>Meet our specialists</h2>
+      <p>Discover how our team can support your health goals with a personalised consultation.</p>
+      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Get in touch</a></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

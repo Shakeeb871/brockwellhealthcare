@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load region_tags %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> /
+      <a href="{% rurl 'services:list' %}">Services</a> /
+      <span>{{ service.name }}</span>
+    </nav>
+    <h1>{{ service.name }}</h1>
+    <p class="muted" style="max-width:62ch">{{ service.summary }}</p>
+    {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
+  </div>
+</div>
+
+<section class="section">
+  <div class="container split" style="align-items:flex-start">
+    <article class="prose">
+      {% for para in service.paragraphs %}<p>{{ para }}</p>{% endfor %}
+
+      {% if service.benefit_list %}
+      <h2>Key benefits</h2>
+      <ul class="checklist">
+        {% for b in service.benefit_list %}<li>{{ b }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+
+    <aside>
+      <div class="card">
+        <h3>Interested in {{ service.name }}?</h3>
+        <p class="muted">Speak with our specialists to find out if this treatment is right for you.</p>
+        <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
+        <p class="stack" style="margin-top:1rem">
+          <a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a>
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% if faqs %}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head"><span class="eyebrow">FAQ</span><h2>Common questions</h2></div>
+    <div class="faq">
+      {% for faq in faqs %}
+      <details {% if forloop.first %}open{% endif %}>
+        <summary>{{ faq.question }}</summary><p>{{ faq.answer }}</p>
+      </details>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if others %}
+<section class="section">
+  <div class="container">
+    <div class="section__head"><span class="eyebrow">More</span><h2>Other services</h2></div>
+    <div class="grid grid--3">
+      {% for s in others %}
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.summary }}</p>
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

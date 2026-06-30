@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load region_tags %}
+{% block content %}
+<section class="section" style="text-align:center">
+  <div class="container">
+    <span class="eyebrow">Error 500</span>
+    <h1>Something went wrong</h1>
+    <p class="muted">We're sorry — an unexpected error occurred. Please try again shortly.</p>
+    <div class="mt-1"><a class="btn btn--primary" href="{% rurl 'core:home' %}">Back to home</a></div>
+  </div>
+</section>
+{% endblock %}

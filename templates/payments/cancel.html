@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load region_tags %}
+{% block content %}
+<section class="section" style="text-align:center">
+  <div class="container" style="max-width:640px">
+    <h1>Checkout cancelled</h1>
+    <p class="muted">No payment was taken. You can try again whenever you're ready, or contact us if you need help.</p>
+    <div class="mt-1">
+      <a class="btn btn--primary" href="{% rurl 'events:list' %}">Back to events</a>
+      <a class="btn btn--ghost" href="{% rurl 'core:contact' %}">Contact us</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
