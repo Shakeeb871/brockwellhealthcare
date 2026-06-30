@@ -152,10 +152,23 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .hero h1 { color: #fff; }
 .hero p.lead { font-size: 1.22rem; font-weight: 300; color: #cfe0c3; max-width: 40ch; line-height: 1.6; }
 .hero .eyebrow { color: var(--teal-400); }
-.hero__cta { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.8rem; }
-/* Hero buttons: compact, slightly-rounded rectangles (not pill) */
-.hero__cta .btn { border-radius: 10px; padding: .7rem 1.35rem; font-size: .95rem; }
-.hero__cta .btn .ico { width: 1em; height: 1em; margin-left: .15rem; }
+.hero__cta { display: flex; gap: .9rem; flex-wrap: wrap; margin-top: 1.8rem; }
+/* Hero buttons — sharp 1px-bordered rectangles, Poppins 18/400 (theme colours) */
+.hero__cta .btn {
+  border-radius: 0;
+  border-style: solid; border-width: 1px;
+  padding: 14px 20px;
+  font-family: var(--font-sans);
+  font-size: 18px; font-weight: 400;
+  box-shadow: none;
+}
+.hero__cta .btn .ico { width: 1em; height: 1em; margin-left: .2rem; }
+/* Primary — filled theme green */
+.hero__cta .btn--light { background: var(--teal-600); color: #fff; border-color: var(--teal-600); }
+.hero__cta .btn--light:hover { background: var(--teal-500); border-color: var(--teal-500); color: #fff; }
+/* Secondary — outlined */
+.hero__cta .btn--outline-light { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+.hero__cta .btn--outline-light:hover { background: rgba(255,255,255,.12); border-color: #fff; color: #fff; }
 .hero__stats { display: flex; gap: 2.2rem; margin-top: 2.6rem; }
 .hero__stats .num { font-family: var(--font-display); font-size: 1.9rem; color: #fff; display: block; }
 .hero__stats .lbl { font-size: .82rem; color: #a9bfa0; letter-spacing: .03em; }
