@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -11,9 +11,9 @@
     </nav>
     <h1>{{ event.title }}</h1>
     <div class="meta-row">
-      <span>🗓 <strong>{{ event.start|date:"l, d M Y" }}</strong> at {{ event.start|date:"H:i" }}</span>
-      <span>📍 <strong>{{ event.location }}</strong></span>
-      <span>🎟 <strong>{% if event.is_free %}Free{% else %}{{ region.currency_symbol }} {{ event.price }}{% endif %}</strong></span>
+      <span>{% icon 'calendar' 'ico-inline' %}<strong>{{ event.start|date:"l, d M Y" }}</strong> at {{ event.start|date:"H:i" }}</span>
+      <span>{% icon 'pin' 'ico-inline' %}<strong>{{ event.location }}</strong></span>
+      <span>{% icon 'ticket' 'ico-inline' %}<strong>{% if event.is_free %}Free{% else %}{{ region.currency_symbol }} {{ event.price }}{% endif %}</strong></span>
     </div>
   </div>
 </div>

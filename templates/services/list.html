@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -20,7 +20,7 @@
       <div class="cat-block">
         <div class="cat-block__head">
           <div>
-            <span class="cat-block__icon" aria-hidden="true">{{ cat.icon }}</span>
+            <span class="cat-block__icon" aria-hidden="true">{% category_icon cat.slug %}</span>
             <h2>{{ cat.name }}</h2>
             <p class="muted">{{ cat.summary }}</p>
           </div>

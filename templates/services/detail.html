@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -62,10 +62,10 @@
     <div class="grid grid--4">
       {% for s in siblings %}
       <article class="card">
-        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
+        <div class="card__icon" aria-hidden="true">{% icon 'plus' %}</div>
         <h3>{{ s.name }}</h3>
         <p>{{ s.summary }}</p>
-        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>

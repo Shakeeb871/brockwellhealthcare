@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -9,7 +9,7 @@
       <a href="{% rurl 'services:list' %}">Services</a> /
       <span>{{ category.name }}</span>
     </nav>
-    <h1>{{ category.icon }} {{ category.name }}</h1>
+    <h1><span class="head-ico">{% category_icon category.slug %}</span>{{ category.name }}</h1>
     <p class="muted" style="max-width:64ch">{{ category.summary }}</p>
   </div>
 </div>
@@ -26,11 +26,11 @@
     <div class="grid grid--3">
       {% for s in services %}
       <article class="card">
-        <div class="card__icon" aria-hidden="true">{{ s.icon }}</div>
+        <div class="card__icon" aria-hidden="true">{% icon 'plus' %}</div>
         <h3>{{ s.name }}</h3>
         <p>{{ s.summary }}</p>
         {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
-        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more →</a>
+        <a class="card__link" href="{{ s.get_absolute_url }}">Learn more {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>

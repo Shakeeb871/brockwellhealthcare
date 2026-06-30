@@ -1,4 +1,4 @@
-{% load region_tags static %}
+{% load region_tags static icons %}
 <header class="site-header">
   <div class="container site-header__inner">
     <a class="brand" href="{% rurl 'core:home' %}" aria-label="{{ BRAND_NAME }} home">
@@ -20,7 +20,7 @@
             {% for cat in nav_categories %}
             <div class="mega__col">
               <div class="mega__colhead">
-                <a class="mega__head" href="{{ cat.get_absolute_url }}">{{ cat.icon }} {{ cat.name }}</a>
+                <a class="mega__head" href="{{ cat.get_absolute_url }}">{% category_icon cat.slug 'mega-ico' %}{{ cat.name }}</a>
                 {% if cat.published_services %}
                 <button class="mega__toggle" data-mega-toggle aria-label="Show {{ cat.name }} services" aria-expanded="false">▾</button>
                 {% endif %}

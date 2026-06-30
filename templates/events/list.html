@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -21,9 +21,9 @@
         <span class="tag">{{ e.start|date:"d M Y · H:i" }}</span>
         <h3 style="margin-top:.8rem">{{ e.title }}</h3>
         <p>{{ e.summary }}</p>
-        <p class="muted" style="font-size:.9rem">📍 {{ e.location }}</p>
+        <p class="muted" style="font-size:.9rem">{% icon 'pin' 'ico-inline' %}{{ e.location }}</p>
         <p class="card__price">{% if e.is_free %}Free{% else %}{{ region.currency_symbol }} {{ e.price }}{% endif %}</p>
-        <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking →</a>
+        <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>

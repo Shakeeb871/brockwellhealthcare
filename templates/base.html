@@ -35,7 +35,7 @@
   <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
@@ -89,6 +89,36 @@
         }
       }
     });
+
+    // Animated count-up for stat counters (runs when scrolled into view).
+    (function () {
+      var nums = document.querySelectorAll('.stat__num[data-count]');
+      if (!nums.length) return;
+      function fmt(n) { return n.toLocaleString('en-US'); }
+      function run(el) {
+        var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+        var val = el.querySelector('.val');
+        var start = null, dur = 1600;
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3);
+          val.textContent = fmt(Math.floor(eased * target));
+          if (p < 1) requestAnimationFrame(step); else val.textContent = fmt(target);
+        }
+        requestAnimationFrame(step);
+      }
+      if (!('IntersectionObserver' in window)) { nums.forEach(run); return; }
+      // JS users: start from 0 and count up when scrolled into view.
+      // (No-JS users keep the real number already in the HTML.)
+      nums.forEach(function (n) { var v = n.querySelector('.val'); if (v) v.textContent = '0'; });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { run(en.target); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.4 });
+      nums.forEach(function (n) { io.observe(n); });
+    })();
   </script>
   {% block body_extra %}{% endblock %}
 </body>

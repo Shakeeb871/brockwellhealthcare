@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
 <div class="page-head">
@@ -25,7 +25,7 @@
         <p class="doctor-card__title">{{ d.title }}</p>
         {% if d.credentials %}<p class="muted" style="font-size:.85rem">{{ d.credentials }}</p>{% endif %}
         <p>{{ d.short_bio }}</p>
-        <a class="card__link" href="{{ d.get_absolute_url }}">View profile →</a>
+        <a class="card__link" href="{{ d.get_absolute_url }}">View profile {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>
