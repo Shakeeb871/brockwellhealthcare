@@ -16,34 +16,8 @@
   </div>
 </section>
 
-<!-- Services -->
-<section class="section">
-  <div class="container">
-    <div class="section__head">
-      <span class="eyebrow">Our Services</span>
-      <h2>Comprehensive regenerative care</h2>
-      <p>From regenerative wellness and medicine to longevity, aesthetics and advanced diagnostics — explore our full range of treatments.</p>
-    </div>
-    {% if categories %}
-    <div class="grid grid--3">
-      {% for c in categories %}
-      <article class="card">
-        <div class="card__icon" aria-hidden="true">{% category_icon c.slug %}</div>
-        <h3>{{ c.name }}</h3>
-        <p>{{ c.summary }}</p>
-        <a class="card__link" href="{{ c.get_absolute_url }}">Explore {% icon 'arrow' 'ico' %}</a>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="text-center mt-2"><a class="btn btn--ghost" href="{% rurl 'services:list' %}">View all services</a></div>
-    {% else %}
-    <p class="text-center muted">Our services will be listed here soon.</p>
-    {% endif %}
-  </div>
-</section>
-
-<!-- Home Care Services carousel -->
-{% include "partials/homecare.html" %}
+<!-- Our Services (paginated slider — 4 per page) -->
+{% include "partials/service_slider.html" %}
 
 <!-- Process -->
 <section class="section section--soft">

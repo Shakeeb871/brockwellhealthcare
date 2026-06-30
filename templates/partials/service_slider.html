@@ -1,0 +1,33 @@
+{% load region_tags icons %}
+{% if categories %}
+<section class="section svcgrid" aria-labelledby="svcgrid-title">
+  <div class="container">
+    <h2 id="svcgrid-title" class="svcgrid__title">Comprehensive regenerative care</h2>
+
+    <div class="svcgrid__row">
+      <div class="svcgrid__lead">
+        <span class="svcgrid__rule" aria-hidden="true"></span>
+        <p>From regenerative wellness and medicine to longevity, aesthetics and advanced diagnostics — explore our full range of main services.</p>
+      </div>
+      <a class="btn btn--ghost svcgrid__cta" href="{% rurl 'services:list' %}">View All Services</a>
+    </div>
+
+    <div class="svc-slider" data-svc-slider>
+      <ul class="svc-track" data-svc-track>
+        {% for c in categories %}
+        <li class="svc-card">
+          <article class="card">
+            <div class="card__icon" aria-hidden="true">{% category_icon c.slug %}</div>
+            <h3>{{ c.name }}</h3>
+            <p>{{ c.summary }}</p>
+            <a class="card__link" href="{{ c.get_absolute_url }}">Explore {% icon 'arrow' 'ico' %}</a>
+          </article>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="svc-bars" data-svc-bars role="tablist" aria-label="Service slides"></div>
+    </div>
+  </div>
+</section>
+{% endif %}

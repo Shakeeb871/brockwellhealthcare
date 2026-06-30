@@ -167,49 +167,73 @@
       });
     })();
 
-    // Home Care carousel: arrows, progress thumb, autoplay (pause on hover), swipe.
+    // Services slider: 4 cards per page, segmented bars below paginate (slide R→L).
     (function () {
-      var car = document.querySelector('[data-hc-carousel]');
-      if (!car) return;
-      var track = car.querySelector('[data-hc-track]');
-      var bar = car.parentNode.querySelector('[data-hc-bar]');
-      var prev = car.querySelector('[data-hc-prev]');
-      var next = car.querySelector('[data-hc-next]');
-      function step() {
-        var c = track.querySelector('.hc-card');
-        var gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap) || 24;
-        return c ? c.offsetWidth + gap : 300;
+      var slider = document.querySelector('[data-svc-slider]');
+      if (!slider) return;
+      var track = slider.querySelector('[data-svc-track]');
+      var bars = slider.querySelector('[data-svc-bars]');
+      var cards = Array.prototype.slice.call(track.querySelectorAll('.svc-card'));
+      if (!cards.length || !bars) return;
+
+      function perView() {
+        var w = window.innerWidth;
+        if (w <= 720) return 1;
+        if (w <= 1100) return 2;
+        return 4;
       }
-      function updateBar() {
-        if (!bar) return;
-        var max = track.scrollWidth - track.clientWidth;
-        var thumb = Math.max(14, (track.clientWidth / track.scrollWidth) * 100);
-        var p = max > 0 ? track.scrollLeft / max : 0;
-        bar.style.width = thumb + '%';
-        bar.style.marginLeft = (p * (100 - thumb)) + '%';
+      function pageCount() { return Math.ceil(cards.length / perView()); }
+      var page = 0;
+
+      function buildBars() {
+        bars.innerHTML = '';
+        var n = pageCount();
+        // A single page needs no pagination bar.
+        if (n <= 1) return;
+        for (var i = 0; i < n; i++) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'svc-bar';
+          b.setAttribute('data-page', i);
+          b.setAttribute('aria-label', 'Go to services slide ' + (i + 1));
+          bars.appendChild(b);
+        }
       }
-      if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
-      if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
-      track.addEventListener('scroll', updateBar, { passive: true });
-      window.addEventListener('resize', updateBar);
-      updateBar();
-      // autoplay
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var timer = null;
-      function play() {
-        if (reduce) return;
-        timer = setInterval(function () {
-          var max = track.scrollWidth - track.clientWidth;
-          if (track.scrollLeft >= max - 4) track.scrollTo({ left: 0, behavior: 'smooth' });
-          else track.scrollBy({ left: step(), behavior: 'smooth' });
-        }, 4000);
+      function markActive() {
+        Array.prototype.forEach.call(bars.children, function (b, i) {
+          b.classList.toggle('is-active', i === page);
+        });
       }
-      function stop() { if (timer) { clearInterval(timer); timer = null; } }
-      car.addEventListener('mouseenter', stop);
-      car.addEventListener('mouseleave', play);
-      car.addEventListener('focusin', stop);
-      car.addEventListener('focusout', play);
-      play();
+      function go(p) {
+        var n = pageCount();
+        page = Math.max(0, Math.min(p, n - 1));
+        var target = cards[page * perView()] || cards[cards.length - 1];
+        track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+        markActive();
+      }
+      bars.addEventListener('click', function (e) {
+        var b = e.target.closest('.svc-bar');
+        if (b) go(parseInt(b.getAttribute('data-page'), 10));
+      });
+      // Keep the active bar in sync when the user swipes/scrolls manually.
+      var raf;
+      track.addEventListener('scroll', function () {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function () {
+          var unit = track.scrollWidth / cards.length;
+          var idx = unit > 0 ? Math.round(track.scrollLeft / unit) : 0;
+          page = Math.max(0, Math.min(Math.floor(idx / perView()), pageCount() - 1));
+          markActive();
+        });
+      }, { passive: true });
+
+      var rt;
+      window.addEventListener('resize', function () {
+        clearTimeout(rt);
+        rt = setTimeout(function () { buildBars(); go(0); }, 150);
+      });
+      buildBars();
+      go(0);
     })();
   </script>
   {% block body_extra %}{% endblock %}
