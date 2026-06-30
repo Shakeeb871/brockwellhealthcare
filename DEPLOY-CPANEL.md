@@ -102,6 +102,23 @@ Visit **https://brockwellhealthcare.com/** — it should load and redirect to
 Handled automatically by WhiteNoise after `collectstatic` — no Apache rules
 needed. Re-run `collectstatic` and **Restart** whenever CSS/images change.
 
+## Auto-deploy (Cron — no terminal needed)
+Make the live site pull the latest code from GitHub automatically. In cPanel →
+**Cron Jobs**, add a job (e.g. every 10 minutes: `*/10 * * * *`) with this
+command (paths shown for user `carpente`, app `brockwellhealthcare`, Python
+3.11 — adjust if different):
+
+```
+( cd /home/carpente/brockwellhealthcare && git fetch -q origin main && git reset -q --hard origin/main && /home/carpente/virtualenv/brockwellhealthcare/3.11/bin/python manage.py migrate --noinput && /home/carpente/virtualenv/brockwellhealthcare/3.11/bin/python manage.py collectstatic --noinput && mkdir -p tmp && touch tmp/restart.txt ) >> /home/carpente/deploy.log 2>&1
+```
+
+It force-syncs the working tree to `origin/main` (so it never hits merge
+conflicts), runs migrations + collectstatic, and restarts Passenger by
+touching `tmp/restart.txt`. `.env`, `db.sqlite3`, `staticfiles/` and `media/`
+are git-ignored, so they are never touched. Progress/errors are logged to
+`~/deploy.log`. Content edited in the admin is live instantly and is
+unaffected by deploys.
+
 ## Updating the site later
 ```bash
 # in the Application root, with the venv activated:
