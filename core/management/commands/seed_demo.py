@@ -103,16 +103,19 @@ DOCTORS = [
         "Dr. Sarah Al Mansoori", "Regenerative Medicine Specialist", "MD, PhD",
         "Leads our regenerative medicine programme with a focus on evidence-based, patient-centred care.",
         "Stem Cell Therapy\nRegenerative Orthopedics\nExosome Therapy",
+        "15+ years", "English, Arabic", True,
     ),
     (
         "Dr. James Carter", "Longevity & Functional Medicine Physician", "MD, IFMCP",
         "Specialises in longevity and functional medicine, helping patients optimise healthspan.",
         "Longevity Medicine\nFunctional Medicine\nGenomics Medicine",
+        "20+ years", "English", True,
     ),
     (
         "Dr. Layla Hassan", "Aesthetic & Wellness Physician", "MBBS, MSc",
         "Combines aesthetic expertise with a holistic approach to wellness and natural rejuvenation.",
         "Anti-Aging Aesthetics\nPure Plasma\nIV & Wellness Therapies",
+        "12+ years", "English, Arabic, French", False,
     ),
 ]
 
@@ -216,12 +219,13 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(f"Seeded {n_cat} categories and {n_sub} sub-services."))
 
         # Doctors
-        for order, (name, title, creds, short_bio, specialties) in enumerate(DOCTORS, start=1):
+        for order, (name, title, creds, short_bio, specialties, experience, languages, available) in enumerate(DOCTORS, start=1):
             Doctor.objects.update_or_create(
                 region=REGION, slug=slugify(name),
                 defaults={
                     "name": name, "title": title, "credentials": creds, "short_bio": short_bio,
                     "specialties": specialties, "order": order, "is_published": True,
+                    "experience": experience, "languages": languages, "available_today": available,
                     "full_bio": (
                         f"{short_bio}\n\n"
                         f"{name} is part of the multidisciplinary team at Brockwell Healthcare, dedicated "

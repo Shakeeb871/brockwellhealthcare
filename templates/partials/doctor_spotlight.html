@@ -1,0 +1,83 @@
+{% load region_tags icons %}
+{% if doctors %}
+<section class="section spotlight" aria-labelledby="spotlight-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Our Specialists</span>
+      <h2 id="spotlight-title">Meet Our Specialists</h2>
+      <p>Expert care led by trusted medical professionals.</p>
+    </div>
+
+    <div class="spotlight__grid">
+
+      {# ---------- Left: doctor selector ---------- #}
+      <div class="spotlight__selector" role="tablist" aria-label="Select a specialist">
+        {% for d in doctors %}
+        <button type="button" class="docchip{% if forloop.first %} is-active{% endif %}"
+                role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-controls="docpanel-{{ forloop.counter0 }}" data-index="{{ forloop.counter0 }}">
+          <span class="docchip__avatar">
+            {% if d.photo %}<img src="{{ d.photo }}" alt="" loading="lazy">{% else %}<span aria-hidden="true">{{ d.initials }}</span>{% endif %}
+          </span>
+          <span class="docchip__meta">
+            <b>{{ d.name }}</b>
+            <small>{{ d.title }}</small>
+          </span>
+        </button>
+        {% endfor %}
+      </div>
+
+      {# ---------- Right: spotlight stage ---------- #}
+      <div class="spotlight__stage">
+        <div class="spotlight__bar">
+          <span class="spotlight__count"><b data-spot-current>01</b> <span>/ {{ doctors|length|stringformat:"02d" }} Specialists</span></span>
+          <div class="spotlight__arrows">
+            <button type="button" class="spot-arrow" data-spot-prev aria-label="Previous specialist">{% icon 'chevron-left' %}</button>
+            <button type="button" class="spot-arrow" data-spot-next aria-label="Next specialist">{% icon 'chevron' %}</button>
+          </div>
+        </div>
+
+        {% for d in doctors %}
+        <article class="docpanel{% if forloop.first %} is-active{% endif %}" id="docpanel-{{ forloop.counter0 }}"
+                 role="tabpanel" data-index="{{ forloop.counter0 }}" aria-label="{{ d.name }}">
+          <div class="docpanel__media">
+            {% if d.photo %}
+              <img src="{{ d.photo }}" alt="{{ d.name }}, {{ d.title }}" {% if not forloop.first %}loading="lazy"{% endif %}>
+            {% else %}
+              <span class="avatar avatar--xl" aria-hidden="true">{{ d.initials }}</span>
+            {% endif %}
+            {% if d.available_today %}<span class="badge-avail"><span class="dot"></span>Available Today</span>{% endif %}
+            {% for t in d.specialty_list|slice:":2" %}
+            <span class="float-tag float-tag--{{ forloop.counter }}">{{ t }}</span>
+            {% endfor %}
+          </div>
+
+          <div class="docpanel__body">
+            <h3>{{ d.name }}</h3>
+            <p class="docpanel__role">{{ d.title }}{% if d.credentials %} · {{ d.credentials }}{% endif %}</p>
+
+            <div class="docpanel__facts">
+              {% if d.experience %}<span>{% icon 'award' 'ico' %} {{ d.experience }} experience</span>{% endif %}
+              {% if d.languages %}<span>{% icon 'globe' 'ico' %} {{ d.languages }}</span>{% endif %}
+            </div>
+
+            <p class="docpanel__bio">{{ d.short_bio }}</p>
+
+            {% if d.specialty_list %}
+            <div class="docpanel__tags">
+              {% for t in d.specialty_list %}<span class="pill-tag">{{ t }}</span>{% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="docpanel__cta">
+              <a class="btn btn--ghost" href="{{ d.get_absolute_url }}">View Profile</a>
+              <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book Appointment</a>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

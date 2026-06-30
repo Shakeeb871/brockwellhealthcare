@@ -130,6 +130,42 @@
         timer = setTimeout(function () { hm.classList.remove('is-open'); }, 240);
       });
     })();
+
+    // Doctor Spotlight: click a chip / use arrows to switch the active doctor.
+    (function () {
+      var root = document.querySelector('.spotlight');
+      if (!root) return;
+      var chips = Array.prototype.slice.call(root.querySelectorAll('.docchip'));
+      var panels = Array.prototype.slice.call(root.querySelectorAll('.docpanel'));
+      var counter = root.querySelector('[data-spot-current]');
+      var total = panels.length;
+      if (!total) return;
+      var i = 0;
+      function show(n) {
+        n = (n % total + total) % total;
+        chips.forEach(function (c, idx) {
+          var on = idx === n;
+          c.classList.toggle('is-active', on);
+          c.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        panels.forEach(function (p, idx) { p.classList.toggle('is-active', idx === n); });
+        if (counter) counter.textContent = ('0' + (n + 1)).slice(-2);
+        i = n;
+        chips[n].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      }
+      chips.forEach(function (c) {
+        c.addEventListener('click', function () { show(parseInt(c.getAttribute('data-index'), 10)); });
+      });
+      var prev = root.querySelector('[data-spot-prev]');
+      var next = root.querySelector('[data-spot-next]');
+      if (prev) prev.addEventListener('click', function () { show(i - 1); });
+      if (next) next.addEventListener('click', function () { show(i + 1); });
+      var selector = root.querySelector('.spotlight__selector');
+      if (selector) selector.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); show(i + 1); chips[i].focus(); }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); show(i - 1); chips[i].focus(); }
+      });
+    })();
   </script>
   {% block body_extra %}{% endblock %}
 </body>

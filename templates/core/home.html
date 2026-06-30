@@ -132,30 +132,8 @@
 </section>
 {% endif %}
 
-<!-- Team preview -->
-{% if doctors %}
-<section class="section">
-  <div class="container">
-    <div class="section__head">
-      <span class="eyebrow">Our Team</span>
-      <h2>Care from experienced specialists</h2>
-      <p>Our multidisciplinary team brings together leading expertise in regenerative medicine and longevity.</p>
-    </div>
-    <div class="grid grid--4">
-      {% for d in doctors %}
-      <article class="doctor-card">
-        <a href="{{ d.get_absolute_url }}" class="doctor-card__media" aria-label="{{ d.name }}">
-          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy">{% else %}<span class="avatar">{{ d.initials }}</span>{% endif %}
-        </a>
-        <h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
-        <p class="doctor-card__title">{{ d.title }}</p>
-      </article>
-      {% endfor %}
-    </div>
-    <div class="text-center mt-2"><a class="btn btn--ghost" href="{% rurl 'team:list' %}">Meet the full team</a></div>
-  </div>
-</section>
-{% endif %}
+<!-- Doctor Spotlight -->
+{% include "partials/doctor_spotlight.html" %}
 
 <!-- FAQ -->
 {% if faqs %}

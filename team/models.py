@@ -16,6 +16,15 @@ class Doctor(TimeStamped):
     credentials = models.CharField(
         max_length=160, blank=True, help_text="e.g. 'MD, PhD, FRCS'."
     )
+    experience = models.CharField(
+        max_length=60, blank=True, help_text="e.g. '15+ years'."
+    )
+    languages = models.CharField(
+        max_length=120, blank=True, help_text="e.g. 'English, Arabic'."
+    )
+    available_today = models.BooleanField(
+        default=False, help_text="Show an 'Available Today' badge."
+    )
     photo = models.CharField(
         max_length=300, blank=True,
         help_text="Optional image URL/path. Leave blank to show initials avatar.",

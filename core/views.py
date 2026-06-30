@@ -23,7 +23,7 @@ def home(request):
     categories = ServiceCategory.objects.filter(region=code, is_published=True)[:6]
     events = Event.objects.filter(region=code, is_published=True).order_by("start")
     upcoming = [e for e in events if e.is_upcoming][:3]
-    doctors = Doctor.objects.filter(region=code, is_published=True)[:4]
+    doctors = Doctor.objects.filter(region=code, is_published=True)[:20]
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
 
     meta = seo.build_meta(
