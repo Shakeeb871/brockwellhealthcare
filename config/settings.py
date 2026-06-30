@@ -183,7 +183,7 @@ BRAND_NAME = os.getenv("BRAND_NAME", "Brockwell Healthcare")
 BRAND_TAGLINE = os.getenv(
     "BRAND_TAGLINE", "Advanced Regenerative & Stem Cell Therapies"
 )
-SITE_DOMAIN = os.getenv("SITE_DOMAIN", "yourbrand.com")
+SITE_DOMAIN = os.getenv("SITE_DOMAIN", "brockwellhealthcare.com")
 DEFAULT_OG_IMAGE = "img/og-default.svg"
 
 # Region configuration. UAE is live now; US is reserved and plugs in later
@@ -199,11 +199,9 @@ REGIONS = {
         "currency_symbol": "AED",
         "stripe_currency": "aed",
         "locale": "en-AE",
-        "phone": os.getenv("UAE_PHONE", "+971 4 000 0000"),
-        "email": os.getenv("UAE_EMAIL", "hello@yourbrand.com"),
-        "address": os.getenv(
-            "UAE_ADDRESS", "Dubai Healthcare City, Dubai, United Arab Emirates"
-        ),
+        "phone": os.getenv("UAE_PHONE", "+971 50 193 1763"),
+        "email": os.getenv("UAE_EMAIL", "info@brockwellhealthcare.com"),
+        "address": os.getenv("UAE_ADDRESS", "Dubai, United Arab Emirates"),
     },
     "us": {
         "code": "us",
@@ -215,7 +213,7 @@ REGIONS = {
         "stripe_currency": "usd",
         "locale": "en-US",
         "phone": os.getenv("US_PHONE", "+1 000 000 0000"),
-        "email": os.getenv("US_EMAIL", "hello@yourbrand.com"),
+        "email": os.getenv("US_EMAIL", "info@brockwellhealthcare.com"),
         "address": os.getenv("US_ADDRESS", "United States"),
     },
 }
