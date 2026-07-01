@@ -15,11 +15,16 @@ class PageSectionInline(SortableInlineAdminMixin, admin.StackedInline):
         "kind", "background", "eyebrow", "heading", "body", "items",
         "image", "button_text", "button_url", "is_published",
     )
-    verbose_name = "Page section"
-    verbose_name_plural = "Page sections — drag to reorder (shown below the main content)"
+    verbose_name = "Content block"
+    verbose_name_plural = "Content blocks — drag to reorder (this IS the page content)"
 
     class Media:
         js = ("admin/js/pagesection_fields.js",)
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "body":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 class RichDescriptionMixin:
@@ -56,7 +61,7 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
 
 
 @admin.register(Service)
-class ServiceAdmin(RichDescriptionMixin, SortableAdminBase, admin.ModelAdmin):
+class ServiceAdmin(SortableAdminBase, admin.ModelAdmin):
     list_display = ("name", "category", "region", "price", "order", "is_published")
     list_filter = ("region", "category", "is_published")
     search_fields = ("name", "summary", "description")
@@ -64,8 +69,7 @@ class ServiceAdmin(RichDescriptionMixin, SortableAdminBase, admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     inlines = [PageSectionInline, FAQItemInline]
     fieldsets = (
-        (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
-        ("Content", {"fields": ("description", "benefits", "price")}),
+        (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "price", "order", "is_published")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
         ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
     )

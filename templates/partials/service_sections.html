@@ -1,7 +1,7 @@
 {% load static icons region_tags %}
-{% comment %} Renders a service's reorderable page-builder sections. Expects
-`sections` (published PageSection list), plus `faqs` and `patient_reviews`
-in context for the faq/reviews blocks. {% endcomment %}
+{% comment %} Renders a service's ordered content blocks (the whole page body).
+Context: `sections` (published PageSection list), `service`, `form`,
+`faqs`, `patient_reviews`. {% endcomment %}
 {% for sec in sections %}
 
 {% if sec.kind == "reviews" %}
@@ -11,20 +11,24 @@ in context for the faq/reviews blocks. {% endcomment %}
 <section class="section psec{% if sec.background == 'soft' %} section--soft{% elif sec.background == 'dark' %} section--dark{% endif %}">
   <div class="container">
 
-    {% if sec.kind == "text" or sec.kind == "treatments" or sec.kind == "counters" or sec.kind == "why" or sec.kind == "brands" %}
-      {% if sec.eyebrow or sec.heading %}
-      <header class="section__head">
-        {% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}
-        {% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}
-      </header>
-      {% endif %}
-    {% endif %}
-
     {% if sec.kind == "text" %}
-      {% if sec.body %}<div class="prose psec__body">{{ sec.body|linebreaks }}</div>{% endif %}
-      {% if sec.image %}<img class="psec__img" src="{{ sec.image.url }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% endif %}
+      <div class="psec__narrow">
+        {% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}
+        {% if sec.heading %}<h2 class="psec__title">{{ sec.heading }}</h2>{% endif %}
+        {% if sec.body %}<div class="prose">{{ sec.body|safe }}</div>{% endif %}
+        {% if sec.image %}<img class="psec__img" src="{{ sec.image.url }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% endif %}
+      </div>
+
+    {% elif sec.kind == "benefits" %}
+      <div class="psec__narrow">
+        {% if sec.heading %}<h2 class="psec__title">{{ sec.heading }}</h2>{% endif %}
+        <ul class="checklist">
+          {% for row in sec.item_rows %}<li>{{ row.0 }}</li>{% endfor %}
+        </ul>
+      </div>
 
     {% elif sec.kind == "treatments" %}
+      {% if sec.eyebrow or sec.heading %}<header class="section__head">{% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}{% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}</header>{% endif %}
       <div class="grid grid--3">
         {% for s in sec.service.category.published_services %}
         <article class="card">
@@ -37,6 +41,7 @@ in context for the faq/reviews blocks. {% endcomment %}
       </div>
 
     {% elif sec.kind == "counters" %}
+      {% if sec.eyebrow or sec.heading %}<header class="section__head">{% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}{% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}</header>{% endif %}
       <ul class="impact__grid" role="list">
         {% for row in sec.item_rows %}
         <li class="impact-stat" data-impact data-value="{{ row.0 }}" data-decimals="{% if '.' in row.0 %}1{% else %}0{% endif %}" data-ring="86">
@@ -55,7 +60,8 @@ in context for the faq/reviews blocks. {% endcomment %}
       </ul>
 
     {% elif sec.kind == "why" %}
-      {% if sec.body %}<div class="prose psec__lead">{{ sec.body|linebreaks }}</div>{% endif %}
+      {% if sec.eyebrow or sec.heading %}<header class="section__head">{% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}{% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}</header>{% endif %}
+      {% if sec.body %}<div class="prose psec__lead psec__narrow">{{ sec.body|safe }}</div>{% endif %}
       <div class="why-grid">
         {% for row in sec.item_rows %}
         <article class="why-card">
@@ -70,6 +76,7 @@ in context for the faq/reviews blocks. {% endcomment %}
       {% include "partials/faqs.html" %}
 
     {% elif sec.kind == "brands" %}
+      {% if sec.eyebrow or sec.heading %}<header class="section__head">{% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}{% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}</header>{% endif %}
       <div class="brand-strip">
         {% for n in "123456"|make_list %}
         <img class="brand-strip__logo" src="{% static 'img/'|add:n|add:'.svg' %}" alt="Accreditation logo" loading="lazy">
@@ -79,8 +86,29 @@ in context for the faq/reviews blocks. {% endcomment %}
     {% elif sec.kind == "cta" %}
       <div class="cta-band">
         {% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}
-        {% if sec.body %}<p>{{ sec.body }}</p>{% endif %}
+        {% if sec.body %}<div class="cta-band__body">{{ sec.body|safe }}</div>{% endif %}
         {% if sec.button_text %}<div class="mt-1"><a class="btn btn--light btn--lg" href="{{ sec.button_url|default:'#' }}">{{ sec.button_text }}</a></div>{% endif %}
+      </div>
+
+    {% elif sec.kind == "booking" %}
+      <div class="card booking psec-booking">
+        <div class="booking__head">
+          <span class="booking__ico" aria-hidden="true">{% icon 'calendar' %}</span>
+          <div>
+            <h3>{{ sec.heading|default:"Book A Consultation" }}</h3>
+            <p>Request an appointment for {{ service.name }}.</p>
+          </div>
+        </div>
+        <form class="form booking__form" method="post" action="{{ service.get_absolute_url }}" novalidate>
+          {% csrf_token %}
+          {{ form.website }}
+          <div class="field"><label for="{{ form.name.id_for_label }}">Full name</label>{{ form.name }}{{ form.name.errors }}</div>
+          <div class="field"><label for="{{ form.email.id_for_label }}">Email</label>{{ form.email }}{{ form.email.errors }}</div>
+          <div class="field"><label for="{{ form.phone.id_for_label }}">Phone</label>{{ form.phone }}{{ form.phone.errors }}</div>
+          <div class="field"><label for="{{ form.message.id_for_label }}">Message</label>{{ form.message }}{{ form.message.errors }}</div>
+          <button class="btn btn--primary booking__submit" type="submit">Request Appointment {% icon 'arrow' %}</button>
+        </form>
+        <p class="booking__note">{% icon 'phone' %} Prefer to talk? <a href="tel:{{ region.phone }}">{{ region.phone }}</a></p>
       </div>
     {% endif %}
 

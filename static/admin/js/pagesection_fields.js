@@ -8,13 +8,15 @@
   // Which toggleable fields are relevant for each section kind.
   var MAP = {
     text:       ["eyebrow", "heading", "body", "image"],
+    benefits:   ["heading", "items"],
     treatments: ["eyebrow", "heading"],
     counters:   ["eyebrow", "heading", "items"],
     why:        ["eyebrow", "heading", "body", "items"],
     faq:        [],
     reviews:    [],
     brands:     ["eyebrow", "heading"],
-    cta:        ["heading", "body", "button_text", "button_url"]
+    cta:        ["heading", "body", "button_text", "button_url"],
+    booking:    ["heading", "body"]
   };
   // All fields that can be shown/hidden (everything else is always visible).
   var TOGGLE = ["eyebrow", "heading", "body", "items", "image", "button_text", "button_url"];

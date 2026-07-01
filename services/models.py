@@ -115,7 +115,8 @@ class PageSection(TimeStamped):
     """
 
     KIND_CHOICES = [
-        ("text", "Text / rich content"),
+        ("text", "Rich text / content"),
+        ("benefits", "Key benefits (checklist)"),
         ("treatments", "Our treatments (cards from this category)"),
         ("counters", "Counters / statistics"),
         ("why", "Why choose us"),
@@ -123,6 +124,7 @@ class PageSection(TimeStamped):
         ("reviews", "Patient reviews slider"),
         ("brands", "Accreditations / brand logos"),
         ("cta", "Call-to-action band"),
+        ("booking", "Booking / consultation form"),
     ]
     BACKGROUND_CHOICES = [
         ("light", "White"),
@@ -139,8 +141,9 @@ class PageSection(TimeStamped):
     items = models.TextField(
         blank=True,
         help_text=(
-            "One item per line. • Counters: 'value | suffix | label' (e.g. 500 | + | Patients "
-            "Treated). • Why choose us: 'title | description'. Not needed for other types."
+            "One item per line. • Key benefits: just the benefit text. • Counters: "
+            "'value | suffix | label' (e.g. 500 | + | Patients Treated). • Why choose us: "
+            "'title | description'. Not needed for other types."
         ),
     )
     button_text = models.CharField(max_length=60, blank=True)

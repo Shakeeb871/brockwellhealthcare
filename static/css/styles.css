@@ -350,9 +350,15 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .section--dark .card, .section--dark .why-card { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
 .section--dark .why-card__ico { background: rgba(255,255,255,.12); color: #bfe3c4; }
 .section--dark .impact-stat__num, .section--dark .impact-stat__label { color: #fff; }
-.psec__body, .psec__lead { max-width: 760px; }
-.psec__lead { margin-bottom: 2rem; }
-.psec__img { display: block; width: 100%; max-width: 900px; border-radius: var(--radius); margin-top: 1.4rem; }
+.psec__narrow { max-width: 760px; margin-inline: auto; }
+.psec__title { margin: 0 0 1rem; }
+.psec__narrow .eyebrow { display: block; margin-bottom: .5rem; }
+.psec__lead { margin-bottom: 2rem; text-align: center; }
+.psec__img { display: block; width: 100%; max-width: 900px; border-radius: var(--radius); margin: 1.4rem auto 0; }
+.cta-band__body { color: #fff; }
+.cta-band__body p { color: rgba(255,255,255,.92); margin: 0; }
+/* Booking block (page-builder) — centred card. */
+.psec-booking { max-width: 620px; margin-inline: auto; }
 
 .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; }
 .why-card {
