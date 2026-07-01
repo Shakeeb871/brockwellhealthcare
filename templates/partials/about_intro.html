@@ -1,4 +1,4 @@
-{% load region_tags icons %}
+{% load region_tags icons static %}
 {% comment %}
 About / Medical Center Introduction — reusable home section.
 Image areas are sage placeholders with a medical icon; to use a real photo,
@@ -87,12 +87,19 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
       </div>
     </div>
 
-    {# ---------- 3. Partner / logo strip ---------- #}
+    {# ---------- 3. Partner / brand-logo strip ---------- #}
+    {# Shows the logo image; if the file is missing it falls back to an icon + name. #}
     <ul class="about__partners" aria-label="Our partners">
       {% for p in about_partners %}
       <li class="about__partner">
-        <span class="about__partner-ic" aria-hidden="true">{% icon p.icon %}</span>
-        <span class="about__partner-name">{{ p.name }}</span>
+        {% if p.logo %}
+        <img class="about__partner-logo" src="{% static p.logo %}" alt="{{ p.name }}" loading="lazy"
+             onerror="this.closest('.about__partner').classList.add('no-logo')">
+        {% endif %}
+        <span class="about__partner-fallback">
+          <span class="about__partner-ic" aria-hidden="true">{% icon p.icon %}</span>
+          <span class="about__partner-name">{{ p.name }}</span>
+        </span>
       </li>
       {% endfor %}
     </ul>

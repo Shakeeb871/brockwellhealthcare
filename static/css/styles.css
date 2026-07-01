@@ -933,6 +933,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   filter: grayscale(1); opacity: .7; transition: filter .25s ease, opacity .25s ease, color .25s ease;
 }
 .about__partner:hover { filter: grayscale(0); opacity: 1; color: var(--teal-600); }
+/* Brand logo image (shown when the file exists). */
+.about__partner-logo { max-height: 48px; width: auto; max-width: 150px; object-fit: contain; display: block; }
+/* Icon + name fallback (shown only when the logo image fails to load). */
+.about__partner-fallback { display: none; align-items: center; gap: .6rem; }
+.about__partner.no-logo .about__partner-logo { display: none; }
+.about__partner.no-logo .about__partner-fallback { display: inline-flex; }
 .about__partner-ic { display: grid; place-items: center; color: var(--teal-600); }
 .about__partner-ic svg { width: 26px; height: 26px; }
 

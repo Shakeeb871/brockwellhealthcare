@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.staticfiles import finders
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
@@ -29,12 +30,16 @@ ABOUT_STATS = [
     {"value": 95, "label": "Medical Success"},
     {"value": 100, "label": "Client Referral"},
 ]
+# Partner/brand logos shown in the About section. Put the 6 logo files in
+# static/img/ named brand-1.png … brand-6.png (any image type works — just
+# match the path). If a file is missing, a fallback icon + name is shown.
 ABOUT_PARTNERS = [
-    {"name": "HealthCare", "icon": "plus"},
-    {"name": "Applo Medic", "icon": "stethoscope"},
-    {"name": "Infi-Health", "icon": "heart"},
-    {"name": "Medicalo", "icon": "shield"},
-    {"name": "HealthyLife", "icon": "leaf"},
+    {"name": "Partner 1", "logo": "img/brand-1.png", "icon": "plus"},
+    {"name": "Partner 2", "logo": "img/brand-2.png", "icon": "stethoscope"},
+    {"name": "Partner 3", "logo": "img/brand-3.png", "icon": "heart"},
+    {"name": "Partner 4", "logo": "img/brand-4.png", "icon": "shield"},
+    {"name": "Partner 5", "logo": "img/brand-5.png", "icon": "leaf"},
+    {"name": "Partner 6", "logo": "img/brand-6.png", "icon": "microscope"},
 ]
 
 # Dummy stats for the circular "Our Impact" counters. Placeholder values only —
@@ -142,6 +147,16 @@ NEWS_ARTICLES = [
 ]
 
 
+def _partners_with_logos():
+    """Only reference a logo file if it actually exists (avoids a manifest
+    error in production for logos that haven't been uploaded yet)."""
+    out = []
+    for p in ABOUT_PARTNERS:
+        logo = p["logo"] if finders.find(p["logo"]) else ""
+        out.append({**p, "logo": logo})
+    return out
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -178,7 +193,7 @@ def home(request):
             "faqs": faqs,
             "about_features": ABOUT_FEATURES,
             "about_stats": ABOUT_STATS,
-            "about_partners": ABOUT_PARTNERS,
+            "about_partners": _partners_with_logos(),
             "impact_stats": IMPACT_STATS,
             "process_steps": PROCESS_STEPS,
             "patient_reviews": PATIENT_REVIEWS,
