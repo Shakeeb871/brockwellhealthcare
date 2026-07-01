@@ -1,48 +1,69 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> /
-      <a href="{% rurl 'team:list' %}">Our Team</a> /
-      <span>{{ doctor.name }}</span>
-    </nav>
+<section class="doc-hero">
+  <div class="container doc-hero__inner">
+    <div class="doc-hero__photo">
+      {% if doctor.photo %}<img src="{{ doctor.photo }}" alt="{{ doctor.name }}">{% else %}<span class="doc-hero__initials">{{ doctor.initials }}</span>{% endif %}
+      {% if doctor.available_today %}<span class="doc-hero__badge">{% icon 'check' %} Available Today</span>{% endif %}
+    </div>
+
+    <div class="doc-hero__info">
+      <nav class="page-hero__crumbs" aria-label="Breadcrumb">
+        <a href="{% rurl 'core:home' %}">Home</a>
+        <span class="page-hero__sep" aria-hidden="true">/</span>
+        <a href="{% rurl 'team:list' %}">Our Team</a>
+        <span class="page-hero__sep" aria-hidden="true">/</span>
+        <span aria-current="page">{{ doctor.name }}</span>
+      </nav>
+
+      <h1 class="doc-hero__name">{{ doctor.name }}</h1>
+      <p class="doc-hero__title">{{ doctor.title }}</p>
+      {% if doctor.credentials %}<p class="doc-hero__cred">{{ doctor.credentials }}</p>{% endif %}
+
+      {% if doctor.experience or doctor.languages %}
+      <ul class="doc-hero__meta">
+        {% if doctor.experience %}<li>{% icon 'award' %}<span>{{ doctor.experience }} experience</span></li>{% endif %}
+        {% if doctor.languages %}<li>{% icon 'globe' %}<span>{{ doctor.languages }}</span></li>{% endif %}
+      </ul>
+      {% endif %}
+
+      <div class="doc-hero__actions">
+        <a class="btn btn--light" href="{% rurl 'core:contact' %}">Book an Appointment</a>
+        <a class="btn btn--outline-light" href="tel:{{ region.phone }}">{% icon 'phone' %} {{ region.phone }}</a>
+      </div>
+    </div>
   </div>
-</div>
+</section>
 
 <section class="section">
-  <div class="container split" style="align-items:flex-start">
+  <div class="container doc-layout">
     <div>
-      <div class="doctor-profile">
-        <div class="doctor-profile__media">
-          {% if doctor.photo %}<img src="{{ doctor.photo }}" alt="{{ doctor.name }}">{% else %}<span class="avatar avatar--xl">{{ doctor.initials }}</span>{% endif %}
-        </div>
-        <div>
-          <h1>{{ doctor.name }}</h1>
-          <p class="doctor-card__title">{{ doctor.title }}</p>
-          {% if doctor.credentials %}<p class="muted">{{ doctor.credentials }}</p>{% endif %}
-        </div>
-      </div>
-
-      <article class="prose mt-2">
+      <div class="section__head"><span class="eyebrow">Biography</span><h2>About {{ doctor.name }}</h2></div>
+      <article class="prose">
         {% for para in doctor.bio_paragraphs %}<p>{{ para }}</p>{% endfor %}
       </article>
     </div>
 
-    <aside>
+    <aside class="doc-aside">
       {% if doctor.specialty_list %}
       <div class="card">
-        <h3>Areas of expertise</h3>
+        <h3>Areas of Expertise</h3>
         <ul class="checklist">
           {% for s in doctor.specialty_list %}<li>{{ s }}</li>{% endfor %}
         </ul>
       </div>
       {% endif %}
-      <div class="card mt-1">
-        <h3>Book with {{ doctor.name }}</h3>
-        <p class="muted">Request a consultation with our team.</p>
+
+      <div class="card doc-facts">
+        <h3>At a Glance</h3>
+        <dl>
+          <div><dt>Specialty</dt><dd>{{ doctor.title }}</dd></div>
+          {% if doctor.credentials %}<div><dt>Credentials</dt><dd>{{ doctor.credentials }}</dd></div>{% endif %}
+          {% if doctor.experience %}<div><dt>Experience</dt><dd>{{ doctor.experience }}</dd></div>{% endif %}
+          {% if doctor.languages %}<div><dt>Languages</dt><dd>{{ doctor.languages }}</dd></div>{% endif %}
+        </dl>
         <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
       </div>
     </aside>
@@ -53,14 +74,18 @@
 <section class="section section--soft">
   <div class="container">
     <div class="section__head"><span class="eyebrow">Our Team</span><h2>Other specialists</h2></div>
-    <div class="grid grid--3">
+    <div class="team-grid">
       {% for d in others %}
-      <article class="doctor-card">
-        <a href="{{ d.get_absolute_url }}" class="doctor-card__media" aria-label="{{ d.name }}">
-          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy">{% else %}<span class="avatar">{{ d.initials }}</span>{% endif %}
+      <article class="team-card">
+        <a href="{{ d.get_absolute_url }}" class="team-card__media" aria-label="{{ d.name }}">
+          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
         </a>
-        <h3><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
-        <p class="doctor-card__title">{{ d.title }}</p>
+        <div class="team-card__body">
+          <h3 class="team-card__name"><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
+          {% if d.title %}<p class="team-card__title">{{ d.title }}</p>{% endif %}
+          <p class="team-card__bio">{{ d.short_bio }}</p>
+          <a class="card__link" href="{{ d.get_absolute_url }}">View Profile {% icon 'arrow' 'ico' %}</a>
+        </div>
       </article>
       {% endfor %}
     </div>
