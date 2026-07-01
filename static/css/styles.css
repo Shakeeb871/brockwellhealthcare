@@ -153,8 +153,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   color: var(--navy-800); font-weight: 500; font-size: .93rem;
   transition: background .2s ease, color .2s ease;
 }
-.navpill a:hover { color: var(--teal-600); }
-.navpill a.is-active { background: var(--teal-600); color: #fff; }
+.navpill a.is-active { background: var(--teal-600); color: var(--white); }
+/* Hover moves the green highlight to the hovered link... */
+.navpill a:hover { background: var(--teal-600); color: var(--white); }
+/* ...and the active link releases its highlight while another is hovered
+   (it returns to the active link as soon as the cursor leaves). */
+.navpill:hover a.is-active:not(:hover) { background: transparent; color: var(--navy-800); }
 
 /* Search box */
 .mainbar__right { display: inline-flex; align-items: center; gap: .6rem; }
