@@ -50,6 +50,23 @@ class RegionScopedAdminMixin:
             qs = qs.filter(**{self.region_lookup: code})
         return qs
 
+    def get_list_display(self, request):
+        """Drop the redundant region column inside a single-region panel."""
+        ld = super().get_list_display(request)
+        if self._region():
+            ld = tuple(f for f in ld if f != self.region_field and f != "region")
+        return ld
+
+    def get_list_filter(self, request):
+        """Drop any 'by region' filter so the other region is never even shown."""
+        lf = super().get_list_filter(request)
+        if self._region():
+            lf = tuple(
+                f for f in lf
+                if not (isinstance(f, str) and (f == self.region_lookup or f.endswith("region")))
+            )
+        return lf
+
     def get_fieldsets(self, request, obj=None):
         """Hide the region field — it is set automatically for this panel."""
         fieldsets = super().get_fieldsets(request, obj)
