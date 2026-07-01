@@ -7,42 +7,30 @@
 <section class="section">
   <div class="container">
     {% if categories %}
-    <div class="svc-grid">
+    <div class="svc-cats">
       {% for cat in categories %}
-      <article class="svc-cat">
-        <header class="svc-cat__head">
-          <span class="svc-cat__icon" aria-hidden="true">{% category_icon cat.slug %}</span>
-          <div>
-            <h2 class="svc-cat__title"><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></h2>
-            {% if cat.summary %}<p class="svc-cat__summary">{{ cat.summary }}</p>{% endif %}
-          </div>
-        </header>
+      <article class="svc-band">
+        <div class="svc-band__aside">
+          <span class="svc-band__icon" aria-hidden="true">{% category_icon cat.slug %}</span>
+          <h2 class="svc-band__title"><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></h2>
+          {% if cat.summary %}<p class="svc-band__summary">{{ cat.summary }}</p>{% endif %}
+          <a class="svc-band__link" href="{{ cat.get_absolute_url }}">Explore all {% icon 'arrow' %}</a>
+        </div>
         {% with subs=cat.published_services %}
         {% if subs %}
-        <ul class="svc-cat__list">
+        <div class="svc-band__services">
           {% for s in subs %}
-          <li><a href="{{ s.get_absolute_url }}"><span>{{ s.name }}</span>{% icon 'arrow' 'svc-cat__arrow' %}</a></li>
+          <a class="svc-pill" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
           {% endfor %}
-        </ul>
+        </div>
         {% endif %}
         {% endwith %}
-        <a class="svc-cat__all" href="{{ cat.get_absolute_url }}">Explore {{ cat.name }} {% icon 'arrow' %}</a>
       </article>
       {% endfor %}
     </div>
     {% else %}
     <p class="text-center muted">Services are being added. Please check back soon or <a href="{% rurl 'core:contact' %}">contact us</a>.</p>
     {% endif %}
-  </div>
-</section>
-
-<section class="section section--soft">
-  <div class="container">
-    <div class="cta-band">
-      <h2>Not sure which treatment is right for you?</h2>
-      <p>Book a consultation and our specialists will guide you.</p>
-      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation</a></div>
-    </div>
   </div>
 </section>
 {% endblock %}
