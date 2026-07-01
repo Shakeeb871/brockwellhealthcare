@@ -34,12 +34,12 @@ ABOUT_STATS = [
 # static/img/ named brand-1.png … brand-6.png (any image type works — just
 # match the path). If a file is missing, a fallback icon + name is shown.
 ABOUT_PARTNERS = [
-    {"name": "Partner 1", "logo": "img/brand-1.png", "icon": "plus"},
-    {"name": "Partner 2", "logo": "img/brand-2.png", "icon": "stethoscope"},
-    {"name": "Partner 3", "logo": "img/brand-3.png", "icon": "heart"},
-    {"name": "Partner 4", "logo": "img/brand-4.png", "icon": "shield"},
-    {"name": "Partner 5", "logo": "img/brand-5.png", "icon": "leaf"},
-    {"name": "Partner 6", "logo": "img/brand-6.png", "icon": "microscope"},
+    {"name": "Partner 1", "logo": "img/1.svg", "icon": "plus"},
+    {"name": "Partner 2", "logo": "img/2.svg", "icon": "stethoscope"},
+    {"name": "Partner 3", "logo": "img/3.svg", "icon": "heart"},
+    {"name": "Partner 4", "logo": "img/4.svg", "icon": "shield"},
+    {"name": "Partner 5", "logo": "img/5.svg", "icon": "leaf"},
+    {"name": "Partner 6", "logo": "img/6.svg", "icon": "microscope"},
 ]
 
 # Dummy stats for the circular "Our Impact" counters. Placeholder values only —
