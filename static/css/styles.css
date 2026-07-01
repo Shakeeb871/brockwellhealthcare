@@ -948,8 +948,8 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   opacity: .9; transition: opacity .25s ease, transform .25s ease, color .25s ease;
 }
 .about__partner:hover { opacity: 1; transform: translateY(-3px); color: var(--teal-600); }
-/* Brand logo image at a normal, professional size. */
-.about__partner-logo { height: 64px; width: auto; max-width: 190px; object-fit: contain; display: block; }
+/* Brand logo image. */
+.about__partner-logo { height: 150px; width: auto; max-width: 240px; object-fit: contain; display: block; }
 /* Icon + name fallback (shown only when the logo image fails to load). */
 .about__partner-fallback { display: none; align-items: center; gap: .6rem; }
 .about__partner.no-logo .about__partner-logo { display: none; }
