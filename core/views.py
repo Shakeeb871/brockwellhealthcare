@@ -162,26 +162,33 @@ def _partners_with_logos():
 # of the icon placeholder.
 FACILITIES = [
     {"title": "Regenerative Wellness", "icon": "leaf", "image": "",
-     "desc": "Personalised, science-led programmes that restore vitality and support your body’s natural ability to heal.",
-     "features": ["Comprehensive wellness assessment", "Cellular health optimisation", "Tailored recovery protocols", "Ongoing progress monitoring"]},
+     "desc": "Our personalised, science-led wellness programmes are designed to restore vitality and "
+             "support your body’s natural ability to heal. Every plan is built around your unique health "
+             "profile, so you receive care that is proactive, measurable and genuinely effective."},
     {"title": "Stem Cell Therapy", "icon": "dna", "image": "",
-     "desc": "Advanced regenerative treatments using evidence-based cellular therapies for lasting results.",
-     "features": ["Autologous cell preparation", "Targeted regenerative injections", "Joint & tissue repair", "Post-therapy care plan"]},
+     "desc": "We deliver advanced regenerative treatments using safe, evidence-based cellular therapies. "
+             "From joint and tissue repair to overall recovery, our specialists focus on lasting results "
+             "and a treatment journey that is comfortable and reassuring."},
     {"title": "Advanced Diagnostics", "icon": "microscope", "image": "",
-     "desc": "Precise imaging and laboratory analysis to map your health and guide every treatment decision.",
-     "features": ["Full biomarker panels", "Advanced imaging", "Genetic & metabolic profiling", "Detailed results consultation"]},
+     "desc": "Precise imaging and comprehensive laboratory analysis let us map your health in detail and "
+             "guide every treatment decision. This diagnostic clarity means your care is always targeted, "
+             "personalised and grounded in real data."},
     {"title": "Longevity & Healthspan", "icon": "clock", "image": "",
-     "desc": "Proactive, preventive care designed to extend healthy, active years and slow biological ageing.",
-     "features": ["Biological age testing", "Personalised longevity plan", "Nutrition & lifestyle coaching", "Continuous optimisation"]},
+     "desc": "Our proactive, preventive care is designed to extend your healthy, active years and slow "
+             "biological ageing. We combine testing, nutrition and lifestyle guidance into one clear plan "
+             "focused on long-term wellbeing."},
     {"title": "Aesthetic Medicine", "icon": "sparkles", "image": "",
-     "desc": "Natural, regenerative aesthetic treatments that rejuvenate the skin from within.",
-     "features": ["Skin regeneration therapy", "Collagen stimulation", "Non-surgical rejuvenation", "Tailored aesthetic plan"]},
+     "desc": "We offer natural, regenerative aesthetic treatments that rejuvenate the skin from within. "
+             "By stimulating your body’s own renewal processes, we help you look refreshed and confident "
+             "without an overdone appearance."},
     {"title": "Cellular Recovery", "icon": "heart", "image": "",
-     "desc": "Attentive recovery and rehabilitation support to help you heal safely and confidently.",
-     "features": ["Guided recovery pathway", "Physiotherapy support", "Pain & mobility management", "Follow-up monitoring"]},
+     "desc": "Our attentive recovery and rehabilitation support helps you heal safely and confidently. "
+             "A dedicated team guides every stage of your recovery, managing comfort and mobility so you "
+             "can return to the life you love."},
     {"title": "Specialist Consultation", "icon": "stethoscope", "image": "",
-     "desc": "One-to-one guidance from experienced clinicians to plan the right treatment for you.",
-     "features": ["Thorough medical review", "Honest, expert advice", "Personalised treatment plan", "Dedicated care team"]},
+     "desc": "Every journey begins with honest, one-to-one guidance from experienced clinicians. We take "
+             "the time to understand your history and goals, then design a personalised treatment plan "
+             "with a care team dedicated to your outcome."},
 ]
 
 

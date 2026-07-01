@@ -9,7 +9,6 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
 <section class="section facilities" aria-labelledby="fac-title">
   <div class="container">
     <header class="section__head">
-      <span class="fac__badge-top" aria-hidden="true">{% icon 'plus' %}</span>
       <span class="eyebrow">Medical Services</span>
       <h2 id="fac-title">What Facilities We Provide</h2>
     </header>
@@ -39,7 +38,6 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
             {% endif %}
           </figure>
           {% endfor %}
-          <span class="fac__badge">{% icon 'plus' %}</span>
         </div>
 
         <div class="fac__content">
@@ -49,12 +47,6 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
                    role="tabpanel" aria-label="{{ f.title }}">
             <h3 class="fac__card-title">{{ f.title }}</h3>
             <p class="fac__card-desc">{{ f.desc }}</p>
-            <ul class="fac__features">
-              {% for feat in f.features %}
-              <li><span class="fac__feat-dot" aria-hidden="true"></span>{{ feat }}</li>
-              {% endfor %}
-            </ul>
-            <a class="fac__link" href="{% rurl 'services:list' %}">Learn More {% icon 'arrow' 'ico' %}</a>
           </article>
           {% endfor %}
         </div>
