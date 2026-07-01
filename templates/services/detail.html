@@ -21,7 +21,8 @@
 
     <aside class="doc-aside">
       <div class="card svc-nav">
-        <h3>{{ category.name }}</h3>
+        <span class="svc-nav__eyebrow">In This Category</span>
+        <h3 class="svc-nav__title">{{ category.name }}</h3>
         <ul class="svc-nav__list">
           {% for s in category.published_services %}
           <li><a href="{{ s.get_absolute_url }}"{% if s.pk == service.pk %} class="is-active" aria-current="page"{% endif %}><span>{{ s.name }}</span>{% icon 'arrow' %}</a></li>
@@ -30,9 +31,14 @@
       </div>
 
       <div class="card booking">
-        <h3>Book a Consultation</h3>
-        <p class="muted">Request an appointment for {{ service.name }} and our team will be in touch.</p>
-        <form class="form" method="post" action="{{ service.get_absolute_url }}" novalidate>
+        <div class="booking__head">
+          <span class="booking__ico" aria-hidden="true">{% icon 'calendar' %}</span>
+          <div>
+            <h3>Book A Consultation</h3>
+            <p>Request an appointment for {{ service.name }}.</p>
+          </div>
+        </div>
+        <form class="form booking__form" method="post" action="{{ service.get_absolute_url }}" novalidate>
           {% csrf_token %}
           {{ form.website }}
           <div class="field">
@@ -51,8 +57,9 @@
             <label for="{{ form.message.id_for_label }}">Message</label>
             {{ form.message }}{{ form.message.errors }}
           </div>
-          <button class="btn btn--primary" type="submit">Request Appointment</button>
+          <button class="btn btn--primary booking__submit" type="submit">Request Appointment {% icon 'arrow' %}</button>
         </form>
+        <p class="booking__note">{% icon 'phone' %} Prefer to talk? <a href="tel:{{ region.phone }}">{{ region.phone }}</a></p>
       </div>
     </aside>
   </div>

@@ -990,21 +990,50 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .doc-aside { display: flex; flex-direction: column; gap: 1.25rem; }
 
 /* Service detail sidebar — sibling sub-service links (relevant to the category). */
-.svc-nav__list { list-style: none; margin: .3rem 0 0; padding: 0; display: flex; flex-direction: column; }
-.svc-nav__list li + li { border-top: 1px solid var(--line); }
+.svc-nav__eyebrow {
+  display: block; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+  font-weight: 700; color: var(--teal-600); margin-bottom: .25rem;
+}
+.svc-nav__title { margin: 0 0 .9rem; font-size: 1.15rem; padding-bottom: .9rem; border-bottom: 1px solid var(--line); }
+.svc-nav__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .15rem; }
 .svc-nav__list a {
   display: flex; align-items: center; justify-content: space-between; gap: .6rem;
-  padding: .62rem .1rem; color: var(--ink); text-decoration: none; font-size: .9rem; font-weight: 500;
-  transition: color .15s ease, padding-left .15s ease;
+  padding: .6rem .7rem; border-radius: 10px;
+  color: var(--ink); text-decoration: none; font-size: .9rem; font-weight: 500;
+  transition: background .15s ease, color .15s ease, padding-left .15s ease;
 }
 .svc-nav__list a svg { width: 14px; height: 14px; flex: none; opacity: 0; transform: translateX(-4px); transition: opacity .15s ease, transform .15s ease; }
-.svc-nav__list a:hover { color: var(--teal-600); padding-left: .4rem; }
+.svc-nav__list a:hover { background: var(--bg-soft); color: var(--teal-600); }
 .svc-nav__list a:hover svg { opacity: 1; transform: none; }
-.svc-nav__list a.is-active { color: var(--teal-600); font-weight: 700; }
+.svc-nav__list a.is-active {
+  background: var(--mint-50); color: var(--teal-600); font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--teal-600);
+}
 .svc-nav__list a.is-active svg { opacity: 1; transform: none; }
-.booking .form { margin-top: 1rem; }
-.booking .field { margin-bottom: .8rem; }
-.booking .btn { width: 100%; }
+
+/* Booking card — branded header + form. */
+.booking { padding: 0; overflow: hidden; }
+.booking__head {
+  display: flex; align-items: center; gap: .9rem; padding: 1.4rem 1.5rem;
+  background: linear-gradient(120deg, #0b2415 0%, #17492b 100%); color: #eaf3e6;
+}
+.booking__head h3 { margin: 0; color: #fff; font-size: 1.12rem; }
+.booking__head p { margin: .2rem 0 0; color: #cfe3cd; font-size: .82rem; line-height: 1.4; }
+.booking__ico {
+  flex: none; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  background: rgba(255,255,255,.12); color: #bfe3c4;
+}
+.booking__ico svg { width: 22px; height: 22px; }
+.booking__form { margin: 0; padding: 1.4rem 1.5rem .3rem; }
+.booking__form .field { margin-bottom: .85rem; }
+.booking__submit { width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: .45rem; }
+.booking__submit svg { width: 16px; height: 16px; }
+.booking__note {
+  margin: 0; padding: .1rem 1.5rem 1.4rem; display: flex; align-items: center; gap: .45rem;
+  font-size: .84rem; color: var(--slate-600);
+}
+.booking__note svg { width: 15px; height: 15px; flex: none; color: var(--teal-600); }
+.booking__note a { font-weight: 600; }
 .doc-facts dl { margin: 0 0 1.4rem; display: grid; gap: 0; }
 .doc-facts dl > div { display: grid; gap: .15rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .doc-facts dl > div:first-child { padding-top: 0; }
