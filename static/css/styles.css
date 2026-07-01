@@ -952,7 +952,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .journey .section__head { max-width: 720px; margin-inline: auto; }
 
 .journey__track {
-  --node: 152px;
+  --node: 96px;
   list-style: none; margin: 3rem 0 0; padding: 0;
   display: flex; align-items: flex-start; gap: 0; position: relative;
 }
@@ -987,16 +987,15 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   box-shadow: var(--shadow-lg), 0 0 0 7px var(--mint-50);   /* soft glow */
 }
 .jstep__ic {
-  display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%;
-  background: var(--mint-50); color: var(--teal-600); transition: transform .28s ease;
+  display: grid; place-items: center; color: var(--teal-600); transition: transform .28s ease;
 }
-.jstep__ic svg { width: 30px; height: 30px; }
-.jstep:hover .jstep__ic { transform: scale(1.08); }
+.jstep__ic svg { width: 30px; height: 30px; stroke-width: 1.6; }
+.jstep:hover .jstep__ic { transform: scale(1.06); }
 .jstep__num {
-  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
   background: var(--teal-600); color: var(--white);
-  font-family: var(--font-display); font-weight: 700; font-size: .8rem; letter-spacing: .04em;
-  padding: .18rem .7rem; border-radius: 999px; box-shadow: var(--shadow);
+  font-family: var(--font-display); font-weight: 700; font-size: .72rem; letter-spacing: .04em;
+  padding: .14rem .58rem; border-radius: 999px; box-shadow: var(--shadow);
 }
 .jstep__body { margin-top: 1.4rem; max-width: 230px; }
 .jstep__title { font-size: 1.06rem; margin: 0 0 .4rem; }
@@ -1008,9 +1007,8 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 /* Tablet: keep the connected horizontal flow, just tighter. */
 @media (max-width: 980px) {
-  .journey__track { --node: 118px; }
-  .jstep__ic { width: 48px; height: 48px; }
-  .jstep__ic svg { width: 24px; height: 24px; }
+  .journey__track { --node: 84px; }
+  .jstep__ic svg { width: 26px; height: 26px; }
   .jstep__body { margin-top: 1.1rem; }
   .jstep__title { font-size: .98rem; }
 }
@@ -1018,7 +1016,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* Mobile: vertical timeline — circular nodes stay intact, stacked in order. */
 @media (max-width: 720px) {
   .journey__track {
-    --node: 84px; flex-direction: column; align-items: stretch; gap: 2.4rem;
+    --node: 74px; flex-direction: column; align-items: stretch; gap: 2.4rem;
   }
   .jstep {
     flex-direction: row; align-items: flex-start; text-align: left; gap: 1.2rem;
