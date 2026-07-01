@@ -40,7 +40,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 15px; }
 
 body {
   margin: 0;
@@ -49,7 +49,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   line-height: 1.7;
-  font-size: 16px;
+  font-size: 1rem;   /* follows the 15px root — slightly smaller body/content text */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
