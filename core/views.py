@@ -63,6 +63,31 @@ PROCESS_STEPS = [
 ]
 
 
+# Dummy verified-style patient reviews for the Reviews + Booking section.
+PATIENT_REVIEWS = [
+    {"name": "Rosalina D. William", "initial": "R", "time": "2 weeks ago",
+     "text": "From my first consultation the team was thorough, reassuring and "
+             "genuinely caring. The regenerative treatment plan was explained clearly "
+             "and my recovery has been remarkable."},
+    {"name": "James P. Anderson", "initial": "J", "time": "1 month ago",
+     "text": "Exceptional, science-led care. The specialists took time to understand my "
+             "condition and the results have exceeded my expectations. Highly recommended."},
+    {"name": "Aisha K. Rahman", "initial": "A", "time": "3 months ago",
+     "text": "A truly premium clinical experience — spotless facilities, advanced "
+             "diagnostics and a dedicated team that supported me at every step."},
+]
+
+# Dummy services for the appointment dropdown (edit freely).
+BOOKING_SERVICES = [
+    "Regenerative Wellness",
+    "Regenerative Medicine",
+    "Longevity & Healthspan",
+    "Anti-Aging & Aesthetics",
+    "Advanced Diagnostics",
+    "Stem Cell Therapy Consultation",
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -102,6 +127,8 @@ def home(request):
             "about_partners": ABOUT_PARTNERS,
             "impact_stats": IMPACT_STATS,
             "process_steps": PROCESS_STEPS,
+            "patient_reviews": PATIENT_REVIEWS,
+            "booking_services": BOOKING_SERVICES,
         },
     )
 

@@ -100,14 +100,6 @@
 </section>
 {% endif %}
 
-<!-- CTA -->
-<section class="section section--soft">
-  <div class="container">
-    <div class="cta-band">
-      <h2>Begin your regenerative journey</h2>
-      <p>Book a confidential consultation with our specialists in {{ region.name }} today.</p>
-      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Book a Consultation</a></div>
-    </div>
-  </div>
-</section>
+<!-- Patient Reviews + Appointment Booking -->
+{% include "partials/reviews_booking.html" %}
 {% endblock %}
