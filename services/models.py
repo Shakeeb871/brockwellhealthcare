@@ -30,6 +30,9 @@ class ServiceCategory(TimeStamped):
 
     seo_title = models.CharField(max_length=70, blank=True)
     seo_description = models.CharField(max_length=170, blank=True)
+    custom_head = models.TextField(blank=True, help_text=CUSTOM_HEAD_HELP)
+
+    faqs = GenericRelation("core.FAQItem")
 
     class Meta:
         ordering = ["order", "name"]

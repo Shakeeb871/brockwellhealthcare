@@ -60,10 +60,14 @@ def category_detail(request, category):
             ]
         ),
     ]
+    faqs = list(cat.faqs.filter(is_published=True))
+    faq_ld = seo.faq_schema(faqs)
+    if faq_ld:
+        jsonld.append(faq_ld)
     return render(
         request,
         "services/category.html",
-        {"meta": meta, "jsonld": jsonld, "category": cat, "services": services},
+        {"meta": meta, "jsonld": jsonld, "category": cat, "services": services, "faqs": faqs},
     )
 
 

@@ -29,11 +29,12 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [ServiceInline]
+    inlines = [ServiceInline, FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description",)}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
+        ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
     )
 
 

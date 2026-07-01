@@ -33,6 +33,10 @@
       <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
     </div>
     {% endif %}
+
+    {% include "partials/faqs.html" %}
   </div>
 </section>
 {% endblock %}
+
+{% block head_extra %}{{ category.custom_head|safe }}{% endblock %}
