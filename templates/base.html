@@ -218,6 +218,28 @@
       groups.forEach(function (g) { io.observe(g); });
     })();
 
+    // Facilities showcase: tab nav switches the content card and circular image.
+    (function () {
+      var root = document.querySelector('[data-facilities]');
+      if (!root) return;
+      var tabs = Array.prototype.slice.call(root.querySelectorAll('.fac__tab'));
+      var cards = Array.prototype.slice.call(root.querySelectorAll('.fac__card'));
+      var media = Array.prototype.slice.call(root.querySelectorAll('.fac__media-item'));
+      if (!tabs.length) return;
+      function show(n) {
+        tabs.forEach(function (t, i) {
+          var on = i === n;
+          t.classList.toggle('is-active', on);
+          t.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        cards.forEach(function (c, i) { c.classList.toggle('is-active', i === n); });
+        media.forEach(function (m, i) { m.classList.toggle('is-active', i === n); });
+      }
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () { show(parseInt(t.getAttribute('data-tab'), 10)); });
+      });
+    })();
+
     // Nav pill: a single highlight that slides between links on hover and
     // returns to the active link when the cursor leaves.
     (function () {

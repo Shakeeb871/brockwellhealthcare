@@ -157,6 +157,34 @@ def _partners_with_logos():
     return out
 
 
+# Dummy facilities for the interactive "What Facilities We Provided" tabs.
+# Add an "image" static URL to any item to show a photo in the circle instead
+# of the icon placeholder.
+FACILITIES = [
+    {"title": "Regenerative Wellness", "icon": "leaf", "image": "",
+     "desc": "Personalised, science-led programmes that restore vitality and support your body’s natural ability to heal.",
+     "features": ["Comprehensive wellness assessment", "Cellular health optimisation", "Tailored recovery protocols", "Ongoing progress monitoring"]},
+    {"title": "Stem Cell Therapy", "icon": "dna", "image": "",
+     "desc": "Advanced regenerative treatments using evidence-based cellular therapies for lasting results.",
+     "features": ["Autologous cell preparation", "Targeted regenerative injections", "Joint & tissue repair", "Post-therapy care plan"]},
+    {"title": "Advanced Diagnostics", "icon": "microscope", "image": "",
+     "desc": "Precise imaging and laboratory analysis to map your health and guide every treatment decision.",
+     "features": ["Full biomarker panels", "Advanced imaging", "Genetic & metabolic profiling", "Detailed results consultation"]},
+    {"title": "Longevity & Healthspan", "icon": "clock", "image": "",
+     "desc": "Proactive, preventive care designed to extend healthy, active years and slow biological ageing.",
+     "features": ["Biological age testing", "Personalised longevity plan", "Nutrition & lifestyle coaching", "Continuous optimisation"]},
+    {"title": "Aesthetic Medicine", "icon": "sparkles", "image": "",
+     "desc": "Natural, regenerative aesthetic treatments that rejuvenate the skin from within.",
+     "features": ["Skin regeneration therapy", "Collagen stimulation", "Non-surgical rejuvenation", "Tailored aesthetic plan"]},
+    {"title": "Cellular Recovery", "icon": "heart", "image": "",
+     "desc": "Attentive recovery and rehabilitation support to help you heal safely and confidently.",
+     "features": ["Guided recovery pathway", "Physiotherapy support", "Pain & mobility management", "Follow-up monitoring"]},
+    {"title": "Specialist Consultation", "icon": "stethoscope", "image": "",
+     "desc": "One-to-one guidance from experienced clinicians to plan the right treatment for you.",
+     "features": ["Thorough medical review", "Honest, expert advice", "Personalised treatment plan", "Dedicated care team"]},
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -198,6 +226,7 @@ def home(request):
             "process_steps": PROCESS_STEPS,
             "patient_reviews": PATIENT_REVIEWS,
             "booking_services": BOOKING_SERVICES,
+            "facilities": FACILITIES,
             "network_locations": NETWORK_LOCATIONS,
             "network_features": NETWORK_FEATURES,
             "news_articles": NEWS_ARTICLES,
