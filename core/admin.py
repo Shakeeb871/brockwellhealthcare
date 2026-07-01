@@ -9,12 +9,11 @@ class FAQItemInline(GenericStackedInline):
     """Per-object FAQ section — reusable on any content model's admin."""
 
     model = FAQItem
-    extra = 0
+    extra = 1
     fields = ("question", "answer", "order", "is_published")
     ordering = ("order", "id")
-    classes = ("collapse",)
     verbose_name = "FAQ"
-    verbose_name_plural = "FAQs (shown below the content, with FAQ schema)"
+    verbose_name_plural = "FAQs — shown below the content (with FAQ schema)"
 
 
 @admin.register(ContactLead)
