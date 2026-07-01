@@ -14,10 +14,16 @@ from django.urls import include, path, re_path
 from django.views.static import serve as media_serve
 
 from core import views as core_views
+from core.region_admin import build_region_admin_sites
 from core.sitemaps import sitemaps
 from django.contrib.sitemaps.views import sitemap
 
+# Per-region admin panels at /admin/<code>/ (generated from settings.REGIONS).
+# Must be listed BEFORE the master /admin/ so the more specific paths win.
+region_admin_sites = build_region_admin_sites()
+
 urlpatterns = [
+    *[path(f"admin/{code}/", site.urls) for code, site in region_admin_sites.items()],
     path("admin/", admin.site.urls),
     # Rich-text editor assets/config (region-exempt).
     path("tinymce/", include("tinymce.urls")),
