@@ -1,41 +1,115 @@
-{% load region_tags %}
+{% load region_tags icons %}
 <footer class="site-footer">
+
+  {# ---------------- Newsletter strip ---------------- #}
+  <section class="newsletter" aria-label="Newsletter signup">
+    <div class="container newsletter__inner">
+      <div class="newsletter__text">
+        <span class="newsletter__label">Our Newsletter</span>
+        <h2 class="newsletter__title">Join our newsletter to never miss out on health updates</h2>
+      </div>
+      <form class="newsletter__form" action="{% rurl 'core:contact' %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="website" class="bform__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="name" value="Newsletter subscriber">
+        <input type="hidden" name="subject" value="Newsletter signup">
+        <input type="hidden" name="message" value="Newsletter subscription request from the website footer.">
+        <div class="newsletter__field">
+          <label class="sr-only" for="nl-email">Email address</label>
+          <input id="nl-email" type="email" name="email" placeholder="Enter your email" autocomplete="email" required>
+          <button type="submit" class="newsletter__btn" aria-label="Subscribe">{% icon 'arrow' %}</button>
+        </div>
+        <p class="newsletter__note">By subscribing, you accept our <a href="{% rurl 'core:privacy' %}">Privacy Policy</a>.</p>
+      </form>
+      <span class="newsletter__deco" aria-hidden="true">{% icon 'stethoscope' %}</span>
+    </div>
+  </section>
+
+  {# ---------------- Main footer columns ---------------- #}
   <div class="container site-footer__grid">
-    <div class="site-footer__brand">
+
+    {# Col 1 — brand card #}
+    <div class="footcard">
       <span class="brand__name">{{ BRAND_NAME }}</span>
-      <p>{{ BRAND_TAGLINE }} in {{ region.name }}.</p>
-      <p class="stack" style="margin-top:1rem">
-        <a href="tel:{{ region.phone }}">{{ region.phone }}</a><br>
-        <a href="mailto:{{ region.email }}">{{ region.email }}</a><br>
-        <span class="muted">{{ region.address }}</span>
-      </p>
+      <p class="footcard__desc">We're dedicated to providing advanced, accessible regenerative medicine and stem cell care.</p>
+      <ul class="foothours">
+        <li><span>Monday – Friday</span><span>9:00 AM – 7:00 PM</span></li>
+        <li><span>Saturday</span><span>10:00 AM – 5:00 PM</span></li>
+        <li><span>Sunday</span><span>Closed</span></li>
+      </ul>
+      <a class="footcard__phone" href="tel:{{ region.phone }}">
+        <span class="footcard__phone-ic" aria-hidden="true">{% icon 'phone' %}</span>
+        <span class="footcard__phone-txt"><small>For Booking</small><strong>{{ region.phone }}</strong></span>
+      </a>
     </div>
 
-    <nav class="site-footer__col" aria-label="Services">
-      <h4>Services</h4>
+    {# Col 2 — quick links #}
+    <nav class="site-footer__col" aria-label="Quick links">
+      <h4>Quick Links</h4>
+      <a href="{% rurl 'core:about' %}">About Us</a>
+      <a href="{% rurl 'services:list' %}">Our Services</a>
+      <a href="{% rurl 'team:list' %}">Team Members</a>
+      <a href="{% rurl 'events:list' %}">Our Insights</a>
+      <a href="{% rurl 'core:contact' %}">24/7 Support</a>
+    </nav>
+
+    {# Col 3 — services list #}
+    <nav class="site-footer__col" aria-label="Our services">
+      <h4>Our Services</h4>
       {% for cat in nav_categories %}
       <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+      {% empty %}
+      <a href="{% rurl 'services:list' %}">Regenerative Medicine</a>
+      <a href="{% rurl 'services:list' %}">Stem Cell Therapy</a>
+      <a href="{% rurl 'services:list' %}">Longevity &amp; Healthspan</a>
+      <a href="{% rurl 'services:list' %}">Advanced Diagnostics</a>
       {% endfor %}
     </nav>
 
-    <nav class="site-footer__col" aria-label="Company">
-      <h4>Company</h4>
-      <a href="{% rurl 'team:list' %}">Our Team</a>
-      <a href="{% rurl 'events:list' %}">Events</a>
-      <a href="{% rurl 'core:about' %}">About Us</a>
-      <a href="{% rurl 'core:contact' %}">Contact Us</a>
-    </nav>
+    {# Col 4 — recent posts + contact #}
+    <div class="footwide">
+      <h4>Recent Posts</h4>
+      <ul class="footposts">
+        <li class="footpost">
+          <span class="footpost__thumb" aria-hidden="true">{% icon 'dna' %}</span>
+          <div class="footpost__meta">
+            <span class="footpost__date">{% icon 'calendar' 'ico' %} Jan 30, 2026</span>
+            <a class="footpost__title" href="{% rurl 'events:list' %}">Latest advances in regenerative treatment</a>
+          </div>
+        </li>
+        <li class="footpost">
+          <span class="footpost__thumb" aria-hidden="true">{% icon 'heart' %}</span>
+          <div class="footpost__meta">
+            <span class="footpost__date">{% icon 'calendar' 'ico' %} Jan 24, 2026</span>
+            <a class="footpost__title" href="{% rurl 'events:list' %}">The future of stem cell recovery care</a>
+          </div>
+        </li>
+        <li class="footpost">
+          <span class="footpost__thumb" aria-hidden="true">{% icon 'microscope' %}</span>
+          <div class="footpost__meta">
+            <span class="footpost__date">{% icon 'calendar' 'ico' %} Jan 18, 2026</span>
+            <a class="footpost__title" href="{% rurl 'events:list' %}">Smart diagnostics in modern clinics</a>
+          </div>
+        </li>
+      </ul>
 
-    <nav class="site-footer__col" aria-label="Legal">
-      <h4>Legal</h4>
-      <a href="{% rurl 'core:privacy' %}">Privacy Policy</a>
-      <a href="{% rurl 'core:terms' %}">Terms &amp; Conditions</a>
-      <a href="{% rurl 'core:cookies' %}">Cookies</a>
-    </nav>
+      <h4 class="footwide__h2">Contact Us</h4>
+      <p class="footcontact__desc">Advancing regenerative medicine to improve quality and duration of life for every patient.</p>
+      <p class="footcontact__row"><span class="footcontact__ic" aria-hidden="true">{% icon 'mail' %}</span><a href="mailto:{{ region.email }}">{{ region.email }}</a></p>
+      <p class="footcontact__row"><span class="footcontact__ic" aria-hidden="true">{% icon 'pin' %}</span>{{ region.address }}</p>
+    </div>
   </div>
 
-  <div class="container site-footer__bottom">
-    <p>&copy; {% now "Y" %} {{ BRAND_NAME }}. All rights reserved.</p>
-    <p class="muted">Information provided is for educational purposes and is not a substitute for professional medical advice.</p>
+  {# ---------------- Bottom bar ---------------- #}
+  <div class="site-footer__bottom-wrap">
+    <div class="container site-footer__bottom">
+      <p>&copy; {% now "Y" %} {{ BRAND_NAME }}. All rights reserved.</p>
+      <div class="site-footer__social" aria-label="Social media">
+        <a href="#" aria-label="Facebook">{% social 'facebook' %}</a>
+        <a href="#" aria-label="X">{% social 'x' %}</a>
+        <a href="#" aria-label="YouTube">{% social 'youtube' %}</a>
+        <a href="#" aria-label="Instagram">{% social 'instagram' %}</a>
+      </div>
+    </div>
   </div>
 </footer>
