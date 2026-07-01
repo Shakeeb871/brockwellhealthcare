@@ -7,10 +7,8 @@
 
 <section class="section">
   <div class="container">
-    {% if category.paragraphs %}
-    <div class="prose" style="margin-bottom:2.5rem">
-      {% for para in category.paragraphs %}<p>{{ para }}</p>{% endfor %}
-    </div>
+    {% if category.description %}
+    <div class="prose" style="margin-bottom:2.5rem">{{ category.description|safe }}</div>
     {% endif %}
 
     {% if services %}

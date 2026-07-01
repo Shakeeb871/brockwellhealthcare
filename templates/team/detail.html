@@ -41,9 +41,7 @@
   <div class="container doc-layout">
     <div>
       <div class="section__head"><span class="eyebrow">Biography</span><h2>About {{ doctor.name }}</h2></div>
-      <article class="prose">
-        {% for para in doctor.bio_paragraphs %}<p>{{ para }}</p>{% endfor %}
-      </article>
+      <article class="prose">{{ doctor.full_bio|safe }}</article>
     </div>
 
     <aside class="doc-aside">

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from .models import Event, EventRegistration
 
@@ -25,6 +26,11 @@ class EventAdmin(admin.ModelAdmin):
         ("Content & Pricing", {"fields": ("description", "price")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
     )
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "description":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 @admin.register(EventRegistration)

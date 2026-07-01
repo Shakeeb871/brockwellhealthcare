@@ -28,13 +28,7 @@
         <div class="blog-article__hero"><img src="{{ post.image.url }}" alt="{{ post.title }}" decoding="async"></div>
         {% endif %}
 
-        <div class="blog-article__body">
-          {% for b in post.body_blocks %}
-            {% if b.type == 'h' %}<h2>{{ b.text }}</h2>
-            {% elif b.type == 'ul' %}<ul>{% for i in b.items %}<li>{{ i }}</li>{% endfor %}</ul>
-            {% else %}<p>{{ b.text }}</p>{% endif %}
-          {% endfor %}
-        </div>
+        <div class="blog-article__body">{{ post.body|safe }}</div>
 
         <div class="blog-article__foot">
           <a class="btn btn--ghost" href="{% rurl 'blog:list' %}">{% icon 'chevron-left' %} Back to Insights</a>

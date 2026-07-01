@@ -1,4 +1,5 @@
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from .models import BlogCategory, BlogPost
 
@@ -25,3 +26,8 @@ class BlogPostAdmin(admin.ModelAdmin):
         ("Content", {"fields": ("excerpt", "body", "author", "published_at")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
     )
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "body":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)

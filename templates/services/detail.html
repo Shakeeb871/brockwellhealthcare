@@ -9,7 +9,7 @@
   <div class="container doc-layout">
     <article class="prose">
       {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
-      {% for para in service.paragraphs %}<p>{{ para }}</p>{% endfor %}
+      {{ service.description|safe }}
 
       {% if service.benefit_list %}
       <h2>Key Benefits</h2>

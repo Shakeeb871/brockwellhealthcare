@@ -62,6 +62,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    # Third-party
+    "tinymce",
     # Local apps
     "core",
     "services",
@@ -70,6 +72,30 @@ INSTALLED_APPS = [
     "team",
     "blog",
 ]
+
+# Rich-text editor (TinyMCE) used in the admin for long-form content fields.
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 480,
+    "menubar": "edit view insert format tools table",
+    "plugins": (
+        "advlist autolink lists link image charmap preview anchor "
+        "searchreplace visualblocks code fullscreen insertdatetime "
+        "media table help wordcount"
+    ),
+    "toolbar": (
+        "undo redo | blocks | bold italic underline forecolor | "
+        "alignleft aligncenter alignright alignjustify | "
+        "bullist numlist outdent indent | link image media table | "
+        "removeformat code fullscreen preview | help"
+    ),
+    "block_formats": (
+        "Paragraph=p; Heading 2=h2; Heading 3=h3; Heading 4=h4; "
+        "Quote=blockquote; Preformatted=pre"
+    ),
+    "branding": False,
+    "promotion": False,
+    "convert_urls": False,
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from .models import ContactLead, FAQ, Page
 
@@ -26,6 +27,11 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("region", "is_published")
     search_fields = ("title", "body")
     prepopulated_fields = {"slug": ("title",)}
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "body":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 admin.site.site_header = "Brockwell Healthcare — Site Administration"

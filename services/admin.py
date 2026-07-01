@@ -1,6 +1,16 @@
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from .models import Service, ServiceCategory
+
+
+class RichDescriptionMixin:
+    """Render the model's ``description`` field with the TinyMCE editor."""
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "description":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 class ServiceInline(admin.TabularInline):
@@ -12,7 +22,7 @@ class ServiceInline(admin.TabularInline):
 
 
 @admin.register(ServiceCategory)
-class ServiceCategoryAdmin(admin.ModelAdmin):
+class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
     list_display = ("name", "region", "order", "is_published")
     list_filter = ("region", "is_published")
     search_fields = ("name", "summary", "description")
@@ -27,7 +37,7 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
+class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
     list_display = ("name", "category", "region", "price", "order", "is_published")
     list_filter = ("region", "category", "is_published")
     search_fields = ("name", "summary", "description")

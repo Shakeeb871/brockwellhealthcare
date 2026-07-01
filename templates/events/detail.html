@@ -22,7 +22,7 @@
   <div class="container split" style="align-items:flex-start">
     <article class="prose">
       <p class="lead muted">{{ event.summary }}</p>
-      {% for para in event.paragraphs %}<p>{{ para }}</p>{% endfor %}
+      {{ event.description|safe }}
     </article>
 
     <aside>

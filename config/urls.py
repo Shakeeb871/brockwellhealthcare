@@ -19,6 +19,8 @@ from django.contrib.sitemaps.views import sitemap
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # Rich-text editor assets/config (region-exempt).
+    path("tinymce/", include("tinymce.urls")),
     # Serve user-uploaded media (e.g. service card images). Kept lightweight so
     # it works under cPanel/Passenger where WhiteNoise only handles static.
     re_path(

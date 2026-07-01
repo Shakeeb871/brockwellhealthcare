@@ -6,11 +6,7 @@
 
 <section class="section">
   <div class="container">
-    <article class="prose">
-      {% for kind, text in page.blocks %}
-        {% if kind == "heading" %}<h2>{{ text }}</h2>{% else %}<p>{{ text }}</p>{% endif %}
-      {% endfor %}
-    </article>
+    <article class="prose">{{ page.body|safe }}</article>
   </div>
 </section>
 {% endblock %}

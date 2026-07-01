@@ -1,4 +1,5 @@
 from django.contrib import admin
+from tinymce.widgets import TinyMCE
 
 from .models import Doctor
 
@@ -16,3 +17,8 @@ class DoctorAdmin(admin.ModelAdmin):
         ("Profile", {"fields": ("short_bio", "full_bio", "specialties")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
     )
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        if db_field.name == "full_bio":
+            kwargs["widget"] = TinyMCE()
+        return super().formfield_for_dbfield(db_field, request, **kwargs)

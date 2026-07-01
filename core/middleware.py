@@ -21,7 +21,7 @@ from django.shortcuts import redirect
 from .regions import detect_region, get_region, is_enabled
 
 # Paths that must never be region-prefixed.
-EXEMPT_PREFIXES = ("/admin", "/static", "/media", "/stripe", "/__")
+EXEMPT_PREFIXES = ("/admin", "/static", "/media", "/stripe", "/tinymce", "/__")
 EXEMPT_EXACT = {
     "/sitemap.xml",
     "/robots.txt",
