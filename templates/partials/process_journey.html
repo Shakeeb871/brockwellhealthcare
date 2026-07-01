@@ -1,0 +1,35 @@
+{% load icons %}
+{% comment %}
+Care Journey — premium circular process/workflow section (reusable).
+Data: `process_steps` (see core.views PROCESS_STEPS). Each item: icon, title, desc.
+Numbers are generated automatically, so it scales to 4–8 steps.
+{% endcomment %}
+{% if process_steps %}
+<section class="section journey" aria-labelledby="journey-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Our Treatment Process</span>
+      <h2 id="journey-title">Stem Cell &amp; Regenerative Care Journey</h2>
+      <p>A clear, science-led pathway — from your first consultation through personalised
+        regenerative therapy and attentive recovery monitoring.</p>
+    </header>
+
+    <ol class="journey__track" data-journey role="list">
+      {% for s in process_steps %}
+      <li class="jstep" style="--i: {{ forloop.counter0 }}">
+        <div class="jstep__node">
+          <span class="jstep__ic" aria-hidden="true">{% icon s.icon %}</span>
+          <span class="jstep__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+        </div>
+        <div class="jstep__body">
+          <h3 class="jstep__title">
+            <span class="sr-only">Step {{ forloop.counter }}: </span>{{ s.title }}
+          </h3>
+          <p class="jstep__desc">{{ s.desc }}</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+{% endif %}

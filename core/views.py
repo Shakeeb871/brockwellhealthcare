@@ -49,6 +49,20 @@ IMPACT_STATS = [
 ]
 
 
+# Dummy steps for the "Care Journey" process section. Reusable/scalable —
+# add 4 to 8 items; numbers are generated automatically in the template.
+PROCESS_STEPS = [
+    {"icon": "stethoscope", "title": "Initial Consultation & Evaluation",
+     "desc": "A thorough one-to-one assessment of your history, goals and suitability."},
+    {"icon": "microscope", "title": "Diagnostic Assessment & Lab Analysis",
+     "desc": "Advanced imaging and laboratory analysis map your regenerative profile."},
+    {"icon": "dna", "title": "Stem Cell Therapy Planning",
+     "desc": "A personalised, evidence-based regenerative treatment plan is designed."},
+    {"icon": "heart", "title": "Treatment & Recovery Monitoring",
+     "desc": "Care is delivered safely, with progress tracked throughout your recovery."},
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -87,6 +101,7 @@ def home(request):
             "about_stats": ABOUT_STATS,
             "about_partners": ABOUT_PARTNERS,
             "impact_stats": IMPACT_STATS,
+            "process_steps": PROCESS_STEPS,
         },
     )
 

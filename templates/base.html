@@ -201,6 +201,19 @@
       stats.forEach(function (s) { io.observe(s); });
     })();
 
+    // Care Journey: reveal the process steps (staggered) when scrolled into view.
+    (function () {
+      var track = document.querySelector('[data-journey]');
+      if (!track) return;
+      if (!('IntersectionObserver' in window)) { track.classList.add('is-in'); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.25 });
+      io.observe(track);
+    })();
+
     // Mega-menu hover intent: keep it open while moving from trigger to panel.
     (function () {
       var hm = document.querySelector('.has-mega');
