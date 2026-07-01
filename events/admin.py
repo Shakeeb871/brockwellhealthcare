@@ -20,7 +20,7 @@ class EventAdmin(admin.ModelAdmin):
     date_hierarchy = "start"
     inlines = [RegistrationInline]
     fieldsets = (
-        (None, {"fields": ("region", "title", "slug", "summary", "is_published")}),
+        (None, {"fields": ("region", "title", "slug", "image", "summary", "is_published")}),
         ("Schedule & Venue", {"fields": ("start", "end", "location", "capacity")}),
         ("Content & Pricing", {"fields": ("description", "price")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),

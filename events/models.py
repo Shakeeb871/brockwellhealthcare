@@ -11,6 +11,10 @@ class Event(TimeStamped):
     region = models.CharField(max_length=8, choices=REGION_CHOICES, default="uae")
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220)
+    image = models.ImageField(
+        upload_to="events/", blank=True, null=True,
+        help_text="Optional event image shown on event cards.",
+    )
     summary = models.CharField(max_length=255)
     description = models.TextField()
     start = models.DateTimeField()

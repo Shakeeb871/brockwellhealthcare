@@ -74,8 +74,11 @@
     <div class="grid grid--3">
       {% for e in upcoming_events %}
       <article class="card">
-        <span class="tag">{{ e.start|date:"d M Y" }}</span>
-        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <div class="card__media">
+          {% if e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
+          <span class="tag tag--onmedia">{{ e.start|date:"d M Y" }}</span>
+        </div>
+        <h3>{{ e.title }}</h3>
         <p>{{ e.summary }}</p>
         <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking {% icon 'arrow' 'ico' %}</a>
       </article>

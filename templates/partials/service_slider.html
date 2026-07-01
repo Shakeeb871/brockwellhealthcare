@@ -19,11 +19,9 @@
         {% for c in categories %}
         <li class="svc-card">
           <article class="card">
-            {% if c.image %}
-            <div class="card__media"><img src="{{ c.image.url }}" alt="{{ c.name }}" loading="lazy"></div>
-            {% else %}
-            <div class="card__icon" aria-hidden="true">{% category_icon c.slug %}</div>
-            {% endif %}
+            <div class="card__media">
+              {% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
+            </div>
             <h3>{{ c.name }}</h3>
             <p>{{ c.summary }}</p>
             <a class="card__link" href="{{ c.get_absolute_url }}">Explore {% icon 'arrow' 'ico' %}</a>

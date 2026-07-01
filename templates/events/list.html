@@ -18,8 +18,11 @@
     <div class="grid grid--3">
       {% for e in upcoming %}
       <article class="card">
-        <span class="tag">{{ e.start|date:"d M Y · H:i" }}</span>
-        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <div class="card__media">
+          {% if e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
+          <span class="tag tag--onmedia">{{ e.start|date:"d M Y · H:i" }}</span>
+        </div>
+        <h3>{{ e.title }}</h3>
         <p>{{ e.summary }}</p>
         <p class="muted" style="font-size:.9rem">{% icon 'pin' 'ico-inline' %}{{ e.location }}</p>
         <p class="card__price">{% if e.is_free %}Free{% else %}{{ region.currency_symbol }} {{ e.price }}{% endif %}</p>
