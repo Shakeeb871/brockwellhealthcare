@@ -25,7 +25,7 @@ class BlogCategory(TimeStamped):
         return f"{self.name} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("blog:category", kwargs={"slug": self.slug})
+        return f"/{self.region}" + reverse("blog:entry", kwargs={"slug": self.slug})
 
     @property
     def published_posts(self):
@@ -69,7 +69,7 @@ class BlogPost(TimeStamped):
         return f"{self.title} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("blog:detail", kwargs={"slug": self.slug})
+        return f"/{self.region}" + reverse("blog:entry", kwargs={"slug": self.slug})
 
     @property
     def reading_time(self):

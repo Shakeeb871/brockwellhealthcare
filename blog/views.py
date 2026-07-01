@@ -18,8 +18,7 @@ def _sidebar(code):
 
 
 def _paginate(request, qs):
-    paginator = Paginator(qs, PER_PAGE)
-    return paginator.get_page(request.GET.get("page"))
+    return Paginator(qs, PER_PAGE).get_page(request.GET.get("page"))
 
 
 def blog_list(request):
@@ -53,10 +52,21 @@ def blog_list(request):
     )
 
 
-def category_detail(request, slug):
+def blog_entry(request, slug):
+    """A flat /blog/<slug>/ route — resolves to a category page or a post."""
     region = request.region
     code = region["code"]
-    category = get_object_or_404(BlogCategory, region=code, slug=slug, is_published=True)
+    category = BlogCategory.objects.filter(region=code, slug=slug, is_published=True).first()
+    if category is not None:
+        return _render_category(request, region, category)
+    post = get_object_or_404(
+        BlogPost.objects.select_related("category"), region=code, slug=slug, is_published=True
+    )
+    return _render_post(request, region, post)
+
+
+def _render_category(request, region, category):
+    code = region["code"]
     posts = category.published_posts.select_related("category")
     page_obj = _paginate(request, posts)
 
@@ -64,7 +74,7 @@ def category_detail(request, slug):
         request,
         title=f"{category.name} — Insights | {settings.BRAND_NAME}",
         description=category.description or f"{category.name} articles from {settings.BRAND_NAME}.",
-        path=f"/blog/category/{category.slug}/",
+        path=f"/blog/{category.slug}/",
     )
     crumbs = seo.breadcrumb_schema(
         [
@@ -83,12 +93,8 @@ def category_detail(request, slug):
     )
 
 
-def post_detail(request, slug):
-    region = request.region
+def _render_post(request, region, post):
     code = region["code"]
-    post = get_object_or_404(
-        BlogPost.objects.select_related("category"), region=code, slug=slug, is_published=True
-    )
     related = (
         BlogPost.objects.filter(region=code, is_published=True, category=post.category)
         .exclude(pk=post.pk)[:3]
@@ -100,7 +106,6 @@ def post_detail(request, slug):
         title=post.seo_title or post.title,
         description=post.seo_description or post.excerpt,
         path=f"/blog/{post.slug}/",
-        image=None,
         og_type="article",
     )
     if post.image:
@@ -109,7 +114,7 @@ def post_detail(request, slug):
     crumbs = [("Home", seo.absolute(region_path(code, "core:home"))),
               ("Insights", seo.absolute(region_path(code, "blog:list")))]
     if post.category_id:
-        crumbs.append((post.category.name, seo.absolute(region_path(code, "blog:category", slug=post.category.slug))))
+        crumbs.append((post.category.name, seo.absolute(region_path(code, "blog:entry", slug=post.category.slug))))
     crumbs.append((post.title, meta["canonical"]))
 
     jsonld = [seo.article_schema(post, region), seo.breadcrumb_schema(crumbs)]

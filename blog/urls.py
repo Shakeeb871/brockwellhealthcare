@@ -6,6 +6,6 @@ app_name = "blog"
 
 urlpatterns = [
     path("", views.blog_list, name="list"),
-    path("category/<slug:slug>/", views.category_detail, name="category"),
-    path("<slug:slug>/", views.post_detail, name="detail"),
+    # A single flat route: the slug resolves to a category or a post.
+    path("<slug:slug>/", views.blog_entry, name="entry"),
 ]

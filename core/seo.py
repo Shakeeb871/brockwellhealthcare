@@ -232,7 +232,7 @@ def article_schema(post, region):
             "name": settings.BRAND_NAME,
             "url": f"https://{settings.SITE_DOMAIN}/{region['code']}/",
         },
-        "mainEntityOfPage": region_absolute(region["code"], "blog:detail", slug=post.slug),
+        "mainEntityOfPage": region_absolute(region["code"], "blog:entry", slug=post.slug),
         "articleSection": post.category.name if post.category_id else "Insights",
     }
 
