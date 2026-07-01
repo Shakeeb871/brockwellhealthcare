@@ -22,6 +22,9 @@ echo "==> Installing/updating Python dependencies..."
 echo "==> Applying database migrations..."
 "$PYBIN" manage.py migrate --noinput
 
+echo "==> Ensuring admin login (from ADMIN_* in .env)..."
+"$PYBIN" manage.py createadmin
+
 echo "==> Collecting static files..."
 "$PYBIN" manage.py collectstatic --noinput
 
