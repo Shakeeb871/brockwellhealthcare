@@ -1463,7 +1463,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* ---- Right: stage (image + content card). z-index above the nav so the
        circle floats in FRONT — but it only overlaps the nav's empty right
        edge, so tab text is never covered. ---- */
-.fac__stage { position: relative; z-index: 4; }
+/* Flex-centre the content so the right panel + circle stay vertically aligned
+   with the left nav no matter how many tabs it has. */
+.fac__stage { position: relative; z-index: 4; display: flex; align-items: center; }
 
 .fac__media {
   position: absolute; top: 50%; left: -55px; transform: translateY(-50%);
@@ -1485,7 +1487,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .fac__media-ph svg { width: 82px; height: 82px; }
 
 .fac__content {
-  position: relative; z-index: 2; min-height: 300px;
+  position: relative; z-index: 2; width: 100%; min-height: 300px;
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow-lg); padding: 2.6rem 2.8rem 2.6rem 235px;
   display: flex; align-items: center;

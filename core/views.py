@@ -147,6 +147,21 @@ NEWS_ARTICLES = [
 ]
 
 
+def _facilities_with_images():
+    """Show a photo in the circle if a matching file exists, else the icon.
+    Drop images into static/img named facility-1 … facility-7 (webp/jpg/png)."""
+    out = []
+    for i, f in enumerate(FACILITIES, start=1):
+        image = ""
+        for ext in ("webp", "jpg", "jpeg", "png"):
+            path = f"img/facility-{i}.{ext}"
+            if finders.find(path):
+                image = path
+                break
+        out.append({**f, "image": image})
+    return out
+
+
 def _partners_with_logos():
     """Only reference a logo file if it actually exists (avoids a manifest
     error in production for logos that haven't been uploaded yet)."""
@@ -233,7 +248,7 @@ def home(request):
             "process_steps": PROCESS_STEPS,
             "patient_reviews": PATIENT_REVIEWS,
             "booking_services": BOOKING_SERVICES,
-            "facilities": FACILITIES,
+            "facilities": _facilities_with_images(),
             "network_locations": NETWORK_LOCATIONS,
             "network_features": NETWORK_FEATURES,
             "news_articles": NEWS_ARTICLES,
