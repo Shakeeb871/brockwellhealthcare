@@ -22,32 +22,6 @@
 <!-- Our Services (paginated slider — 4 per page) -->
 {% include "partials/service_slider.html" %}
 
-<!-- Why us / trust -->
-<section class="section section--soft">
-  <div class="container split">
-    <div>
-      <span class="eyebrow">Science First</span>
-      <h2>Regenerative care you can trust</h2>
-      <p class="muted">We combine the latest advances in cellular medicine with rigorous clinical standards, so you receive care that is both innovative and safe.</p>
-      <ul class="checklist mt-1">
-        <li>Treatments guided by current clinical evidence</li>
-        <li>Fully accredited laboratory and clinical partners</li>
-        <li>Ethical, transparent and patient-centred practice</li>
-        <li>Dedicated care team throughout your journey</li>
-      </ul>
-    </div>
-    <div class="hero__card" style="background:var(--white);border-color:var(--line);">
-      <h3 style="color:var(--navy-800)">Speak to a specialist</h3>
-      <p class="muted">Have questions about whether regenerative therapy is right for you? Our team is here to help.</p>
-      <p class="stack" style="margin:0">
-        <a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a><br>
-        <a href="mailto:{{ region.email }}">{{ region.email }}</a>
-      </p>
-      <a class="btn btn--primary mt-1" href="{% rurl 'core:contact' %}">Request a callback</a>
-    </div>
-  </div>
-</section>
-
 <!-- Our Impact — circular statistic counters -->
 {% include "partials/impact_stats.html" %}
 
