@@ -1,8 +1,9 @@
 from django.conf import settings
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
 
 from core import seo
-from core.models import FAQ
+from core.forms import ContactForm
 from core.regions import region_path
 
 from .models import Service, ServiceCategory
@@ -74,8 +75,21 @@ def service_detail(request, category, slug):
     service = get_object_or_404(
         Service, region=region["code"], category=cat, slug=slug, is_published=True
     )
-    siblings = cat.services.filter(is_published=True).exclude(pk=service.pk)[:4]
-    faqs = list(FAQ.objects.filter(region=region["code"], is_published=True)[:6])
+
+    # Sidebar booking form — saves an enquiry tagged with this service.
+    form = ContactForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        if not form.is_spam():
+            lead = form.save(commit=False)
+            lead.region = region["code"]
+            if not lead.subject:
+                lead.subject = f"Booking enquiry: {service.name}"
+            lead.save()
+        messages.success(
+            request,
+            "Thank you — your booking request has been received. Our team will contact you shortly.",
+        )
+        return redirect(service.get_absolute_url())
 
     title = service.seo_title or f"{service.name} in {region['name']}"
     description = service.seo_description or service.summary
@@ -97,10 +111,6 @@ def service_detail(request, category, slug):
             ]
         ),
     ]
-    faq_ld = seo.faq_schema(faqs)
-    if faq_ld:
-        jsonld.append(faq_ld)
-
     return render(
         request,
         "services/detail.html",
@@ -109,7 +119,6 @@ def service_detail(request, category, slug):
             "jsonld": jsonld,
             "category": cat,
             "service": service,
-            "siblings": siblings,
-            "faqs": faqs,
+            "form": form,
         },
     )

@@ -14,6 +14,10 @@ Args: hero_eyebrow (optional), hero_title, hero_lead (optional), crumb_label. {%
       <a href="{{ crumb_parent_url }}">{{ crumb_parent_label }}</a>
       <span class="page-hero__sep" aria-hidden="true">/</span>
       {% endif %}
+      {% if crumb_parent2_label %}
+      <a href="{{ crumb_parent2_url }}">{{ crumb_parent2_label }}</a>
+      <span class="page-hero__sep" aria-hidden="true">/</span>
+      {% endif %}
       <span aria-current="page">{{ crumb_label }}</span>
     </nav>
   </div>

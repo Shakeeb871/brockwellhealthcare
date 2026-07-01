@@ -988,6 +988,23 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 .doc-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) 340px; gap: 3rem; align-items: start; }
 .doc-aside { display: flex; flex-direction: column; gap: 1.25rem; }
+
+/* Service detail sidebar — sibling sub-service links (relevant to the category). */
+.svc-nav__list { list-style: none; margin: .3rem 0 0; padding: 0; display: flex; flex-direction: column; }
+.svc-nav__list li + li { border-top: 1px solid var(--line); }
+.svc-nav__list a {
+  display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+  padding: .62rem .1rem; color: var(--ink); text-decoration: none; font-size: .9rem; font-weight: 500;
+  transition: color .15s ease, padding-left .15s ease;
+}
+.svc-nav__list a svg { width: 14px; height: 14px; flex: none; opacity: 0; transform: translateX(-4px); transition: opacity .15s ease, transform .15s ease; }
+.svc-nav__list a:hover { color: var(--teal-600); padding-left: .4rem; }
+.svc-nav__list a:hover svg { opacity: 1; transform: none; }
+.svc-nav__list a.is-active { color: var(--teal-600); font-weight: 700; }
+.svc-nav__list a.is-active svg { opacity: 1; transform: none; }
+.booking .form { margin-top: 1rem; }
+.booking .field { margin-bottom: .8rem; }
+.booking .btn { width: 100%; }
 .doc-facts dl { margin: 0 0 1.4rem; display: grid; gap: 0; }
 .doc-facts dl > div { display: grid; gap: .15rem; padding: .8rem 0; border-bottom: 1px solid var(--line); }
 .doc-facts dl > div:first-child { padding-top: 0; }
