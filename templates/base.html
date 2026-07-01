@@ -218,6 +218,37 @@
       groups.forEach(function (g) { io.observe(g); });
     })();
 
+    // Nav pill: a single highlight that slides between links on hover and
+    // returns to the active link when the cursor leaves.
+    (function () {
+      var nav = document.querySelector('[data-navpill]');
+      if (!nav) return;
+      var slider = nav.querySelector('.navpill__slider');
+      var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+      if (!slider || !links.length) return;
+      var active = nav.querySelector('a.is-active') || links[0];
+
+      function moveTo(link) {
+        slider.style.width = link.offsetWidth + 'px';
+        slider.style.height = link.offsetHeight + 'px';
+        slider.style.transform = 'translate(' + link.offsetLeft + 'px,' + link.offsetTop + 'px)';
+        links.forEach(function (l) { l.classList.toggle('is-current', l === link); });
+      }
+      function place(link) {                 // position instantly (no slide)
+        slider.style.transition = 'none';
+        moveTo(link);
+        // force reflow, then restore transitions
+        void slider.offsetWidth;
+        slider.style.transition = '';
+      }
+
+      nav.classList.add('is-ready');
+      place(active);
+      links.forEach(function (l) { l.addEventListener('mouseenter', function () { moveTo(l); }); });
+      nav.addEventListener('mouseleave', function () { moveTo(active); });
+      window.addEventListener('resize', function () { place(nav.querySelector('a.is-current') || active); });
+    })();
+
     // Mega-menu hover intent: keep it open while moving from trigger to panel.
     (function () {
       var hm = document.querySelector('.has-mega');

@@ -35,7 +35,8 @@
       </a>
 
       {% with ns=request.resolver_match.namespace un=request.resolver_match.url_name %}
-      <nav class="navpill" aria-label="Primary">
+      <nav class="navpill" aria-label="Primary" data-navpill>
+        <span class="navpill__slider" aria-hidden="true"></span>
         <a href="{% rurl 'core:home' %}" class="{% if ns == 'core' and un == 'home' %}is-active{% endif %}">Home</a>
         <a href="{% rurl 'services:list' %}" class="{% if ns == 'services' %}is-active{% endif %}">Services</a>
         <a href="{% rurl 'team:list' %}" class="{% if ns == 'team' %}is-active{% endif %}">Our Team</a>
