@@ -493,9 +493,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* Panels — FIXED height; long content scrolls inside the body */
 .docpanel { display: none; grid-template-columns: 360px 1fr; gap: 2.2rem; align-items: stretch; height: 470px; }
 .docpanel.is-active { display: grid; animation: fadeUp .4s ease; }
-.docpanel__media { position: relative; }
-.docpanel__media img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow-lg); }
-.docpanel__media .avatar--xl { width: 100%; height: 100%; border-radius: var(--radius); }
+.docpanel__media {
+  position: relative; min-height: 0; overflow: hidden;   /* clip tall photo to the panel height */
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+}
+.docpanel__media img { width: 100%; height: 100%; object-fit: cover; }
+.docpanel__media .avatar--xl { width: 100%; height: 100%; }
 .badge-avail {
   position: absolute; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: .45rem;
   background: #fff; color: var(--teal-600); font-weight: 600; font-size: .8rem; padding: .4rem .8rem;
