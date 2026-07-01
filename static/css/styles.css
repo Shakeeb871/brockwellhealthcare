@@ -20,9 +20,9 @@
      reviews, so they read as authentic Google reviews. Not part of the theme. */
   --google-blue: #4285f4;
   --google-gold: #fbbc04;
-  --ink:      #14241a;
-  --slate-600:#566b5c;
-  --slate-400:#9aa89d;
+  --ink:      #1a1c20;  /* professional near-black body text */
+  --slate-600:#4d545c;  /* neutral grey — secondary text */
+  --slate-400:#8b929c;  /* neutral grey — muted / placeholders */
   --line:     #e4ebe2;
   --bg:       #ffffff;
   --bg-soft:  #f6f7f9;   /* neutral light grey (not green-tinted) */
@@ -49,7 +49,7 @@ body {
   color: var(--ink);
   background: var(--bg);
   line-height: 1.7;
-  font-size: 16.5px;
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -58,10 +58,19 @@ img { max-width: 100%; height: auto; display: block; }
 a { color: var(--teal-600); text-decoration: none; transition: color .2s ease; }
 a:hover { color: var(--teal-500); }
 
-h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.18; color: var(--navy-800); font-weight: 700; margin: 0 0 .5em; }
-h1 { font-size: clamp(2.1rem, 4.6vw, 3.4rem); letter-spacing: -.02em; }
-h2 { font-size: clamp(1.6rem, 3.2vw, 2.4rem); letter-spacing: -.015em; font-weight: 600; }
-h3 { font-size: 1.3rem; font-weight: 600; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display); line-height: 1.18; color: var(--navy-800);
+  font-weight: 700; margin: 0 0 .5em;   /* all headings share one bold weight */
+}
+/* Every heading starts with a capital letter. */
+h1::first-letter, h2::first-letter, h3::first-letter,
+h4::first-letter, h5::first-letter, h6::first-letter { text-transform: uppercase; }
+h1 { font-size: clamp(2rem, 4.4vw, 3.2rem); letter-spacing: -.02em; }
+h2 { font-size: clamp(1.55rem, 3.1vw, 2.3rem); letter-spacing: -.015em; }
+h3 { font-size: 1.25rem; }
+h4 { font-size: 1.1rem; }
+h5 { font-size: 1rem; }
+h6 { font-size: .9rem; }
 p { margin: 0 0 1rem; }
 
 strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
