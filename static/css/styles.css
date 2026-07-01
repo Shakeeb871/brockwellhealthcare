@@ -15,6 +15,7 @@
   --teal-500: #3f9a59;  /* hover */
   --teal-400: #9cc06f;  /* sage accent (matches logo DNA helix) */
   --mint-50:  #eef4e3;  /* pale sage surface */
+  --mint-tint:#e7f7ee;  /* light mint wash — flat section background */
   --ink:      #14241a;
   --slate-600:#566b5c;
   --slate-400:#9aa89d;
@@ -860,11 +861,8 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
    Our Impact — circular statistic counters
    ========================================================================= */
 .impact {
-  /* Prominent dark forest-green band (theme brand darks + faint sage glows). */
-  background:
-    radial-gradient(55% 55% at 12% 18%, var(--navy-700), transparent 70%),
-    radial-gradient(50% 50% at 92% 85%, var(--navy-700), transparent 70%),
-    linear-gradient(135deg, var(--navy-800), var(--navy-900));
+  /* Prominent dark forest-green band — flat solid (no gradient). */
+  background: var(--navy-800);
 }
 .impact .section__head h2 { color: var(--white); }
 .impact .eyebrow { color: var(--teal-400); }
@@ -928,10 +926,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
    Care Journey — premium circular process flow with connected nodes
    ========================================================================= */
 .journey {
-  background:
-    radial-gradient(50% 60% at 10% 10%, var(--mint-50), transparent 70%),
-    radial-gradient(45% 55% at 92% 90%, var(--mint-50), transparent 70%),
-    linear-gradient(180deg, var(--bg), var(--bg-soft));
+  background: var(--mint-tint);   /* flat light mint (no gradient) */
 }
 .journey .section__head { max-width: 720px; margin-inline: auto; }
 
