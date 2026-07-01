@@ -7,25 +7,48 @@
 <section class="section">
   <div class="container">
     {% if categories %}
-    <div class="svc-cats">
+    <div class="svc-tabs" id="svc-tabs">
+      <div class="svc-tabs__nav" role="tablist" aria-label="Service categories">
+        {% for cat in categories %}
+        <button type="button" class="svc-tab{% if forloop.first %} is-active{% endif %}"
+                role="tab" id="svc-tab-{{ cat.slug }}" data-svc-tab="{{ cat.slug }}"
+                aria-controls="svc-panel-{{ cat.slug }}"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                tabindex="{% if forloop.first %}0{% else %}-1{% endif %}">
+          <span class="svc-tab__ico" aria-hidden="true">{% category_icon cat.slug %}</span>
+          <span class="svc-tab__label">{{ cat.name }}</span>
+        </button>
+        {% endfor %}
+      </div>
+
       {% for cat in categories %}
-      <article class="svc-band">
-        <div class="svc-band__aside">
-          <span class="svc-band__icon" aria-hidden="true">{% category_icon cat.slug %}</span>
-          <h2 class="svc-band__title"><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></h2>
-          {% if cat.summary %}<p class="svc-band__summary">{{ cat.summary }}</p>{% endif %}
-          <a class="svc-band__link" href="{{ cat.get_absolute_url }}">Explore all {% icon 'arrow' %}</a>
+      <div class="svc-panel{% if forloop.first %} is-active{% endif %}"
+           id="svc-panel-{{ cat.slug }}" data-svc-panel="{{ cat.slug }}"
+           role="tabpanel" aria-labelledby="svc-tab-{{ cat.slug }}"
+           {% if not forloop.first %}hidden{% endif %}>
+        <div class="svc-panel__head">
+          <div>
+            <h2 class="svc-panel__title">{{ cat.name }}</h2>
+            {% if cat.summary %}<p class="svc-panel__summary">{{ cat.summary }}</p>{% endif %}
+          </div>
+          <a class="btn btn--ghost" href="{{ cat.get_absolute_url }}">View {{ cat.name }}</a>
         </div>
         {% with subs=cat.published_services %}
         {% if subs %}
-        <div class="svc-band__services">
+        <div class="svc-sub-grid">
           {% for s in subs %}
-          <a class="svc-pill" href="{{ s.get_absolute_url }}">{{ s.name }}</a>
+          <a class="svc-sub" href="{{ s.get_absolute_url }}">
+            <span class="svc-sub__name">{{ s.name }}</span>
+            {% if s.summary %}<span class="svc-sub__desc">{{ s.summary }}</span>{% endif %}
+            <span class="svc-sub__more">Learn more {% icon 'arrow' %}</span>
+          </a>
           {% endfor %}
         </div>
+        {% else %}
+        <p class="muted">Details for this area are coming soon — <a href="{% rurl 'core:contact' %}">get in touch</a> to learn more.</p>
         {% endif %}
         {% endwith %}
-      </article>
+      </div>
       {% endfor %}
     </div>
     {% else %}
@@ -33,4 +56,43 @@
     {% endif %}
   </div>
 </section>
+{% endblock %}
+
+{% block body_extra %}
+<script>
+(function () {
+  var root = document.getElementById('svc-tabs');
+  if (!root) return;
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('.svc-tab'));
+  var panels = Array.prototype.slice.call(root.querySelectorAll('.svc-panel'));
+
+  function activate(slug, focus) {
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-svc-tab') === slug;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    panels.forEach(function (p) {
+      var on = p.getAttribute('data-svc-panel') === slug;
+      p.classList.toggle('is-active', on);
+      p.hidden = !on;
+    });
+  }
+
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener('click', function () {
+      activate(tab.getAttribute('data-svc-tab'), false);
+    });
+    tab.addEventListener('keydown', function (e) {
+      var dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!dir) return;
+      e.preventDefault();
+      var next = (i + dir + tabs.length) % tabs.length;
+      activate(tabs[next].getAttribute('data-svc-tab'), true);
+    });
+  });
+})();
+</script>
 {% endblock %}
