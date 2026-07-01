@@ -1089,10 +1089,24 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .bform__note a { font-weight: 600; }
 
 /* =========================================================================
-   Verified Google reviews — 4-column grid
+   Verified Google reviews — continuous right-to-left auto-loop slider
    ========================================================================= */
-.rgrid__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+.rmarquee {
+  position: relative; overflow: hidden; margin-top: 2.5rem;
+  /* Fade the two edges so cards slide in/out softly. */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+.rmarquee__track {
+  display: flex; width: max-content; align-items: stretch;
+  animation: rmarquee 55s linear infinite;   /* right → left, seamless loop */
+}
+.rmarquee:hover .rmarquee__track,
+.rmarquee:focus-within .rmarquee__track { animation-play-state: paused; }
+@keyframes rmarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
 .grev {
+  flex: 0 0 340px; width: 340px; margin-right: 1.5rem;
   background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow); padding: 1.5rem;
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
@@ -1126,10 +1140,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .grev__stars .gstar { width: 16px; height: 16px; fill: var(--google-gold); stroke: none; }
 .grev__text { margin: 0; font-size: .92rem; color: var(--slate-600); }
 
-@media (max-width: 1024px) { .rgrid__grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 900px) {
-  .rb__grid { grid-template-columns: 1fr; gap: 2.4rem; }
-  .rgrid__grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 560px) { .rgrid__grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .rb__grid { grid-template-columns: 1fr; gap: 2.4rem; } }
+@media (max-width: 560px) { .grev { flex-basis: 80vw; width: 80vw; } }
 @media (max-width: 480px) { .bform__row { grid-template-columns: 1fr; } }
+
+/* Respect reduced-motion: stop the auto-scroll, allow manual swipe instead. */
+@media (prefers-reduced-motion: reduce) {
+  .rmarquee { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .rmarquee__track { animation: none; }
+}
