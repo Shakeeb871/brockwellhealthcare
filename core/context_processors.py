@@ -22,6 +22,18 @@ def site_context(request):
     except Exception:
         nav_categories = []
 
+    # Latest blog posts for the footer "Recent Posts" column.
+    footer_posts = []
+    try:
+        from blog.models import BlogPost
+
+        footer_posts = list(
+            BlogPost.objects.filter(region=region_code, is_published=True)
+            .select_related("category")[:3]
+        )
+    except Exception:
+        footer_posts = []
+
     return {
         "BRAND_NAME": settings.BRAND_NAME,
         "BRAND_TAGLINE": settings.BRAND_TAGLINE,
@@ -30,6 +42,7 @@ def site_context(request):
         "region_code": region_code,
         "enabled_regions": enabled_regions(),
         "nav_categories": nav_categories,
+        "footer_posts": footer_posts,
         "STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY,
         "DEFAULT_OG_IMAGE": settings.DEFAULT_OG_IMAGE,
         "SITE_NOINDEX": settings.SITE_NOINDEX,

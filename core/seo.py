@@ -213,6 +213,30 @@ def event_schema(event, region):
     return data
 
 
+def article_schema(post, region):
+    if post.image:
+        images = [absolute(post.image.url)]
+    else:
+        images = [absolute(settings.STATIC_URL + settings.DEFAULT_OG_IMAGE)]
+    return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": post.excerpt,
+        "image": images,
+        "datePublished": post.published_at.isoformat(),
+        "dateModified": post.updated_at.isoformat(),
+        "author": {"@type": "Organization", "name": post.author},
+        "publisher": {
+            "@type": "Organization",
+            "name": settings.BRAND_NAME,
+            "url": f"https://{settings.SITE_DOMAIN}/{region['code']}/",
+        },
+        "mainEntityOfPage": region_absolute(region["code"], "blog:detail", slug=post.slug),
+        "articleSection": post.category.name if post.category_id else "Insights",
+    }
+
+
 def faq_schema(faqs):
     if not faqs:
         return None

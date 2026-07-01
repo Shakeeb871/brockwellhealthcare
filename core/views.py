@@ -8,6 +8,7 @@ from django.views.decorators.http import require_http_methods
 from django.http import Http404
 from django.db.models import Q
 
+from blog.models import BlogPost
 from events.models import Event
 from services.models import Service, ServiceCategory
 from team.models import Doctor
@@ -215,6 +216,7 @@ def home(request):
     upcoming = [e for e in events if e.is_upcoming][:3]
     doctors = Doctor.objects.filter(region=code, is_published=True)[:20]
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
+    latest_posts = BlogPost.objects.filter(region=code, is_published=True).select_related("category")[:3]
 
     meta = seo.build_meta(
         request,
@@ -251,7 +253,7 @@ def home(request):
             "facilities": _facilities_with_images(),
             "network_locations": NETWORK_LOCATIONS,
             "network_features": NETWORK_FEATURES,
-            "news_articles": NEWS_ARTICLES,
+            "news_posts": latest_posts,
         },
     )
 

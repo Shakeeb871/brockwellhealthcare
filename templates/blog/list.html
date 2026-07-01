@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load region_tags icons %}
+
+{% block content %}
+<div class="page-head">
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> /
+      {% if active_category %}<a href="{% rurl 'blog:list' %}">Insights</a> / <span>{{ active_category.name }}</span>
+      {% else %}<span>Insights</span>{% endif %}
+    </nav>
+    <span class="eyebrow">News &amp; Insights</span>
+    <h1>{% if active_category %}{{ active_category.name }}{% else %}Insights &amp; Articles{% endif %}</h1>
+    <p class="muted" style="max-width:64ch">
+      {% if active_category and active_category.description %}{{ active_category.description }}
+      {% else %}Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists in {{ region.name }}.{% endif %}
+    </p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container blog-layout">
+    <div class="blog-main">
+      <div class="blog-filters">
+        <a class="blog-chip{% if not active_category %} is-active{% endif %}" href="{% rurl 'blog:list' %}">All</a>
+        {% for c in categories %}
+        <a class="blog-chip{% if active_category and active_category.slug == c.slug %} is-active{% endif %}" href="{{ c.get_absolute_url }}">{{ c.name }}</a>
+        {% endfor %}
+      </div>
+
+      {% if posts %}
+      <div class="blog-grid">
+        {% for p in posts %}
+        <article class="post">
+          <a class="post__media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
+            {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}" loading="lazy" decoding="async">{% endif %}
+            {% if p.category %}<span class="post__badge">{{ p.category.name }}</span>{% endif %}
+          </a>
+          <div class="post__body">
+            <div class="post__meta">
+              <span class="post__metaitem">{% icon 'calendar' 'ico' %} {{ p.published_at|date:"d M Y" }}</span>
+              <span class="post__metaitem">{% icon 'clock' 'ico' %} {{ p.reading_time }} min read</span>
+            </div>
+            <h3 class="post__title"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3>
+            <p class="post__desc">{{ p.excerpt }}</p>
+            <a class="post__link" href="{{ p.get_absolute_url }}">Read More {% icon 'arrow' 'ico' %}</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+
+      {% if page_obj.has_other_pages %}
+      <nav class="pagination" aria-label="Pagination">
+        {% if page_obj.has_previous %}<a class="pagination__btn" href="?page={{ page_obj.previous_page_number }}">{% icon 'chevron-left' %}</a>{% endif %}
+        <span class="pagination__info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a class="pagination__btn" href="?page={{ page_obj.next_page_number }}">{% icon 'chevron' %}</a>{% endif %}
+      </nav>
+      {% endif %}
+      {% else %}
+      <p class="muted">No articles here yet — check back soon.</p>
+      {% endif %}
+    </div>
+
+    {% include "blog/_sidebar.html" %}
+  </div>
+</section>
+{% endblock %}

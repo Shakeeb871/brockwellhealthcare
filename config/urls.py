@@ -38,6 +38,7 @@ urlpatterns = [
     path("services/", include("services.urls")),
     path("events/", include("events.urls")),
     path("team/", include("team.urls")),
+    path("blog/", include("blog.urls")),
     path("checkout/", include("payments.urls")),
     path("", include("core.urls")),
 ]

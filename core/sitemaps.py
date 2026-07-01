@@ -2,6 +2,7 @@
 
 from django.contrib.sitemaps import Sitemap
 
+from blog.models import BlogCategory, BlogPost
 from events.models import Event
 from services.models import Service, ServiceCategory
 from team.models import Doctor
@@ -18,7 +19,7 @@ class StaticViewSitemap(Sitemap):
     def items(self):
         pages = [
             "core:home", "core:about", "core:contact",
-            "services:list", "events:list", "team:list",
+            "services:list", "events:list", "team:list", "blog:list",
         ]
         return [
             (region["code"], name)
@@ -110,6 +111,36 @@ class PageSitemap(Sitemap):
         return obj.updated_at
 
 
+class BlogPostSitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.7
+    protocol = "https"
+
+    def items(self):
+        return list(BlogPost.objects.filter(region__in=_codes(), is_published=True))
+
+    def location(self, obj):
+        return obj.get_absolute_url()
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+
+class BlogCategorySitemap(Sitemap):
+    changefreq = "weekly"
+    priority = 0.5
+    protocol = "https"
+
+    def items(self):
+        return list(BlogCategory.objects.filter(region__in=_codes(), is_published=True))
+
+    def location(self, obj):
+        return obj.get_absolute_url()
+
+    def lastmod(self, obj):
+        return obj.updated_at
+
+
 sitemaps = {
     "static": StaticViewSitemap,
     "categories": CategorySitemap,
@@ -117,4 +148,6 @@ sitemaps = {
     "team": DoctorSitemap,
     "events": EventSitemap,
     "pages": PageSitemap,
+    "blog": BlogPostSitemap,
+    "blog_categories": BlogCategorySitemap,
 }
