@@ -44,6 +44,33 @@ _ICONS = {
     "building": '<path d="M4 21V4h10v17"/><path d="M14 10h6v11"/><path d="M2.5 21h19"/><path d="M7 7.5h4M7 11h4M7 14.5h4M17 13.5h0M17 17h0"/>',
     "globe-pin": '<circle cx="12" cy="10" r="8"/><path d="M4 10h16M12 2c2.5 2.6 2.5 12.4 0 16M12 2c-2.5 2.6-2.5 12.4 0 16"/>',
     "chat": '<path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3v-3H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/>',
+    # --- service-specific glyphs ---------------------------------------- #
+    "droplet": '<path d="M12 3.2c3.2 3.6 5.3 6.6 5.3 9.6a5.3 5.3 0 0 1-10.6 0c0-3 2.1-6 5.3-9.6z"/>',
+    "plasma": '<path d="M12 3.2c3.2 3.6 5.3 6.6 5.3 9.6a5.3 5.3 0 0 1-10.6 0c0-3 2.1-6 5.3-9.6z"/><path d="M12 10.5v4.5M9.7 12.7h4.6"/>',
+    "syringe": '<path d="M15 3l6 6"/><path d="M18.5 5.5 8 16"/><path d="M13 7.5l3.5 3.5"/><path d="M10 10.5l3.5 3.5"/><path d="M8 16H5.5L3 18.5"/>',
+    "brain": '<path d="M9.5 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.8V15a3 3 0 0 0 4 2.8"/><path d="M14.5 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.8V15a3 3 0 0 1-4 2.8"/><path d="M12 4.6v13.8"/>',
+    "lungs": '<path d="M12 4v7"/><path d="M12 9c-1-1.6-3-1.4-3 .6 0 0-2 .6-3 3.1s-1 5.5 0 6.4 3 .4 3-1 .6-5.6 0-9.1z"/><path d="M12 9c1-1.6 3-1.4 3 .6 0 0 2 .6 3 3.1s1 5.5 0 6.4-3 .4-3-1-.6-5.6 0-9.1z"/>',
+    "iv-bag": '<rect x="9" y="3" width="6" height="9" rx="1.6"/><path d="M11 6.2h2"/><path d="M12 12v5a2 2 0 0 0 2 2h1.5"/>',
+    "male": '<circle cx="10" cy="14" r="5.5"/><path d="M14 10l6-6"/><path d="M15 4h5v5"/>',
+    "apple": '<path d="M12 8.2c-1-2-3.4-2.4-5 0-1.4 2.2-.9 6 .9 8 1 1.1 2 1.6 4.1 1.6s3.1-.5 4.1-1.6c1.8-2 2.3-5.8.9-8-1.6-2.4-4-2-5 0z"/><path d="M12 8.2V5a3 3 0 0 1 3-3"/>',
+    "magnet": '<path d="M6 4h4v8a2 2 0 0 0 4 0V4h4v8a6 6 0 0 1-12 0z"/><path d="M6 8.5h4M14 8.5h4"/>',
+    "sun": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/>',
+    "waveform": '<circle cx="12" cy="12" r="1.4"/><path d="M8.2 8.2a6 6 0 0 0 0 7.6M5.8 5.8a9.4 9.4 0 0 0 0 12.4M15.8 8.2a6 6 0 0 1 0 7.6M18.2 5.8a9.4 9.4 0 0 1 0 12.4"/>',
+    "spa": '<path d="M12 20c-2-1.5-3.2-3.8-3.2-6.2 0-2.6 1.4-4.9 3.2-6.3 1.8 1.4 3.2 3.7 3.2 6.3 0 2.4-1.2 4.7-3.2 6.2z"/><path d="M12 20c-3.8 0-6.6-2.4-6.8-6 2 0 3.6 1 4.7 2.3M12 20c3.8 0 6.6-2.4 6.8-6-2 0-3.6 1-4.7 2.3"/>',
+    "kidney": '<path d="M10 4C6 4 4 7 4 12s2 8 6 8c2.2 0 3-1.6 3.6-3 .5-1.2 1-1.8 2-1.8 1.7 0 2.4-1.7 2.4-4.2C18 5.5 14 4 10 4z"/>',
+    "bone": '<path d="M17.5 3.2a2.1 2.1 0 0 1 1.9 3.3 2.1 2.1 0 1 1-1.6 3.4l-7.7 7.7a2.1 2.1 0 1 1-3.4 1.6 2.1 2.1 0 1 1-1.6-3.4l7.7-7.7a2.1 2.1 0 0 1 3.3-1.9 2.1 2.1 0 0 1 1.4-3z"/>',
+    "flask": '<path d="M9 3h6M10 3v5.5l-4.6 7.7A2 2 0 0 0 7.1 19h9.8a2 2 0 0 0 1.7-2.8L14 8.5V3"/><path d="M7.5 15h9"/>',
+    "run": '<circle cx="15.5" cy="5" r="1.9"/><path d="M6 20.5l3-5 3 2 1.5 4.5M12 17.5l-1.2-6 4-2 2 3 3 1M8.5 9.5l2.5-1"/>',
+    "molecule": '<circle cx="6" cy="7" r="2"/><circle cx="18" cy="9" r="2"/><circle cx="10" cy="18" r="2"/><circle cx="12.5" cy="11" r="2"/><path d="M7.7 8.3 10.7 9.8M16.2 9.9 14.4 10.4M11.4 12.9 10.6 16.1"/>',
+    "clipboard": '<rect x="5" y="4.5" width="14" height="16.5" rx="2"/><path d="M9 4.5a3 3 0 0 1 6 0"/><path d="M12 10.5v5M9.5 13h5"/>',
+    "hand": '<path d="M8 11V6.2a1.5 1.5 0 0 1 3 0V10M11 10V4.7a1.5 1.5 0 0 1 3 0V10M14 10.2V6.5a1.5 1.5 0 0 1 3 0V14c0 3.6-2.4 6.5-6 6.5-2.5 0-4.3-1.3-5.7-3.4L4 13.4a1.6 1.6 0 0 1 2.6-1.8L8 13.3"/>',
+    "cells": '<circle cx="9" cy="10" r="4.2"/><circle cx="16.5" cy="15.5" r="3.4"/><circle cx="9" cy="10" r="1.3"/><circle cx="16.5" cy="15.5" r="1"/>',
+    "refresh": '<path d="M4 11a8 8 0 0 1 13.7-4.7L20 8.5M20 13a8 8 0 0 1-13.7 4.7L4 15.5"/><path d="M20 3.5V8.5h-5M4 20.5V15.5h5"/>',
+    "capsule": '<path d="M8.6 3.6a5 5 0 0 1 7 7l-5 5a5 5 0 0 1-7-7z"/><path d="M6.1 8.1l5 5"/>',
+    "vial": '<path d="M8 3h8M9.5 3v13a2.5 2.5 0 0 0 5 0V3"/><path d="M9.5 11h5"/>',
+    "chair": '<path d="M6.5 4v7.5h9V4"/><path d="M5 11.5h12"/><path d="M6.5 11.5 5.5 20M15.5 11.5l1 8.5"/><path d="M8 20h6"/>',
+    "muscle": '<path d="M5 8.5c2.2-1.3 4.2-1 5.2 1 .8 1.5 2.1 2.1 3.8 2.1 2.1 0 3.5 1.6 3.5 4.1v1.8a1.5 1.5 0 0 1-1.5 1.5H8.2A3.2 3.2 0 0 1 5 16.8z"/><path d="M5 8.5C3.8 6.6 3.9 4.6 6 3.4"/>',
+    "scan": '<rect x="3" y="4" width="18" height="12.5" rx="2"/><path d="M7.5 20.5h9M12 16.5v4"/><path d="M7.5 11a5 5 0 0 1 4.5-3 5 5 0 0 1 4.5 3"/><path d="M12 8v3.2"/>',
 }
 
 _CATEGORY = {
@@ -53,6 +80,45 @@ _CATEGORY = {
     "anti-aging-aesthetics": "sparkles",
     "advanced-diagnostics": "microscope",
     "emsculpt-for-pain": "zap",
+}
+
+# Unique, relevant glyph per sub-service (falls back to its category icon).
+_SERVICE = {
+    # regenerative-wellness
+    "detox-therapy": "droplet",
+    "hydrodissection-injections": "syringe",
+    "exomind-tms-wellness": "brain",
+    "hyperbaric-oxygen-therapy": "lungs",
+    "iv-laser-therapy": "iv-bag",
+    "male-wellness": "male",
+    "sexual-health": "heart",
+    "nutrition-weight-loss": "apple",
+    "pemf-therapy": "magnet",
+    "red-light-therapy": "sun",
+    "shock-wave-therapy": "waveform",
+    "stress-management": "spa",
+    "urology-services": "kidney",
+    # regenerative-medicine
+    "regenerative-orthopedics": "bone",
+    "biological-integrative-medicine": "flask",
+    "sports-medicine": "run",
+    "exosome-therapy": "molecule",
+    "functional-medicine": "clipboard",
+    "genomics-medicine": "dna",
+    "physiotherapy": "hand",
+    # longevity-healthspan
+    "healthspan": "pulse",
+    "longevity-medicine": "clock",
+    "stem-cells": "cells",
+    "stress-reset": "refresh",
+    "ketamine-therapy": "capsule",
+    "longevity-ivs": "vial",
+    # anti-aging-aesthetics
+    "pure-plasma": "plasma",
+    "emsella": "chair",
+    "emsculpt-neo": "muscle",
+    # advanced-diagnostics
+    "ultrasound-diagnostics": "scan",
 }
 
 
@@ -95,3 +161,10 @@ def icon(name, cls="ico"):
 @register.simple_tag
 def category_icon(slug, cls="ico"):
     return _svg(_ICONS.get(_CATEGORY.get(slug, "plus"), _ICONS["plus"]), cls)
+
+
+@register.simple_tag
+def service_icon(slug, cls="ico", category_slug=None):
+    """Unique glyph for a sub-service; falls back to its category icon, then plus."""
+    key = _SERVICE.get(slug) or _CATEGORY.get(category_slug, "plus")
+    return _svg(_ICONS.get(key, _ICONS["plus"]), cls)

@@ -20,6 +20,7 @@
         </button>
         {% endfor %}
       </div>
+      <div class="svc-tabs__rail" aria-hidden="true"><span class="svc-tabs__thumb"></span></div>
 
       {% for cat in categories %}
       <div class="svc-panel{% if forloop.first %} is-active{% endif %}"
@@ -38,6 +39,7 @@
         <div class="svc-sub-grid">
           {% for s in subs %}
           <a class="svc-sub" href="{{ s.get_absolute_url }}">
+            <span class="svc-sub__ico" aria-hidden="true">{% service_icon s.slug 'ico' cat.slug %}</span>
             <span class="svc-sub__name">{{ s.name }}</span>
             {% if s.summary %}<span class="svc-sub__desc">{{ s.summary }}</span>{% endif %}
             <span class="svc-sub__more">Learn more {% icon 'arrow' %}</span>
@@ -63,23 +65,45 @@
 (function () {
   var root = document.getElementById('svc-tabs');
   if (!root) return;
+  var nav = root.querySelector('.svc-tabs__nav');
+  var thumb = root.querySelector('.svc-tabs__thumb');
   var tabs = Array.prototype.slice.call(root.querySelectorAll('.svc-tab'));
   var panels = Array.prototype.slice.call(root.querySelectorAll('.svc-panel'));
 
+  function updateRail() {
+    var sw = nav.scrollWidth, cw = nav.clientWidth, max = sw - cw;
+    var scrollable = max > 2;
+    root.classList.toggle('has-scroll', scrollable);
+    if (scrollable && thumb) {
+      var ratio = cw / sw;
+      thumb.style.width = (ratio * 100) + '%';
+      thumb.style.left = (max ? (nav.scrollLeft / max) * (100 - ratio * 100) : 0) + '%';
+    }
+  }
+
   function activate(slug, focus) {
+    var activeTab = null;
     tabs.forEach(function (t) {
       var on = t.getAttribute('data-svc-tab') === slug;
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-selected', on ? 'true' : 'false');
       t.tabIndex = on ? 0 : -1;
-      if (on && focus) t.focus();
+      if (on) { activeTab = t; if (focus) t.focus(); }
     });
     panels.forEach(function (p) {
       var on = p.getAttribute('data-svc-panel') === slug;
       p.classList.toggle('is-active', on);
       p.hidden = !on;
     });
+    if (activeTab && activeTab.scrollIntoView) {
+      activeTab.scrollIntoView({ block: 'nearest', inline: 'center' });
+    }
   }
+
+  nav.addEventListener('scroll', updateRail, { passive: true });
+  window.addEventListener('resize', updateRail);
+  window.addEventListener('load', updateRail);
+  updateRail();
 
   tabs.forEach(function (tab, i) {
     tab.addEventListener('click', function () {
