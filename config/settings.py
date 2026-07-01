@@ -76,6 +76,7 @@ INSTALLED_APPS = [
 
 # Rich-text editor (TinyMCE) used in the admin for long-form content fields.
 TINYMCE_DEFAULT_CONFIG = {
+    "license_key": "gpl",
     "height": 480,
     "menubar": "edit view insert format tools table",
     "plugins": (

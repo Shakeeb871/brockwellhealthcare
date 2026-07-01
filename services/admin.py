@@ -1,4 +1,4 @@
-from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
+from adminsortable2.admin import SortableAdminBase, SortableStackedInline
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
@@ -6,7 +6,7 @@ from core.admin import FAQItemInline
 from .models import PageSection, Service, ServiceCategory
 
 
-class PageSectionInline(SortableInlineAdminMixin, admin.StackedInline):
+class PageSectionInline(SortableStackedInline):
     """Drag-and-drop reorderable, pre-designed content blocks for a service."""
 
     model = PageSection

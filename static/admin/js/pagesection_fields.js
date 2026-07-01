@@ -9,6 +9,7 @@
   var MAP = {
     text:       ["eyebrow", "heading", "body", "image"],
     benefits:   ["heading", "items"],
+    journey:    ["eyebrow", "heading", "body", "items"],
     treatments: ["eyebrow", "heading"],
     counters:   ["eyebrow", "heading", "items"],
     why:        ["eyebrow", "heading", "body", "items"],

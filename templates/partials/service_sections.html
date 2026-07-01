@@ -7,6 +7,33 @@ Context: `sections` (published PageSection list), `service`, `form`,
 {% if sec.kind == "reviews" %}
 {% include "partials/reviews_grid.html" %}
 
+{% elif sec.kind == "journey" %}
+<section class="section journey{% if sec.background == 'soft' %} section--soft{% elif sec.background == 'dark' %} section--dark{% endif %}">
+  <div class="container">
+    {% if sec.eyebrow or sec.heading or sec.body %}
+    <header class="section__head">
+      {% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}
+      {% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}
+      {% if sec.body %}<p>{{ sec.body|striptags }}</p>{% endif %}
+    </header>
+    {% endif %}
+    <ol class="journey__track" data-journey role="list">
+      {% for row in sec.item_rows %}
+      <li class="jstep" style="--i: {{ forloop.counter0 }}">
+        <div class="jstep__node">
+          <span class="jstep__ic" aria-hidden="true">{% icon row.2|default:"plus" %}</span>
+          <span class="jstep__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+        </div>
+        <div class="jstep__body">
+          <h3 class="jstep__title">{{ row.0 }}</h3>
+          {% if row.1 %}<p class="jstep__desc">{{ row.1 }}</p>{% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ol>
+  </div>
+</section>
+
 {% else %}
 <section class="section psec{% if sec.background == 'soft' %} section--soft{% elif sec.background == 'dark' %} section--dark{% endif %}">
   <div class="container">
