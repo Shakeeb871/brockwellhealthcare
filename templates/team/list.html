@@ -17,7 +17,7 @@
           <h3 class="team-card__name"><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
           {% if d.title %}<p class="team-card__title">{{ d.title }}</p>{% endif %}
           <p class="team-card__bio">{{ d.short_bio }}</p>
-          <a class="btn btn--primary team-card__btn" href="{{ d.get_absolute_url }}">View Profile {% icon 'arrow' 'ico' %}</a>
+          <a class="card__link" href="{{ d.get_absolute_url }}">View Profile {% icon 'arrow' 'ico' %}</a>
         </div>
       </article>
       {% endfor %}
