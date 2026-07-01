@@ -34,7 +34,7 @@ class ServiceAdmin(admin.ModelAdmin):
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
     fieldsets = (
-        (None, {"fields": ("region", "category", "name", "slug", "icon", "summary", "order", "is_published")}),
+        (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description", "benefits", "price")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
     )

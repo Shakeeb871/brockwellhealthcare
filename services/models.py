@@ -61,6 +61,10 @@ class Service(TimeStamped):
     name = models.CharField(max_length=160)
     slug = models.SlugField(max_length=180)
     icon = models.CharField(max_length=8, default="✦")
+    image = models.ImageField(
+        upload_to="services/", blank=True, null=True,
+        help_text="Card image shown on the category page. Recommended 16:10 ratio.",
+    )
     summary = models.CharField(max_length=255, help_text="One-line description for cards & meta.")
     description = models.TextField(help_text="Full description. Blank line separates paragraphs.")
     benefits = models.TextField(blank=True, help_text="One benefit per line; shown as a checklist.")
