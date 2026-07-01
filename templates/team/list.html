@@ -2,15 +2,7 @@
 {% load region_tags icons %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> / <span>Our Team</span>
-    </nav>
-    <h1>Our Team</h1>
-    <p class="muted" style="max-width:64ch">Meet the experienced clinicians and specialists behind {{ BRAND_NAME }} — dedicated to your regenerative health and longevity.</p>
-  </div>
-</div>
+{% include "partials/page_hero.html" with hero_eyebrow="Our Specialists" hero_title="Our Team" hero_lead="Meet the experienced clinicians and specialists behind "|add:BRAND_NAME|add:" — dedicated to your regenerative health and longevity." crumb_label="Our Team" %}
 
 <section class="section">
   <div class="container">

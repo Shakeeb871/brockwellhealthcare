@@ -2,14 +2,7 @@
 {% load region_tags %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> / <span>{{ page.title }}</span>
-    </nav>
-    <h1>{{ page.title }}</h1>
-  </div>
-</div>
+{% include "partials/page_hero.html" with hero_eyebrow="Legal" hero_title=page.title crumb_label=page.title %}
 
 <section class="section">
   <div class="container">

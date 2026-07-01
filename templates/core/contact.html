@@ -2,15 +2,7 @@
 {% load region_tags %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> / <span>Contact</span>
-    </nav>
-    <h1>Contact us</h1>
-    <p class="muted" style="max-width:60ch">We're here to answer your questions and help you take the next step. Reach our {{ region.name }} team below.</p>
-  </div>
-</div>
+{% include "partials/page_hero.html" with hero_eyebrow="Get In Touch" hero_title="Contact Us" hero_lead="We're here to answer your questions and help you take the next step. Reach our "|add:region.name|add:" team below." crumb_label="Contact" %}
 
 <section class="section">
   <div class="container split">

@@ -385,6 +385,97 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .breadcrumbs a { color: var(--slate-600); }
 .breadcrumbs a:hover { color: var(--teal-600); }
 
+/* -------------------------------------------------- Interior page hero (image) */
+.page-hero {
+  position: relative; overflow: hidden; isolation: isolate;
+  color: #eaf3e6;
+  background-color: #0c2616;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+}
+.page-hero::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  background: linear-gradient(112deg,
+    rgba(9,30,18,.95) 0%, rgba(18,53,31,.90) 40%,
+    rgba(18,53,31,.66) 74%, rgba(120,160,90,.26) 100%);
+}
+.page-hero__inner {
+  position: relative; z-index: 1;
+  padding-block: 4.5rem 3.25rem;
+}
+.page-hero__eyebrow {
+  display: inline-block; font-size: .72rem; letter-spacing: .14em;
+  text-transform: uppercase; font-weight: 700; color: #bfe3c4; margin-bottom: .75rem;
+}
+.page-hero__title {
+  font-family: var(--font-display); color: #fff; margin: 0;
+  font-size: clamp(1.9rem, 4.6vw, 2.9rem); line-height: 1.1;
+}
+.page-hero__lead {
+  margin: .95rem 0 0; max-width: 62ch; color: #d7e8d3;
+  font-size: 1rem; line-height: 1.6;
+}
+.page-hero__crumbs {
+  margin-top: 1.6rem; font-size: .82rem; color: #cfe3cd;
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+}
+.page-hero__crumbs a { color: #eaf3e6; text-decoration: none; opacity: .92; }
+.page-hero__crumbs a:hover { color: #fff; text-decoration: underline; }
+.page-hero__crumbs [aria-current="page"] { color: #fff; font-weight: 600; }
+.page-hero__sep { opacity: .5; }
+
+/* ------------------------------------------------ Services overview grid */
+.svc-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;
+}
+.svc-cat {
+  display: flex; flex-direction: column;
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.75rem; box-shadow: var(--shadow);
+  transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+}
+.svc-cat:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--teal-400); }
+.svc-cat__head { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.1rem; }
+.svc-cat__icon {
+  flex: none; width: 52px; height: 52px; border-radius: 14px;
+  display: grid; place-items: center;
+  background: var(--mint-50); color: var(--teal-600);
+}
+.svc-cat__icon svg { width: 26px; height: 26px; }
+.svc-cat__title { margin: 0; font-size: 1.2rem; line-height: 1.25; }
+.svc-cat__title a { color: var(--ink); text-decoration: none; }
+.svc-cat__title a:hover { color: var(--teal-600); }
+.svc-cat__summary { margin: .35rem 0 0; color: var(--slate-600); font-size: .9rem; line-height: 1.55; }
+.svc-cat__list {
+  list-style: none; margin: 0 0 1.25rem; padding: .4rem 0 0;
+  border-top: 1px solid var(--line); display: flex; flex-direction: column;
+}
+.svc-cat__list li { border-bottom: 1px solid var(--line); }
+.svc-cat__list li:last-child { border-bottom: 0; }
+.svc-cat__list a {
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  padding: .7rem .25rem; color: var(--ink); text-decoration: none;
+  font-size: .92rem; font-weight: 500;
+  transition: color .15s ease, padding-left .15s ease;
+}
+.svc-cat__list a:hover { color: var(--teal-600); padding-left: .55rem; }
+.svc-cat__arrow {
+  width: 15px; height: 15px; flex: none; opacity: 0; transform: translateX(-4px);
+  transition: opacity .15s ease, transform .15s ease;
+}
+.svc-cat__list a:hover .svc-cat__arrow { opacity: 1; transform: translateX(0); }
+.svc-cat__all {
+  margin-top: auto; font-weight: 600; color: var(--teal-600); text-decoration: none;
+  display: inline-flex; align-items: center; gap: .4rem; font-size: .9rem;
+  transition: gap .15s ease;
+}
+.svc-cat__all:hover { gap: .65rem; }
+.svc-cat__all svg { width: 16px; height: 16px; }
+
+@media (max-width: 520px) {
+  .svc-grid { grid-template-columns: 1fr; }
+  .page-hero__inner { padding-block: 3.25rem 2.5rem; }
+}
+
 /* ---------------------------------------------------------------- Article */
 .prose { max-width: 760px; }
 .prose p { color: #1f2b3d; }

@@ -1,0 +1,16 @@
+{% load static region_tags %}
+{% comment %} Reusable interior page hero: background image + forest-green overlay (matches
+homepage hero), then eyebrow, heading, lead copy, and breadcrumbs below.
+Args: hero_eyebrow (optional), hero_title, hero_lead (optional), crumb_label. {% endcomment %}
+<section class="page-hero" style="background-image:url('{% static 'img/brockwell-services-content.webp' %}')">
+  <div class="container page-hero__inner">
+    {% if hero_eyebrow %}<span class="page-hero__eyebrow">{{ hero_eyebrow }}</span>{% endif %}
+    <h1 class="page-hero__title">{{ hero_title }}</h1>
+    {% if hero_lead %}<p class="page-hero__lead">{{ hero_lead }}</p>{% endif %}
+    <nav class="page-hero__crumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a>
+      <span class="page-hero__sep" aria-hidden="true">/</span>
+      <span aria-current="page">{{ crumb_label }}</span>
+    </nav>
+  </div>
+</section>
