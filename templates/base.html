@@ -265,10 +265,14 @@
       }
 
       nav.classList.add('is-ready');
+      function reposition() { place(nav.querySelector('a.is-current') || active); }
       place(active);
       links.forEach(function (l) { l.addEventListener('mouseenter', function () { moveTo(l); }); });
       nav.addEventListener('mouseleave', function () { moveTo(active); });
-      window.addEventListener('resize', function () { place(nav.querySelector('a.is-current') || active); });
+      window.addEventListener('resize', reposition);
+      // Re-measure once web fonts finish loading (text width changes shift the pill).
+      if (document.fonts && document.fonts.ready) { document.fonts.ready.then(reposition); }
+      window.addEventListener('load', reposition);
     })();
 
     // Mega-menu hover intent: keep it open while moving from trigger to panel.
