@@ -3,8 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 CUSTOM_HEAD_HELP = (
-    "Optional custom code injected into this page's <head> — e.g. a "
-    '<script type="application/ld+json"> schema block or other head HTML.'
+    "Optional custom code injected into this page's &lt;head&gt; — e.g. a "
+    "&lt;script type=&quot;application/ld+json&quot;&gt; schema block or other head HTML."
 )
 
 # Region choices shared across apps. Keep in sync with settings.REGIONS.
