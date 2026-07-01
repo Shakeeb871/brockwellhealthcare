@@ -201,17 +201,20 @@
       stats.forEach(function (s) { io.observe(s); });
     })();
 
-    // Care Journey: reveal the process steps (staggered) when scrolled into view.
+    // Staggered scroll-reveal for grouped items (Care Journey steps, article cards).
     (function () {
-      var track = document.querySelector('[data-journey]');
-      if (!track) return;
-      if (!('IntersectionObserver' in window)) { track.classList.add('is-in'); return; }
+      var groups = document.querySelectorAll('[data-journey], [data-articles]');
+      if (!groups.length) return;
+      if (!('IntersectionObserver' in window)) {
+        groups.forEach(function (g) { g.classList.add('is-in'); });
+        return;
+      }
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); }
         });
-      }, { threshold: 0.25 });
-      io.observe(track);
+      }, { threshold: 0.2 });
+      groups.forEach(function (g) { io.observe(g); });
     })();
 
     // Mega-menu hover intent: keep it open while moving from trigger to panel.

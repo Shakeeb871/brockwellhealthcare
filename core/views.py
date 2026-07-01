@@ -124,6 +124,24 @@ NETWORK_FEATURES = [
 ]
 
 
+# Dummy blog/news articles for the "Recent Articles" section. Edit freely; add
+# an "image" static URL to any item to show a photo instead of the icon.
+NEWS_ARTICLES = [
+    {"category": "Regenerative Medicine", "icon": "dna", "image": "",
+     "date": "Jan 30, 2026", "comments": 4,
+     "title": "Advances in regenerative medicine for modern treatment",
+     "desc": "How the latest cellular therapies are reshaping long-term patient outcomes."},
+    {"category": "Stem Cell Therapy", "icon": "leaf", "image": "",
+     "date": "Jan 24, 2026", "comments": 6,
+     "title": "How stem cell therapy is transforming patient recovery",
+     "desc": "A closer look at evidence-based protocols improving recovery and mobility."},
+    {"category": "Clinical Research", "icon": "microscope", "image": "",
+     "date": "Jan 18, 2026", "comments": 3,
+     "title": "What new clinical research means for regenerative care",
+     "desc": "Translating emerging studies into safe, personalised treatment plans."},
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -167,6 +185,7 @@ def home(request):
             "booking_services": BOOKING_SERVICES,
             "network_locations": NETWORK_LOCATIONS,
             "network_features": NETWORK_FEATURES,
+            "news_articles": NEWS_ARTICLES,
         },
     )
 

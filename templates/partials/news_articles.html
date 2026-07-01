@@ -1,0 +1,45 @@
+{% load region_tags icons %}
+{% comment %}
+Recent Articles — reusable news/blog grid (data: news_articles, see core.views).
+Image areas are sage placeholders with a category icon; to use a real photo,
+give the article an "image" URL and it renders an <img> instead. Theme only.
+{% endcomment %}
+{% if news_articles %}
+<section class="section articles" aria-labelledby="articles-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">News &amp; Updates</span>
+      <h2 id="articles-title">Recent Articles</h2>
+      <p>Medical insights, regenerative-medicine updates and patient education from our specialists.</p>
+    </header>
+
+    <div class="articles__grid" data-articles>
+      {% for a in news_articles %}
+      <article class="post" style="--i: {{ forloop.counter0 }}">
+        <a class="post__media" href="{% rurl 'events:list' %}" tabindex="-1" aria-hidden="true">
+          {% if a.image %}
+            <img src="{{ a.image }}" alt="{{ a.title }}" loading="lazy">
+          {% else %}
+            <span class="post__ph">{% icon a.icon %}</span>
+          {% endif %}
+          <span class="post__badge">{{ a.category }}</span>
+        </a>
+        <div class="post__body">
+          <div class="post__meta">
+            <span class="post__metaitem">{% icon 'calendar' 'ico' %} {{ a.date }}</span>
+            <span class="post__metaitem">{% icon 'chat' 'ico' %} {{ a.comments }}</span>
+          </div>
+          <h3 class="post__title"><a href="{% rurl 'events:list' %}">{{ a.title }}</a></h3>
+          <p class="post__desc">{{ a.desc }}</p>
+          <a class="post__link" href="{% rurl 'events:list' %}">Read More {% icon 'arrow' 'ico' %}</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    <div class="articles__cta">
+      <a class="btn btn--primary" href="{% rurl 'events:list' %}">View All Articles {% icon 'arrow' 'ico' %}</a>
+    </div>
+  </div>
+</section>
+{% endif %}
