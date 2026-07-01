@@ -372,7 +372,15 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .tag { display: inline-block; background: var(--mint-50); color: var(--teal-600); font-weight: 600; font-size: .8rem; padding: .25rem .7rem; border-radius: 999px; }
 
 /* ---------------------------------------------------------------- Footer */
-.site-footer { background: var(--navy-900); color: var(--mint-50); margin-top: 4rem; }
+.site-footer {
+  /* Charcoal footer palette (scoped overrides — recolours every footer
+     element that uses these tokens; teal accents & white headings stay). */
+  --navy-900: #23272b;   /* charcoal background */
+  --navy-800: #2b3035;   /* charcoal cards / surfaces */
+  --navy-700: #3b424a;   /* charcoal borders / dividers */
+  --mint-50:  #c9ced5;   /* neutral light-grey footer text */
+  background: var(--navy-900); color: var(--mint-50); margin-top: 4rem;
+}
 
 /* Newsletter strip */
 .newsletter { padding: 3rem 0 1.4rem; }
@@ -930,11 +938,11 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .about__partner {
   display: inline-flex; align-items: center; gap: .6rem; color: var(--slate-600);
   font-family: var(--font-display); font-weight: 600; letter-spacing: .02em;
-  filter: grayscale(1); opacity: .7; transition: filter .25s ease, opacity .25s ease, color .25s ease;
+  opacity: .9; transition: opacity .25s ease, transform .25s ease, color .25s ease;
 }
-.about__partner:hover { filter: grayscale(0); opacity: 1; color: var(--teal-600); }
-/* Brand logo image (shown when the file exists). */
-.about__partner-logo { max-height: 48px; width: auto; max-width: 150px; object-fit: contain; display: block; }
+.about__partner:hover { opacity: 1; transform: translateY(-3px); color: var(--teal-600); }
+/* Brand logo image at a normal, professional size. */
+.about__partner-logo { height: 64px; width: auto; max-width: 190px; object-fit: contain; display: block; }
 /* Icon + name fallback (shown only when the logo image fails to load). */
 .about__partner-fallback { display: none; align-items: center; gap: .6rem; }
 .about__partner.no-logo .about__partner-logo { display: none; }
