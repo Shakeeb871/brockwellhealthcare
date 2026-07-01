@@ -585,6 +585,11 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   display: none; position: absolute; left: 0; right: 0; top: 100%;
   background: #fff; border-top: 1px solid var(--line);
   box-shadow: var(--shadow-lg); padding: 2.2rem 0 2.4rem; z-index: 90;
+  /* Never grow past the viewport: if the menu is tall, scroll INSIDE it so
+     every link stays reachable (instead of spilling below the fold). */
+  max-height: calc(100vh - 190px);
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* don't scroll the page behind the menu */
 }
 .has-mega:hover .mega,
 .has-mega:focus-within .mega,
