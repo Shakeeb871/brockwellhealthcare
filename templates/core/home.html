@@ -80,26 +80,9 @@
 <!-- Doctor Spotlight -->
 {% include "partials/doctor_spotlight.html" %}
 
-<!-- FAQ -->
-{% if faqs %}
-<section class="section">
-  <div class="container">
-    <div class="section__head">
-      <span class="eyebrow">Questions, Answered</span>
-      <h2>Frequently asked questions</h2>
-    </div>
-    <div class="faq">
-      {% for faq in faqs %}
-      <details {% if forloop.first %}open{% endif %}>
-        <summary>{{ faq.question }}</summary>
-        <p>{{ faq.answer }}</p>
-      </details>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
+<!-- FAQ (left) + Appointment Booking (right) -->
+{% include "partials/faq_booking.html" %}
 
-<!-- Patient Reviews + Appointment Booking -->
-{% include "partials/reviews_booking.html" %}
+<!-- Verified Google reviews — 4-column grid -->
+{% include "partials/reviews_grid.html" %}
 {% endblock %}

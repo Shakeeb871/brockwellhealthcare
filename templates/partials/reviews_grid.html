@@ -1,0 +1,37 @@
+{% load icons %}
+{% comment %}
+Verified Google-style patient reviews — 4-column grid (data: patient_reviews).
+Google logo + blue verified tick use Google's official brand colours on purpose.
+{% endcomment %}
+{% if patient_reviews %}
+<section class="section rgrid" aria-labelledby="rgrid-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Patient Feedback &amp; Verified Google Experiences</span>
+      <h2 id="rgrid-title">What Our Patients Say</h2>
+    </header>
+
+    <div class="rgrid__grid">
+      {% for r in patient_reviews %}
+      <article class="grev">
+        <header class="grev__head">
+          <span class="grev__avatar" aria-hidden="true">{{ r.initial }}</span>
+          <div class="grev__id">
+            <span class="grev__name">
+              {{ r.name }}
+              <span class="grev__tick" title="Verified review" aria-label="Verified">{% icon 'check' %}</span>
+            </span>
+            <span class="grev__time">{{ r.time }}</span>
+          </div>
+          <span class="grev__glogo" role="img" aria-label="Google review">{% social 'google' %}</span>
+        </header>
+        <span class="grev__stars" role="img" aria-label="Rated 5 out of 5">
+          {% for _ in "xxxxx" %}{% icon 'star' 'gstar' %}{% endfor %}
+        </span>
+        <p class="grev__text">{{ r.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}

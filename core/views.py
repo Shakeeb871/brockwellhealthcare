@@ -63,18 +63,32 @@ PROCESS_STEPS = [
 ]
 
 
-# Dummy verified-style patient reviews for the Reviews + Booking section.
+# Dummy verified Google-style patient reviews (UAE names). Edit freely.
 PATIENT_REVIEWS = [
-    {"name": "Rosalina D. William", "initial": "R", "time": "2 weeks ago",
-     "text": "From my first consultation the team was thorough, reassuring and "
-             "genuinely caring. The regenerative treatment plan was explained clearly "
-             "and my recovery has been remarkable."},
-    {"name": "James P. Anderson", "initial": "J", "time": "1 month ago",
-     "text": "Exceptional, science-led care. The specialists took time to understand my "
-             "condition and the results have exceeded my expectations. Highly recommended."},
-    {"name": "Aisha K. Rahman", "initial": "A", "time": "3 months ago",
+    {"name": "Ahmed Al Mansoori", "initial": "A", "time": "2 weeks ago",
+     "text": "From my first consultation the team was thorough and reassuring. The "
+             "regenerative plan was explained clearly and my recovery has been remarkable."},
+    {"name": "Fatima Al Zaabi", "initial": "F", "time": "3 weeks ago",
+     "text": "Exceptional, science-led care. The specialists genuinely listened and the "
+             "results have exceeded my expectations. Highly recommended."},
+    {"name": "Omar Al Nuaimi", "initial": "O", "time": "1 month ago",
      "text": "A truly premium clinical experience — spotless facilities, advanced "
-             "diagnostics and a dedicated team that supported me at every step."},
+             "diagnostics and a dedicated team that supported me throughout."},
+    {"name": "Layla Al Suwaidi", "initial": "L", "time": "1 month ago",
+     "text": "Professional and compassionate from start to finish. I felt in safe, "
+             "expert hands during every stage of my treatment."},
+    {"name": "Khalid Al Maktoum", "initial": "K", "time": "2 months ago",
+     "text": "The consultants are world-class. Clear communication, honest advice and "
+             "a treatment plan tailored precisely to my needs."},
+    {"name": "Mariam Al Qassimi", "initial": "M", "time": "2 months ago",
+     "text": "Outstanding regenerative care. The follow-up and recovery monitoring made "
+             "a real difference to my results. Thank you to the whole team."},
+    {"name": "Yousef Al Hashimi", "initial": "Y", "time": "3 months ago",
+     "text": "State-of-the-art clinic with genuinely caring staff. Booking was simple "
+             "and the entire experience felt calm and premium."},
+    {"name": "Noura Al Falasi", "initial": "N", "time": "4 months ago",
+     "text": "Highly skilled specialists and a warm, welcoming environment. I would "
+             "confidently recommend them to family and friends."},
 ]
 
 # Dummy services for the appointment dropdown (edit freely).

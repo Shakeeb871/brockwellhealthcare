@@ -15,6 +15,11 @@
   --teal-500: #3f9a59;  /* hover */
   --teal-400: #9cc06f;  /* sage accent (matches logo DNA helix) */
   --mint-50:  #eef4e3;  /* pale sage surface */
+
+  /* Google brand colours — used ONLY for the verified tick + Google logo on
+     reviews, so they read as authentic Google reviews. Not part of the theme. */
+  --google-blue: #4285f4;
+  --google-gold: #fbbc04;
   --ink:      #14241a;
   --slate-600:#566b5c;
   --slate-400:#9aa89d;
@@ -1017,53 +1022,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .rb { background: var(--bg-soft); }
 .rb__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
 
-/* ---- Left: Google-style verified reviews ---- */
-.rb__reviews > h2 { margin-bottom: 1.6rem; }
-.greviews { position: relative; }
-.greview {
-  display: none; background: var(--white); border: 1px solid var(--line);
-  border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.8rem;
-}
-.greview.is-active { display: block; animation: fadeUp .4s ease both; }
-.greview__head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; }
-.greview__avatar {
-  flex: none; width: 50px; height: 50px; border-radius: 50%;
-  display: grid; place-items: center; color: var(--white);
-  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
-  background: var(--teal-600);
-}
-.greview__avatar--2 { background: var(--navy-700); }
-.greview__avatar--3 { background: var(--teal-500); }
-.greview__id { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
-.greview__name {
-  display: inline-flex; align-items: center; gap: .4rem;
-  font-family: var(--font-display); font-weight: 600; color: var(--navy-800);
-}
-.greview__badge {
-  display: inline-grid; place-items: center; width: 18px; height: 18px; flex: none;
-  border-radius: 50%; background: var(--teal-600); color: var(--white);
-}
-.greview__badge svg { width: 12px; height: 12px; }
-.greview__stars { display: inline-flex; gap: 2px; color: var(--teal-500); }
-.greview__stars .gstar { width: 16px; height: 16px; fill: currentColor; stroke: none; }
-.greview__source { margin-left: auto; align-self: flex-start; font-size: .78rem; color: var(--slate-400); white-space: nowrap; }
-.greview__text { margin: 0 0 .8rem; color: var(--slate-600); }
-.greview__time { margin: 0; font-size: .82rem; color: var(--slate-400); }
-
-.greviews__nav { display: flex; align-items: center; gap: 1.4rem; margin-top: 1.6rem; }
-.gdot {
-  background: none; border: 0; cursor: pointer; padding: 0 0 .3rem;
-  font-family: var(--font-display); font-weight: 700; font-size: 1rem;
-  color: var(--slate-400); position: relative; transition: color .2s ease;
-}
-.gdot::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
-  background: var(--teal-600); border-radius: 2px; transform: scaleX(0); transform-origin: left;
-  transition: transform .25s ease;
-}
-.gdot:hover { color: var(--teal-600); }
-.gdot.is-active { color: var(--teal-600); }
-.gdot.is-active::after { transform: scaleX(1); }
+/* ---- Left: FAQ column ---- */
+.rb__faq > h2 { margin-bottom: 1.4rem; }
+.rb__faq .faq { margin-top: .4rem; }
 
 /* ---- Right: premium appointment form ---- */
 .rb__form {
@@ -1112,12 +1073,63 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   color: var(--slate-600); pointer-events: none;
 }
 .bfield__chev svg { width: 18px; height: 18px; transform: rotate(90deg); }
-.bform__submit { width: 100%; justify-content: center; margin-top: .5rem; }
+/* Larger, more prominent CTA. */
+.bform__submit {
+  width: 100%; justify-content: center; gap: .5rem; margin-top: .6rem;
+  padding: 1.05rem 1.6rem; font-size: 1.08rem; letter-spacing: .01em;
+}
+.bform__submit svg { width: 20px; height: 20px; }
+/* Trust / reassurance line under the CTA. */
+.bform__note {
+  display: flex; align-items: center; gap: .5rem; flex-wrap: wrap;
+  margin: .2rem 0 0; font-size: .85rem; color: var(--slate-600);
+}
+.bform__note-ic { display: inline-grid; place-items: center; color: var(--teal-600); flex: none; }
+.bform__note-ic svg { width: 18px; height: 18px; }
+.bform__note a { font-weight: 600; }
 
+/* =========================================================================
+   Verified Google reviews — 4-column grid
+   ========================================================================= */
+.rgrid__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+.grev {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1.5rem;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.grev:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: transparent; }
+.grev__head { display: flex; align-items: center; gap: .75rem; margin-bottom: .9rem; }
+.grev__avatar {
+  flex: none; width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--white);
+  font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
+  background: var(--teal-600);
+}
+/* Cycle four brand shades across the eight avatars. */
+.grev:nth-child(4n+2) .grev__avatar { background: var(--navy-700); }
+.grev:nth-child(4n+3) .grev__avatar { background: var(--teal-500); }
+.grev:nth-child(4n+4) .grev__avatar { background: var(--navy-800); }
+.grev__id { display: flex; flex-direction: column; gap: .15rem; min-width: 0; }
+.grev__name {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: var(--font-display); font-weight: 600; font-size: .96rem; color: var(--navy-800);
+}
+.grev__tick {
+  display: inline-grid; place-items: center; width: 17px; height: 17px; flex: none;
+  border-radius: 50%; background: var(--google-blue); color: var(--white);
+}
+.grev__tick svg { width: 11px; height: 11px; }
+.grev__time { font-size: .8rem; color: var(--slate-400); }
+.grev__glogo { margin-left: auto; flex: none; }
+.grev__glogo svg { width: 20px; height: 20px; }
+.grev__stars { display: inline-flex; gap: 2px; margin-bottom: .6rem; }
+.grev__stars .gstar { width: 16px; height: 16px; fill: var(--google-gold); stroke: none; }
+.grev__text { margin: 0; font-size: .92rem; color: var(--slate-600); }
+
+@media (max-width: 1024px) { .rgrid__grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 900px) {
   .rb__grid { grid-template-columns: 1fr; gap: 2.4rem; }
+  .rgrid__grid { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 480px) {
-  .bform__row { grid-template-columns: 1fr; }
-  .greview__source { display: none; }
-}
+@media (max-width: 560px) { .rgrid__grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .bform__row { grid-template-columns: 1fr; } }

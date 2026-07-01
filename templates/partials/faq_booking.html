@@ -1,51 +1,27 @@
 {% load region_tags icons %}
 {% comment %}
-Patient Reviews + Appointment Booking — reusable dual-layout section.
-Data: `patient_reviews` and `booking_services` (see core.views). No background image.
-The form posts to the existing contact endpoint (no backend changes); a default
-message is included so it works with or without JS.
+FAQ + Appointment Booking — dual layout (FAQ left, premium form right).
+No background image. Form posts to the existing contact endpoint (no backend
+changes); a default message is included so it works with or without JS.
 {% endcomment %}
-{% if patient_reviews %}
-<section class="section rb" aria-labelledby="rb-title">
+<section class="section rb" aria-labelledby="faqbk-title">
   <div class="container rb__grid">
 
-    {# ---------------- LEFT: Google-style reviews ---------------- #}
-    <div class="rb__reviews">
-      <span class="eyebrow">Patient Feedback &amp; Verified Google Experiences</span>
-      <h2 id="rb-title">Patient Reviews</h2>
-
-      <div class="greviews" data-greviews>
-        {% for r in patient_reviews %}
-        <article class="greview{% if forloop.first %} is-active{% endif %}"
-                 data-greview="{{ forloop.counter0 }}"
-                 {% if not forloop.first %}aria-hidden="true"{% endif %}>
-          <div class="greview__head">
-            <span class="greview__avatar greview__avatar--{{ forloop.counter }}" aria-hidden="true">{{ r.initial }}</span>
-            <div class="greview__id">
-              <span class="greview__name">
-                {{ r.name }}
-                <span class="greview__badge" title="Verified patient">{% icon 'check' %}</span>
-              </span>
-              <span class="greview__stars" role="img" aria-label="Rated 5 out of 5">
-                {% for _ in "xxxxx" %}{% icon 'star' 'gstar' %}{% endfor %}
-              </span>
-            </div>
-            <span class="greview__source">Google&nbsp;Review</span>
-          </div>
-          <p class="greview__text">{{ r.text }}</p>
-          <p class="greview__time">Posted {{ r.time }}</p>
-        </article>
+    {# ---------------- LEFT: FAQ ---------------- #}
+    <div class="rb__faq">
+      <span class="eyebrow">Questions, Answered</span>
+      <h2 id="faqbk-title">Frequently Asked Questions</h2>
+      {% if faqs %}
+      <div class="faq">
+        {% for faq in faqs %}
+        <details {% if forloop.first %}open{% endif %}>
+          <summary>{{ faq.question }}</summary>
+          <p>{{ faq.answer }}</p>
+        </details>
         {% endfor %}
       </div>
-
-      {% if patient_reviews|length > 1 %}
-      <div class="greviews__nav" data-greviews-nav role="tablist" aria-label="Choose a review">
-        {% for r in patient_reviews %}
-        <button type="button" class="gdot{% if forloop.first %} is-active{% endif %}"
-                data-goto="{{ forloop.counter0 }}"
-                aria-label="Show review {{ forloop.counter }}">{{ forloop.counter }}</button>
-        {% endfor %}
-      </div>
+      {% else %}
+      <p class="muted">Have a question? Reach out and our team will be glad to help.</p>
       {% endif %}
     </div>
 
@@ -106,9 +82,14 @@ message is included so it works with or without JS.
         </div>
 
         <button class="btn btn--primary bform__submit" type="submit">Make Appointment {% icon 'arrow' 'ico' %}</button>
+
+        <p class="bform__note">
+          <span class="bform__note-ic" aria-hidden="true">{% icon 'shield' %}</span>
+          Your details are kept private &amp; secure. Or call us
+          <a href="tel:{{ region.phone }}">{{ region.phone }}</a>.
+        </p>
       </form>
     </div>
 
   </div>
 </section>
-{% endif %}
