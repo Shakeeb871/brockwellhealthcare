@@ -1,0 +1,71 @@
+{% load region_tags icons %}
+{% comment %}
+Medical Network — 2-column section: content (left) + stylised UAE map with
+interactive glowing location pins & tooltips (right). Data: network_locations,
+network_features (see core.views). Theme colours only; no background image.
+{% endcomment %}
+{% if network_locations %}
+<section class="section netreach" aria-labelledby="netreach-title">
+  <div class="container netreach__grid">
+
+    {# ---------------- LEFT: content ---------------- #}
+    <div class="netreach__content">
+      <span class="eyebrow">Our Medical Network</span>
+      <h2 id="netreach-title">Where patients trust regenerative care</h2>
+      <p>From first consultation to advanced regenerative therapy, our connected
+        network of UAE centres gives patients seamless access to expert clinicians,
+        international patient assistance and evidence-based stem cell care — wherever
+        they are.</p>
+
+      <ul class="netreach__features">
+        {% for f in network_features %}
+        <li class="netreach__feature">
+          <span class="netreach__fic" aria-hidden="true">{% icon 'check' %}</span>{{ f }}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <a class="btn btn--primary netreach__cta" href="{% rurl 'core:contact' %}">View Locations {% icon 'arrow' 'ico' %}</a>
+    </div>
+
+    {# ---------------- RIGHT: UAE map ---------------- #}
+    <div class="netreach__map" role="group" aria-label="Our clinic locations across the United Arab Emirates">
+      <svg class="netreach__uae" viewBox="0 0 440 320" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="netgrid" width="26" height="26" patternUnits="userSpaceOnUse">
+            <circle cx="1.4" cy="1.4" r="1.4" class="netreach__dot"/>
+          </pattern>
+        </defs>
+        <path class="netreach__land"
+              d="M30 200 L70 152 L122 140 L182 130 L232 120 L282 104 L322 92 L358 76 L392 58 L404 48
+                 L394 80 L372 102 L344 130 L314 150 L280 165 L234 175 L188 183 L138 196 L84 216 L44 226 Z"/>
+        <path class="netreach__landgrid"
+              d="M30 200 L70 152 L122 140 L182 130 L232 120 L282 104 L322 92 L358 76 L392 58 L404 48
+                 L394 80 L372 102 L344 130 L314 150 L280 165 L234 175 L188 183 L138 196 L84 216 L44 226 Z"
+              fill="url(#netgrid)"/>
+      </svg>
+
+      {# Floating clinic image nodes (dummy — swap the icon for an <img> later). #}
+      <span class="netreach__node netreach__node--1" aria-hidden="true">{% icon 'building' %}</span>
+      <span class="netreach__node netreach__node--2" aria-hidden="true">{% icon 'plus' %}</span>
+      <span class="netreach__node netreach__node--3" aria-hidden="true">{% icon 'stethoscope' %}</span>
+
+      {# Interactive location pins. #}
+      {% for loc in network_locations %}
+      <div class="netpin" style="top:{{ loc.top }};left:{{ loc.left }}">
+        <button type="button" class="netpin__dot"
+                aria-label="{{ loc.name }}, {{ loc.city }} — {{ loc.desc }}">
+          <span class="netpin__ic" aria-hidden="true">{% icon loc.icon %}</span>
+        </button>
+        <span class="netpin__tip" role="tooltip" aria-hidden="true">
+          <strong class="netpin__name">{{ loc.name }}</strong>
+          <span class="netpin__city">{% icon 'pin' %}{{ loc.city }}</span>
+          <span class="netpin__desc">{{ loc.desc }}</span>
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+{% endif %}

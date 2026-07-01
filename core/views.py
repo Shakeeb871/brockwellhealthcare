@@ -102,6 +102,28 @@ BOOKING_SERVICES = [
 ]
 
 
+# Dummy UAE clinic network — used by the "Medical Network" map section.
+# top/left are percentage positions on the stylised UAE map. Edit freely.
+NETWORK_LOCATIONS = [
+    {"city": "Abu Dhabi", "name": "Brockwell Abu Dhabi", "icon": "stethoscope",
+     "desc": "Flagship regenerative medicine & diagnostics centre.", "top": "60%", "left": "27%"},
+    {"city": "Dubai", "name": "Brockwell Dubai", "icon": "plus",
+     "desc": "Advanced stem cell therapy & consultation hub.", "top": "42%", "left": "60%"},
+    {"city": "Sharjah", "name": "Brockwell Sharjah", "icon": "shield",
+     "desc": "Clinical evaluation & patient support.", "top": "36%", "left": "67%"},
+    {"city": "Ajman", "name": "Brockwell Ajman", "icon": "microscope",
+     "desc": "Longevity & advanced diagnostics clinic.", "top": "31%", "left": "72%"},
+    {"city": "Ras Al Khaimah", "name": "Brockwell RAK", "icon": "heart",
+     "desc": "Regenerative treatment & recovery care.", "top": "22%", "left": "81%"},
+]
+NETWORK_FEATURES = [
+    "Consultation & Planning Support",
+    "International Patient Assistance",
+    "Clinical Evaluation Services",
+    "Regenerative Treatment Access",
+]
+
+
 def home(request):
     region = request.region
     code = region["code"]
@@ -143,6 +165,8 @@ def home(request):
             "process_steps": PROCESS_STEPS,
             "patient_reviews": PATIENT_REVIEWS,
             "booking_services": BOOKING_SERVICES,
+            "network_locations": NETWORK_LOCATIONS,
+            "network_features": NETWORK_FEATURES,
         },
     )
 
