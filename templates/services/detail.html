@@ -17,6 +17,8 @@
         {% for b in service.benefit_list %}<li>{{ b }}</li>{% endfor %}
       </ul>
       {% endif %}
+
+      {% include "partials/faqs.html" %}
     </article>
 
     <aside class="doc-aside">
@@ -65,3 +67,5 @@
   </div>
 </section>
 {% endblock %}
+
+{% block head_extra %}{{ service.custom_head|safe }}{% endblock %}

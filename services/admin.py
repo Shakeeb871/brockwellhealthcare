@@ -1,6 +1,7 @@
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
+from core.admin import FAQItemInline
 from .models import Service, ServiceCategory
 
 
@@ -43,8 +44,10 @@ class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description", "benefits", "price")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
+        ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
     )

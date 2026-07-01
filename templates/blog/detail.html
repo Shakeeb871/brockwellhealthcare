@@ -30,6 +30,8 @@
 
         <div class="blog-article__body">{{ post.body|safe }}</div>
 
+        {% include "partials/faqs.html" %}
+
         <div class="blog-article__foot">
           <a class="btn btn--ghost" href="{% rurl 'blog:list' %}">{% icon 'chevron-left' %} Back to Insights</a>
         </div>
@@ -61,3 +63,5 @@
   </div>
 </section>
 {% endblock %}
+
+{% block head_extra %}{{ post.custom_head|safe }}{% endblock %}

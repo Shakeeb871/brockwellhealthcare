@@ -118,8 +118,12 @@ def _render_post(request, region, post):
     crumbs.append((post.title, meta["canonical"]))
 
     jsonld = [seo.article_schema(post, region), seo.breadcrumb_schema(crumbs)]
+    faqs = list(post.faqs.filter(is_published=True))
+    faq_ld = seo.faq_schema(faqs)
+    if faq_ld:
+        jsonld.append(faq_ld)
     return render(
         request,
         "blog/detail.html",
-        {"meta": meta, "jsonld": jsonld, "post": post, "related": related, **_sidebar(code)},
+        {"meta": meta, "jsonld": jsonld, "post": post, "related": related, "faqs": faqs, **_sidebar(code)},
     )

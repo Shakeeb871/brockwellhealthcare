@@ -281,7 +281,11 @@ def page(request, slug):
             ]
         ),
     ]
-    return render(request, "core/page.html", {"meta": meta, "jsonld": jsonld, "page": obj})
+    faqs = list(obj.faqs.filter(is_published=True))
+    faq_ld = seo.faq_schema(faqs)
+    if faq_ld:
+        jsonld.append(faq_ld)
+    return render(request, "core/page.html", {"meta": meta, "jsonld": jsonld, "page": obj, "faqs": faqs})
 
 
 def search(request):

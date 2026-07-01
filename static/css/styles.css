@@ -338,6 +338,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .step p { color: var(--ink); font-size: 1rem; }
 
 /* ---------------------------------------------------------------- FAQ */
+.faq-block { max-width: 820px; margin: 2.6rem auto 0; }
+.faq-block__title { margin-bottom: 1.1rem; }
+.faq-block .faq { max-width: none; margin-inline: 0; }
 .faq { max-width: 820px; margin-inline: auto; display: grid; gap: .55rem; }
 .faq details {
   border: 1px solid var(--line); border-radius: 0;   /* sharp, professional corners */

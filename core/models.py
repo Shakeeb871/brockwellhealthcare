@@ -1,4 +1,11 @@
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+
+CUSTOM_HEAD_HELP = (
+    "Optional custom code injected into this page's <head> — e.g. a "
+    '<script type="application/ld+json"> schema block or other head HTML.'
+)
 
 # Region choices shared across apps. Keep in sync with settings.REGIONS.
 REGION_CHOICES = [
@@ -55,6 +62,30 @@ class FAQ(TimeStamped):
         return self.question
 
 
+class FAQItem(TimeStamped):
+    """A question/answer pair attached to any content object (page, service,
+    blog post, …) via a generic relation. Rendered below the content with
+    FAQPage structured data."""
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    question = models.CharField(max_length=255)
+    answer = models.TextField(help_text="Plain text. Blank lines separate paragraphs.")
+    order = models.PositiveIntegerField(default=0)
+    is_published = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "FAQ"
+        verbose_name_plural = "FAQs"
+        indexes = [models.Index(fields=["content_type", "object_id"])]
+
+    def __str__(self):
+        return self.question
+
+
 class Page(TimeStamped):
     """A simple content page (Privacy Policy, Terms, Cookies), editable in admin."""
 
@@ -66,6 +97,9 @@ class Page(TimeStamped):
 
     seo_title = models.CharField(max_length=70, blank=True)
     seo_description = models.CharField(max_length=170, blank=True)
+    custom_head = models.TextField(blank=True, help_text=CUSTOM_HEAD_HELP)
+
+    faqs = GenericRelation("core.FAQItem")
 
     class Meta:
         ordering = ["title"]

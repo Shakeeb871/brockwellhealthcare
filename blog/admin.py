@@ -1,6 +1,7 @@
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
+from core.admin import FAQItemInline
 from .models import BlogCategory, BlogPost
 
 
@@ -21,10 +22,12 @@ class BlogPostAdmin(admin.ModelAdmin):
     list_editable = ("is_published", "is_featured")
     prepopulated_fields = {"slug": ("title",)}
     date_hierarchy = "published_at"
+    inlines = [FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "category", "title", "slug", "image", "is_published", "is_featured")}),
         ("Content", {"fields": ("excerpt", "body", "author", "published_at")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
+        ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
     )
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):

@@ -111,6 +111,11 @@ def service_detail(request, category, slug):
             ]
         ),
     ]
+    faqs = list(service.faqs.filter(is_published=True))
+    faq_ld = seo.faq_schema(faqs)
+    if faq_ld:
+        jsonld.append(faq_ld)
+
     return render(
         request,
         "services/detail.html",
@@ -120,5 +125,6 @@ def service_detail(request, category, slug):
             "category": cat,
             "service": service,
             "form": form,
+            "faqs": faqs,
         },
     )

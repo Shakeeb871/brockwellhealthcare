@@ -7,6 +7,9 @@
 <section class="section">
   <div class="container">
     <article class="prose">{{ page.body|safe }}</article>
+    {% include "partials/faqs.html" %}
   </div>
 </section>
 {% endblock %}
+
+{% block head_extra %}{{ page.custom_head|safe }}{% endblock %}

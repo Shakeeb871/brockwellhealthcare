@@ -1,0 +1,14 @@
+{% comment %} Per-object FAQ section. Expects `faqs` (published FAQItem list). {% endcomment %}
+{% if faqs %}
+<div class="faq-block">
+  <h2 class="faq-block__title">Frequently Asked Questions</h2>
+  <div class="faq">
+    {% for f in faqs %}
+    <details {% if forloop.first %}open{% endif %}>
+      <summary>{{ f.question }}</summary>
+      {{ f.answer|linebreaks }}
+    </details>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

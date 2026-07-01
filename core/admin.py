@@ -1,7 +1,20 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericStackedInline
 from tinymce.widgets import TinyMCE
 
-from .models import ContactLead, FAQ, Page
+from .models import ContactLead, FAQ, FAQItem, Page
+
+
+class FAQItemInline(GenericStackedInline):
+    """Per-object FAQ section — reusable on any content model's admin."""
+
+    model = FAQItem
+    extra = 0
+    fields = ("question", "answer", "order", "is_published")
+    ordering = ("order", "id")
+    classes = ("collapse",)
+    verbose_name = "FAQ"
+    verbose_name_plural = "FAQs (shown below the content, with FAQ schema)"
 
 
 @admin.register(ContactLead)
@@ -27,6 +40,12 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("region", "is_published")
     search_fields = ("title", "body")
     prepopulated_fields = {"slug": ("title",)}
+    inlines = [FAQItemInline]
+    fieldsets = (
+        (None, {"fields": ("region", "slug", "title", "body", "is_published")}),
+        ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
+        ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
+    )
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         if db_field.name == "body":

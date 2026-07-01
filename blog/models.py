@@ -1,8 +1,9 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
-from core.models import REGION_CHOICES, TimeStamped
+from core.models import CUSTOM_HEAD_HELP, REGION_CHOICES, TimeStamped
 
 
 class BlogCategory(TimeStamped):
@@ -58,6 +59,9 @@ class BlogPost(TimeStamped):
 
     seo_title = models.CharField(max_length=70, blank=True)
     seo_description = models.CharField(max_length=170, blank=True)
+    custom_head = models.TextField(blank=True, help_text=CUSTOM_HEAD_HELP)
+
+    faqs = GenericRelation("core.FAQItem")
 
     class Meta:
         ordering = ["-published_at"]
