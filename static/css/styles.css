@@ -15,7 +15,6 @@
   --teal-500: #3f9a59;  /* hover */
   --teal-400: #9cc06f;  /* sage accent (matches logo DNA helix) */
   --mint-50:  #eef4e3;  /* pale sage surface */
-  --mint-tint:#e7f7ee;  /* light mint wash — flat section background */
   --ink:      #14241a;
   --slate-600:#566b5c;
   --slate-400:#9aa89d;
@@ -926,7 +925,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
    Care Journey — premium circular process flow with connected nodes
    ========================================================================= */
 .journey {
-  background: var(--mint-tint);   /* flat light mint (no gradient) */
+  background: var(--mint-50);   /* flat pale sage #eef4e3 (no gradient) */
 }
 .journey .section__head { max-width: 720px; margin-inline: auto; }
 
