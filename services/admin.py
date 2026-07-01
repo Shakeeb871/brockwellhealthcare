@@ -18,6 +18,9 @@ class PageSectionInline(SortableInlineAdminMixin, admin.StackedInline):
     verbose_name = "Page section"
     verbose_name_plural = "Page sections — drag to reorder (shown below the main content)"
 
+    class Media:
+        js = ("admin/js/pagesection_fields.js",)
+
 
 class RichDescriptionMixin:
     """Render the model's ``description`` field with the TinyMCE editor."""
