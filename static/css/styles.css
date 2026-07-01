@@ -186,6 +186,11 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   box-shadow: var(--shadow-lg); padding: .7rem; z-index: 60;
   opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(10px);
   transition: opacity .22s ease, transform .22s ease, visibility .22s;
+  /* Long service lists must never spill below the fold: cap to the space left
+     under the sticky header and scroll INSIDE the dropdown instead. */
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overscroll-behavior: contain;   /* don't scroll the page behind the dropdown */
 }
 .catbar__item.has-dd:hover .dd, .catbar__item.has-dd:focus-within .dd {
   opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
