@@ -71,3 +71,22 @@ class RegionMiddleware:
         # No region prefix: redirect to the visitor's region (geo-aware).
         target_region = detect_region(request)
         return redirect(f"/{target_region}{path}")
+
+
+class NoIndexMiddleware:
+    """Emit ``X-Robots-Tag: noindex`` on every response when ``SITE_NOINDEX``.
+
+    A response header is the most reliable way to de-index a whole site: it
+    covers HTML pages, files, redirects and error responses alike, and search
+    engines honour it even where they wouldn't parse a ``<meta>`` tag. Set
+    ``SITE_NOINDEX=False`` in the environment to lift it and allow indexing.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if getattr(settings, "SITE_NOINDEX", False):
+            response["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+        return response

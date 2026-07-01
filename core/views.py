@@ -196,6 +196,19 @@ def contact(request):
 # Technical SEO endpoints
 # --------------------------------------------------------------------------- #
 def robots_txt(request):
+    if settings.SITE_NOINDEX:
+        # De-indexed mode: keep crawling ALLOWED so bots can read the site-wide
+        # `noindex` directive (meta + X-Robots-Tag) and drop pages from their
+        # index. Blocking here instead would leave already-indexed URLs stuck.
+        # The sitemap is withheld so we don't actively invite indexing.
+        lines = [
+            "# Site is temporarily de-indexed (noindex in effect).",
+            "User-agent: *",
+            "Allow: /",
+            "Disallow: /admin/",
+        ]
+        return _text_response("\n".join(lines))
+
     lines = [
         "User-agent: *",
         "Allow: /",

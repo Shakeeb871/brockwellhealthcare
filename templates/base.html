@@ -9,7 +9,11 @@
   <title>{{ meta.title|default:BRAND_NAME }}</title>
   <meta name="description" content="{{ meta.description|default:BRAND_TAGLINE }}">
   {% if meta.canonical %}<link rel="canonical" href="{{ meta.canonical }}">{% endif %}
+  {% if SITE_NOINDEX %}
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  {% else %}
   <meta name="robots" content="{{ meta.robots|default:'index, follow' }}">
+  {% endif %}
 
   {# ---------- hreflang alternates (region targeting) ---------- #}
   {% for alt in meta.alternates %}

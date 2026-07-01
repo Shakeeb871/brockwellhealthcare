@@ -32,4 +32,5 @@ def site_context(request):
         "nav_categories": nav_categories,
         "STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY,
         "DEFAULT_OG_IMAGE": settings.DEFAULT_OG_IMAGE,
+        "SITE_NOINDEX": settings.SITE_NOINDEX,
     }

@@ -82,6 +82,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Detects the active region (UAE/US) for every request.
     "core.middleware.RegionMiddleware",
+    # Adds X-Robots-Tag: noindex on every response while SITE_NOINDEX is on.
+    "core.middleware.NoIndexMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -186,6 +188,16 @@ BRAND_TAGLINE = os.getenv(
 )
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "brockwellhealthcare.com")
 DEFAULT_OG_IMAGE = "img/og-default.svg"
+
+# Site-wide search-engine indexing switch.
+#   True  -> the whole site is de-indexed: every page sends `noindex` via a
+#            <meta> tag AND an X-Robots-Tag response header. robots.txt still
+#            allows crawling (so engines can see the noindex and drop pages)
+#            but withholds the sitemap.
+#   False -> normal indexing resumes.
+# Flip this by setting SITE_NOINDEX=False in the environment (.env) when ready
+# to go live in search engines. Currently defaults to de-indexed.
+SITE_NOINDEX = env_bool("SITE_NOINDEX", True)
 
 # Region configuration. UAE is live now; US is reserved and plugs in later
 # by simply flipping ``enabled`` to True (no code changes required).
