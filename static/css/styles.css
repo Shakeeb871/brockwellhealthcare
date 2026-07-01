@@ -252,7 +252,8 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 /* ---------------------------------------------------------------- Sections */
 .section { padding: 5rem 0; }
-.section--soft { background: var(--bg-soft); }
+.section--soft { background: var(--bg-soft); }        /* neutral grey band */
+.section--mint { background: var(--mint-50); }        /* pale sage band (brand) */
 .section__head { max-width: 720px; margin: 0 auto 3rem; text-align: center; }
 .section__head p { color: var(--slate-600); font-size: 1.08rem; }
 
@@ -436,7 +437,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* =========================================================================
    Doctor Spotlight section
    ========================================================================= */
-.spotlight { position: relative; overflow: hidden; }
+.spotlight { position: relative; overflow: hidden; background: var(--bg-soft); }
 .spotlight .container { position: relative; z-index: 1; }
 
 .spotlight__grid { display: grid; grid-template-columns: 290px 1fr; gap: 2.5rem; align-items: start; }
@@ -514,6 +515,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* =========================================================================
    Our Services slider (4 per page, segmented pagination bars)
    ========================================================================= */
+.svcgrid { background: var(--mint-50); }   /* pale sage band so the white cards pop */
 .svcgrid__title { max-width: 900px; font-size: clamp(1.6rem, 3vw, 2.3rem); margin-bottom: 1.6rem; }
 .svcgrid__row {
   display: flex; justify-content: space-between; align-items: center;
