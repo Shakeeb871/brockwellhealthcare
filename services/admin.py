@@ -1,30 +1,8 @@
-from adminsortable2.admin import SortableAdminBase, SortableStackedInline
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
 from core.admin import FAQItemInline
-from .models import PageSection, Service, ServiceCategory
-
-
-class PageSectionInline(SortableStackedInline):
-    """Drag-and-drop reorderable, pre-designed content blocks for a service."""
-
-    model = PageSection
-    extra = 0
-    fields = (
-        "kind", "background", "eyebrow", "heading", "body", "items",
-        "image", "button_text", "button_url", "is_published",
-    )
-    verbose_name = "Content block"
-    verbose_name_plural = "Content blocks — drag to reorder (this IS the page content)"
-
-    class Media:
-        js = ("admin/js/pagesection_fields.js",)
-
-    def formfield_for_dbfield(self, db_field, request, **kwargs):
-        if db_field.name == "body":
-            kwargs["widget"] = TinyMCE()
-        return super().formfield_for_dbfield(db_field, request, **kwargs)
+from .models import Service, ServiceCategory
 
 
 class RichDescriptionMixin:
@@ -61,15 +39,16 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
 
 
 @admin.register(Service)
-class ServiceAdmin(SortableAdminBase, admin.ModelAdmin):
+class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
     list_display = ("name", "category", "region", "price", "order", "is_published")
     list_filter = ("region", "category", "is_published")
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [PageSectionInline, FAQItemInline]
+    inlines = [FAQItemInline]
     fieldsets = (
-        (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "price", "order", "is_published")}),
+        (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
+        ("Content", {"fields": ("description", "benefits", "price")}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
         ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),
     )

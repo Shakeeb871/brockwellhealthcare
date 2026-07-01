@@ -5,7 +5,55 @@
 {% rurl 'services:list' as services_url %}
 {% include "partials/page_hero.html" with hero_eyebrow=category.name hero_title=service.name hero_lead=service.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_parent2_label=category.name crumb_parent2_url=category.get_absolute_url crumb_label=service.name %}
 
-{% include "partials/service_sections.html" %}
+<section class="section">
+  <div class="container doc-layout">
+    <article class="prose">
+      {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
+      {{ service.description|safe }}
+
+      {% if service.benefit_list %}
+      <h2>Key Benefits</h2>
+      <ul class="checklist">
+        {% for b in service.benefit_list %}<li>{{ b }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+
+      {% include "partials/faqs.html" %}
+    </article>
+
+    <aside class="doc-aside">
+      <div class="card svc-nav">
+        <span class="svc-nav__eyebrow">In This Category</span>
+        <h3 class="svc-nav__title">{{ category.name }}</h3>
+        <ul class="svc-nav__list">
+          {% for s in category.published_services %}
+          <li><a href="{{ s.get_absolute_url }}"{% if s.pk == service.pk %} class="is-active" aria-current="page"{% endif %}><span>{{ s.name }}</span>{% icon 'arrow' %}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="card booking">
+        <div class="booking__head">
+          <span class="booking__ico" aria-hidden="true">{% icon 'calendar' %}</span>
+          <div>
+            <h3>Book A Consultation</h3>
+            <p>Request an appointment for {{ service.name }}.</p>
+          </div>
+        </div>
+        <form class="form booking__form" method="post" action="{{ service.get_absolute_url }}" novalidate>
+          {% csrf_token %}
+          {{ form.website }}
+          <div class="field"><label for="{{ form.name.id_for_label }}">Full name</label>{{ form.name }}{{ form.name.errors }}</div>
+          <div class="field"><label for="{{ form.email.id_for_label }}">Email</label>{{ form.email }}{{ form.email.errors }}</div>
+          <div class="field"><label for="{{ form.phone.id_for_label }}">Phone</label>{{ form.phone }}{{ form.phone.errors }}</div>
+          <div class="field"><label for="{{ form.message.id_for_label }}">Message</label>{{ form.message }}{{ form.message.errors }}</div>
+          <button class="btn btn--primary booking__submit" type="submit">Request Appointment {% icon 'arrow' %}</button>
+        </form>
+        <p class="booking__note">{% icon 'phone' %} Prefer to talk? <a href="tel:{{ region.phone }}">{{ region.phone }}</a></p>
+      </div>
+    </aside>
+  </div>
+</section>
 {% endblock %}
 
 {% block head_extra %}{{ service.custom_head|safe }}{% endblock %}
