@@ -22,9 +22,7 @@ Numbers are generated automatically, so it scales to 4–8 steps.
           <span class="jstep__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
         </div>
         <div class="jstep__body">
-          <h3 class="jstep__title">
-            <span class="sr-only">Step {{ forloop.counter }}: </span>{{ s.title }}
-          </h3>
+          <h3 class="jstep__title" aria-label="Step {{ forloop.counter }}: {{ s.title }}">{{ s.title }}</h3>
           <p class="jstep__desc">{{ s.desc }}</p>
         </div>
       </li>
