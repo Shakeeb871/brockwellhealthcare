@@ -79,8 +79,8 @@ class Service(TimeStamped):
     order = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
 
-    seo_title = models.CharField(max_length=70, blank=True)
-    seo_description = models.CharField(max_length=170, blank=True)
+    seo_title = models.CharField(max_length=200, blank=True)
+    seo_description = models.CharField(max_length=320, blank=True)
     custom_head = models.TextField(blank=True, help_text=CUSTOM_HEAD_HELP)
 
     faqs = GenericRelation("core.FAQItem")

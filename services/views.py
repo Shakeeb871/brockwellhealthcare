@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.staticfiles import finders
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core import seo
@@ -7,6 +8,12 @@ from core.forms import ContactForm
 from core.regions import region_path
 
 from .models import Service, ServiceCategory
+
+
+def _hero_image_for(slug):
+    """Per-service hero background: static img/services/<slug>-hero.webp if present."""
+    rel = f"img/services/{slug}-hero.webp"
+    return rel if finders.find(rel) else None
 
 
 def service_overview(request):
@@ -130,5 +137,6 @@ def service_detail(request, category, slug):
             "service": service,
             "form": form,
             "faqs": faqs,
+            "hero_image": _hero_image_for(service.slug),
         },
     )
