@@ -157,6 +157,50 @@
       rings.forEach(function (r) { io.observe(r); });
     })();
 
+    // Our Impact: count each number up while its progress ring fills in sync.
+    (function () {
+      var stats = document.querySelectorAll('[data-impact]');
+      if (!stats.length) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var R = 54, C = 2 * Math.PI * R;   // ring radius / circumference
+      function fmt(n, dec) {
+        return dec > 0 ? n.toFixed(dec) : Math.round(n).toLocaleString('en-US');
+      }
+      function setup(el) {
+        var bar = el.querySelector('.impact-ring__bar');
+        if (bar) { bar.style.strokeDasharray = C; bar.style.strokeDashoffset = C; }
+      }
+      function run(el) {
+        var target = parseFloat(el.getAttribute('data-value')) || 0;
+        var dec = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+        var ring = parseFloat(el.getAttribute('data-ring')) || 0;
+        var val = el.querySelector('.val');
+        var bar = el.querySelector('.impact-ring__bar');
+        function apply(p) {
+          if (val) val.textContent = fmt(target * p, dec);
+          if (bar) bar.style.strokeDashoffset = C * (1 - (ring / 100) * p);
+        }
+        if (reduce) { apply(1); return; }
+        var start = null, dur = 1800;
+        function step(ts) {
+          if (!start) start = ts;
+          var t = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - t, 3);
+          apply(eased);
+          if (t < 1) requestAnimationFrame(step); else apply(1);
+        }
+        requestAnimationFrame(step);
+      }
+      stats.forEach(setup);
+      if (!('IntersectionObserver' in window)) { stats.forEach(run); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) { run(en.target); io.unobserve(en.target); }
+        });
+      }, { threshold: 0.4 });
+      stats.forEach(function (s) { io.observe(s); });
+    })();
+
     // Mega-menu hover intent: keep it open while moving from trigger to panel.
     (function () {
       var hm = document.querySelector('.has-mega');

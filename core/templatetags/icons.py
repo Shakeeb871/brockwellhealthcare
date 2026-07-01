@@ -36,6 +36,11 @@ _ICONS = {
     "heart": '<path d="M12 20s-7-4.4-7-9.5A3.7 3.7 0 0 1 12 7a3.7 3.7 0 0 1 7 3.5C19 15.6 12 20 12 20Z"/>',
     "plus": '<circle cx="12" cy="12" r="9"/><path d="M12 8.2v7.6M8.2 12h7.6"/>',
     "stethoscope": '<path d="M6 3v5a4 4 0 0 0 8 0V3"/><path d="M10 16v1a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="12" r="2"/><path d="M6 3H4M14 3h-2"/>',
+    "bed": '<path d="M3 8v10"/><path d="M3 17h18v-3a3 3 0 0 0-3-3H9v3H3"/><circle cx="6.6" cy="10.6" r="1.6"/>',
+    "pulse": '<path d="M2 12h3l2-6 3.5 12L14 9l1.5 3H22"/>',
+    "user-plus": '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 11 0"/><path d="M18 13v6M15 16h6"/>',
+    "scalpel": '<path d="M4 20l7-7"/><path d="M11 13l8-8v5l-5 5z"/>',
+    "star": '<path d="M12 3.5l2.5 5.3 5.8.6-4.3 3.9 1.2 5.7L12 16.9 6.8 19l1.2-5.7L3.7 9.4l5.8-.6z"/>',
 }
 
 _CATEGORY = {

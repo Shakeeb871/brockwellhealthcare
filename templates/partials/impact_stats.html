@@ -1,0 +1,41 @@
+{% load icons %}
+{% comment %}
+Our Impact — circular statistic counters (reusable).
+Data comes from `impact_stats` (see core.views IMPACT_STATS). Each item:
+icon, value, decimals, suffix, ring (decorative arc %), label.
+{% endcomment %}
+{% if impact_stats %}
+<section class="section impact" aria-labelledby="impact-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Our Impact</span>
+      <h2 id="impact-title">Key statistics at a glance</h2>
+    </header>
+
+    <ul class="impact__grid" role="list">
+      {% for s in impact_stats %}
+      <li class="impact-stat"
+          data-impact
+          data-value="{{ s.value }}"
+          data-decimals="{{ s.decimals }}"
+          data-ring="{{ s.ring }}">
+        <div class="impact-ring">
+          <svg class="impact-ring__svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+            <circle class="impact-ring__track" cx="60" cy="60" r="54"></circle>
+            <circle class="impact-ring__bar" cx="60" cy="60" r="54"></circle>
+          </svg>
+          <div class="impact-ring__content">
+            <span class="impact-stat__ic" aria-hidden="true">{% icon s.icon %}</span>
+            <p class="impact-stat__num">
+              <span class="val">{{ s.value }}</span>{% if s.suffix %}<span class="suffix">{{ s.suffix }}</span>{% endif %}
+            </p>
+            <span class="sr-only">{{ s.value }}{{ s.suffix }} {{ s.label }}</span>
+          </div>
+        </div>
+        <p class="impact-stat__label">{{ s.label }}</p>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}

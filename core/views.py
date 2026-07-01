@@ -37,6 +37,17 @@ ABOUT_PARTNERS = [
     {"name": "HealthyLife", "icon": "leaf"},
 ]
 
+# Dummy stats for the circular "Our Impact" counters. Placeholder values only —
+# edit freely. `decimals`/`suffix` handle the rating; `ring` is the decorative
+# arc fill percentage (visual only, not tied to the value).
+IMPACT_STATS = [
+    {"icon": "bed", "value": 692, "decimals": 0, "suffix": "", "ring": 70, "label": "Hospital Beds"},
+    {"icon": "pulse", "value": 1478, "decimals": 0, "suffix": "", "ring": 82, "label": "Outpatients (per day)"},
+    {"icon": "user-plus", "value": 44478, "decimals": 0, "suffix": "", "ring": 90, "label": "Inpatients (per day)"},
+    {"icon": "scalpel", "value": 1218, "decimals": 0, "suffix": "", "ring": 60, "label": "Surgeries (per day)"},
+    {"icon": "star", "value": 4.9, "decimals": 1, "suffix": "/5.0", "ring": 98, "label": "Worldwide Rating"},
+]
+
 
 def home(request):
     region = request.region
@@ -75,6 +86,7 @@ def home(request):
             "about_features": ABOUT_FEATURES,
             "about_stats": ABOUT_STATS,
             "about_partners": ABOUT_PARTNERS,
+            "impact_stats": IMPACT_STATS,
         },
     )
 
