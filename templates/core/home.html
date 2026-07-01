@@ -22,12 +22,6 @@
 <!-- Our Services (paginated slider — 4 per page) -->
 {% include "partials/service_slider.html" %}
 
-<!-- Our Impact — circular statistic counters -->
-{% include "partials/impact_stats.html" %}
-
-<!-- Care Journey — premium circular process flow -->
-{% include "partials/process_journey.html" %}
-
 <!-- Why us / trust -->
 <section class="section section--soft">
   <div class="container split">
@@ -54,10 +48,24 @@
   </div>
 </section>
 
+<!-- Our Impact — circular statistic counters -->
+{% include "partials/impact_stats.html" %}
+
+<!-- Our Treatments — Care Journey process flow -->
+{% include "partials/process_journey.html" %}
+
+<!-- Our Team — doctor spotlight (prominent) -->
+{% include "partials/doctor_spotlight.html" %}
+
+<!-- FAQ (left) + Appointment Booking (right) -->
+{% include "partials/faq_booking.html" %}
+
+<!-- Verified Google reviews — 4-column grid -->
+{% include "partials/reviews_grid.html" %}
 
 <!-- Upcoming events -->
 {% if upcoming_events %}
-<section class="section">
+<section class="section section--soft">
   <div class="container">
     <div class="section__head">
       <span class="eyebrow">Upcoming Events</span>
@@ -76,15 +84,6 @@
   </div>
 </section>
 {% endif %}
-
-<!-- Doctor Spotlight -->
-{% include "partials/doctor_spotlight.html" %}
-
-<!-- FAQ (left) + Appointment Booking (right) -->
-{% include "partials/faq_booking.html" %}
-
-<!-- Verified Google reviews — 4-column grid -->
-{% include "partials/reviews_grid.html" %}
 
 <!-- Medical Network — UAE map with interactive location pins -->
 {% include "partials/network_map.html" %}
