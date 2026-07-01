@@ -1,8 +1,22 @@
+from adminsortable2.admin import SortableAdminBase, SortableInlineAdminMixin
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
 from core.admin import FAQItemInline
-from .models import Service, ServiceCategory
+from .models import PageSection, Service, ServiceCategory
+
+
+class PageSectionInline(SortableInlineAdminMixin, admin.StackedInline):
+    """Drag-and-drop reorderable, pre-designed content blocks for a service."""
+
+    model = PageSection
+    extra = 0
+    fields = (
+        "kind", "background", "eyebrow", "heading", "body", "items",
+        "image", "button_text", "button_url", "is_published",
+    )
+    verbose_name = "Page section"
+    verbose_name_plural = "Page sections — drag to reorder (shown below the main content)"
 
 
 class RichDescriptionMixin:
@@ -39,13 +53,13 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
 
 
 @admin.register(Service)
-class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
+class ServiceAdmin(RichDescriptionMixin, SortableAdminBase, admin.ModelAdmin):
     list_display = ("name", "category", "region", "price", "order", "is_published")
     list_filter = ("region", "category", "is_published")
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [FAQItemInline]
+    inlines = [PageSectionInline, FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description", "benefits", "price")}),

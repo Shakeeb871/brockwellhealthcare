@@ -7,3 +7,4 @@ python-dotenv==1.0.1
 psycopg2-binary==2.9.9
 Pillow==10.4.0
 django-tinymce==5.0.0
+django-admin-sortable2==2.3.1

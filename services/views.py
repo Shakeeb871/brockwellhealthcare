@@ -120,6 +120,11 @@ def service_detail(request, category, slug):
     if faq_ld:
         jsonld.append(faq_ld)
 
+    sections = list(service.sections.filter(is_published=True))
+    # Patient reviews are needed only if a "reviews" section is present.
+    from core.views import PATIENT_REVIEWS
+    patient_reviews = PATIENT_REVIEWS if any(s.kind == "reviews" for s in sections) else None
+
     return render(
         request,
         "services/detail.html",
@@ -130,5 +135,7 @@ def service_detail(request, category, slug):
             "service": service,
             "form": form,
             "faqs": faqs,
+            "sections": sections,
+            "patient_reviews": patient_reviews,
         },
     )

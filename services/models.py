@@ -104,3 +104,64 @@ class Service(TimeStamped):
     @property
     def paragraphs(self):
         return [p.strip() for p in self.description.split("\n\n") if p.strip()]
+
+
+class PageSection(TimeStamped):
+    """A reorderable, pre-designed content block added to a service page.
+
+    Editors pick a `kind`, fill a few fields, and the front-end renders the
+    matching designed section (counters, why-choose-us, treatments, etc.).
+    Order is managed with drag-and-drop in the admin.
+    """
+
+    KIND_CHOICES = [
+        ("text", "Text / rich content"),
+        ("treatments", "Our treatments (cards from this category)"),
+        ("counters", "Counters / statistics"),
+        ("why", "Why choose us"),
+        ("faq", "FAQ (uses this service's FAQs)"),
+        ("reviews", "Patient reviews slider"),
+        ("brands", "Accreditations / brand logos"),
+        ("cta", "Call-to-action band"),
+    ]
+    BACKGROUND_CHOICES = [
+        ("light", "White"),
+        ("soft", "Soft grey"),
+        ("dark", "Dark green"),
+    ]
+
+    service = models.ForeignKey(Service, related_name="sections", on_delete=models.CASCADE)
+    kind = models.CharField(max_length=20, choices=KIND_CHOICES, default="text")
+    eyebrow = models.CharField(max_length=80, blank=True, help_text="Small label above the heading.")
+    heading = models.CharField(max_length=200, blank=True)
+    body = models.TextField(blank=True, help_text="Intro / paragraph text. Blank line = new paragraph.")
+    image = models.ImageField(upload_to="sections/", blank=True, null=True)
+    items = models.TextField(
+        blank=True,
+        help_text=(
+            "One item per line. • Counters: 'value | suffix | label' (e.g. 500 | + | Patients "
+            "Treated). • Why choose us: 'title | description'. Not needed for other types."
+        ),
+    )
+    button_text = models.CharField(max_length=60, blank=True)
+    button_url = models.CharField(max_length=300, blank=True)
+    background = models.CharField(max_length=10, choices=BACKGROUND_CHOICES, default="light")
+    order = models.PositiveIntegerField(default=0, db_index=True)
+    is_published = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "Page section"
+
+    def __str__(self):
+        return f"{self.get_kind_display()} — {self.heading or self.service.name}"
+
+    @property
+    def item_rows(self):
+        """Parse `items` into a list of pipe-split rows."""
+        rows = []
+        for line in self.items.splitlines():
+            line = line.strip()
+            if line:
+                rows.append([p.strip() for p in line.split("|")])
+        return rows

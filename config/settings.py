@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     # Third-party
+    "adminsortable2",
     "tinymce",
     # Local apps
     "core",

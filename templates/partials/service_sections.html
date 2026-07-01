@@ -1,0 +1,90 @@
+{% load static icons region_tags %}
+{% comment %} Renders a service's reorderable page-builder sections. Expects
+`sections` (published PageSection list), plus `faqs` and `patient_reviews`
+in context for the faq/reviews blocks. {% endcomment %}
+{% for sec in sections %}
+
+{% if sec.kind == "reviews" %}
+{% include "partials/reviews_grid.html" %}
+
+{% else %}
+<section class="section psec{% if sec.background == 'soft' %} section--soft{% elif sec.background == 'dark' %} section--dark{% endif %}">
+  <div class="container">
+
+    {% if sec.kind == "text" or sec.kind == "treatments" or sec.kind == "counters" or sec.kind == "why" or sec.kind == "brands" %}
+      {% if sec.eyebrow or sec.heading %}
+      <header class="section__head">
+        {% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}
+        {% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}
+      </header>
+      {% endif %}
+    {% endif %}
+
+    {% if sec.kind == "text" %}
+      {% if sec.body %}<div class="prose psec__body">{{ sec.body|linebreaks }}</div>{% endif %}
+      {% if sec.image %}<img class="psec__img" src="{{ sec.image.url }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% endif %}
+
+    {% elif sec.kind == "treatments" %}
+      <div class="grid grid--3">
+        {% for s in sec.service.category.published_services %}
+        <article class="card">
+          <div class="card__media">{% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% endif %}</div>
+          <h3>{{ s.name }}</h3>
+          <p>{{ s.summary }}</p>
+          <a class="card__link" href="{{ s.get_absolute_url }}">Learn more {% icon 'arrow' 'ico' %}</a>
+        </article>
+        {% endfor %}
+      </div>
+
+    {% elif sec.kind == "counters" %}
+      <ul class="impact__grid" role="list">
+        {% for row in sec.item_rows %}
+        <li class="impact-stat" data-impact data-value="{{ row.0 }}" data-decimals="{% if '.' in row.0 %}1{% else %}0{% endif %}" data-ring="86">
+          <div class="impact-ring">
+            <svg class="impact-ring__svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+              <circle class="impact-ring__track" cx="60" cy="60" r="54"></circle>
+              <circle class="impact-ring__bar" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <div class="impact-ring__content">
+              <p class="impact-stat__num"><span class="val">{{ row.0 }}</span>{% if row.1 %}<span class="suffix">{{ row.1 }}</span>{% endif %}</p>
+            </div>
+          </div>
+          <p class="impact-stat__label">{{ row.2|default:row.1 }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+
+    {% elif sec.kind == "why" %}
+      {% if sec.body %}<div class="prose psec__lead">{{ sec.body|linebreaks }}</div>{% endif %}
+      <div class="why-grid">
+        {% for row in sec.item_rows %}
+        <article class="why-card">
+          <span class="why-card__ico" aria-hidden="true">{% icon 'check' %}</span>
+          <h3>{{ row.0 }}</h3>
+          {% if row.1 %}<p>{{ row.1 }}</p>{% endif %}
+        </article>
+        {% endfor %}
+      </div>
+
+    {% elif sec.kind == "faq" %}
+      {% include "partials/faqs.html" %}
+
+    {% elif sec.kind == "brands" %}
+      <div class="brand-strip">
+        {% for n in "123456"|make_list %}
+        <img class="brand-strip__logo" src="{% static 'img/'|add:n|add:'.svg' %}" alt="Accreditation logo" loading="lazy">
+        {% endfor %}
+      </div>
+
+    {% elif sec.kind == "cta" %}
+      <div class="cta-band">
+        {% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}
+        {% if sec.body %}<p>{{ sec.body }}</p>{% endif %}
+        {% if sec.button_text %}<div class="mt-1"><a class="btn btn--light btn--lg" href="{{ sec.button_url|default:'#' }}">{{ sec.button_text }}</a></div>{% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endif %}
+{% endfor %}
