@@ -19,10 +19,9 @@
         </span>
       </div>
       <div class="topbar__social" aria-label="Social links">
-        <a href="#" aria-label="Instagram">{% social 'instagram' %}</a>
-        <a href="#" aria-label="Facebook">{% social 'facebook' %}</a>
-        <a href="#" aria-label="X">{% social 'x' %}</a>
-        <a href="#" aria-label="YouTube">{% social 'youtube' %}</a>
+        {% for s in SOCIAL_LINKS %}{% if s.url %}
+        <a href="{{ s.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ s.name }}">{% social s.icon %}</a>
+        {% endif %}{% endfor %}
       </div>
     </div>
   </div>
@@ -110,6 +109,11 @@
       <a href="tel:{{ region.phone }}">{% icon 'phone' 'ico-inline' %}{{ region.phone }}</a>
       <a href="https://wa.me/{{ region.phone|cut:'+'|cut:' ' }}">{% social 'whatsapp' 'soc-sm' %}WhatsApp</a>
       <span>{% icon 'pin' 'ico-inline' %}{{ region.address }}</span>
+    </div>
+    <div class="mobile-menu__social" aria-label="Social links">
+      {% for s in SOCIAL_LINKS %}{% if s.url %}
+      <a href="{{ s.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ s.name }}">{% social s.icon %}</a>
+      {% endif %}{% endfor %}
     </div>
   </div>
 </header>

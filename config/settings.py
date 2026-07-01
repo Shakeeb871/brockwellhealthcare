@@ -218,6 +218,21 @@ BRAND_TAGLINE = os.getenv(
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "brockwellhealthcare.com")
 DEFAULT_OG_IMAGE = "img/og-default.svg"
 
+# Social media profiles (shown in the header). Override any via .env; leave a
+# value blank to hide that icon.
+SOCIAL_LINKS = [
+    {"name": "Facebook", "icon": "facebook",
+     "url": os.getenv("SOCIAL_FACEBOOK", "https://www.facebook.com/profile.php?id=61572848905268")},
+    {"name": "Instagram", "icon": "instagram",
+     "url": os.getenv("SOCIAL_INSTAGRAM", "https://www.instagram.com/brockwellhealthcare")},
+    {"name": "YouTube", "icon": "youtube",
+     "url": os.getenv("SOCIAL_YOUTUBE", "https://www.youtube.com/@Brockwellhealthcare")},
+    {"name": "TikTok", "icon": "tiktok",
+     "url": os.getenv("SOCIAL_TIKTOK", "https://www.tiktok.com/@brockwellhealthcare")},
+    {"name": "LinkedIn", "icon": "linkedin",
+     "url": os.getenv("SOCIAL_LINKEDIN", "https://www.linkedin.com/company/brockwell-healthcare")},
+]
+
 # Site-wide search-engine indexing switch.
 #   True  -> the whole site is de-indexed: every page sends `noindex` via a
 #            <meta> tag AND an X-Robots-Tag response header. robots.txt still

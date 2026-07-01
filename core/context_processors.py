@@ -43,6 +43,7 @@ def site_context(request):
         "enabled_regions": enabled_regions(),
         "nav_categories": nav_categories,
         "footer_posts": footer_posts,
+        "SOCIAL_LINKS": settings.SOCIAL_LINKS,
         "STRIPE_PUBLISHABLE_KEY": settings.STRIPE_PUBLISHABLE_KEY,
         "DEFAULT_OG_IMAGE": settings.DEFAULT_OG_IMAGE,
         "SITE_NOINDEX": settings.SITE_NOINDEX,
