@@ -569,7 +569,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .docchip.is-active .docchip__name { color: var(--teal-600); }
 
 /* Stage */
-.spotlight__stage { position: relative; }
+/* Prominent floating panel around the doctor content (right column). */
+.spotlight__stage {
+  position: relative; background: var(--white);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.5rem 1.7rem; box-shadow: var(--shadow-lg);
+}
 .spotlight__bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.1rem; }
 .spotlight__count { color: var(--slate-600); font-size: .9rem; display: inline-flex; align-items: baseline; gap: .4rem; }
 .spotlight__count b { font-family: var(--font-display); font-size: 1.5rem; color: var(--teal-600); }
