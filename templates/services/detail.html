@@ -3,7 +3,7 @@
 
 {% block content %}
 {% rurl 'services:list' as services_url %}
-{% include "partials/page_hero.html" with hero_eyebrow=category.name hero_title=service.hero_heading|default:service.name hero_lead=service.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_parent2_label=category.name crumb_parent2_url=category.get_absolute_url crumb_label=service.name hero_image=hero_image %}
+{% include "partials/page_hero.html" with hero_title=service.hero_heading|default:service.name hero_lead=service.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_parent2_label=category.name crumb_parent2_url=category.get_absolute_url crumb_label=service.name hero_image=hero_image %}
 
 <section class="section">
   <div class="container doc-layout">
