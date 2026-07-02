@@ -63,6 +63,11 @@ class Service(TimeStamped):
         ServiceCategory, related_name="services", on_delete=models.CASCADE
     )
     name = models.CharField(max_length=160)
+    hero_heading = models.CharField(
+        max_length=200, blank=True,
+        help_text="Keyword-rich H1 for the page hero, e.g. 'Stem Cell Therapy in Dubai'. "
+        "Falls back to the service name if left blank.",
+    )
     slug = models.SlugField(max_length=180)
     icon = models.CharField(max_length=8, default="✦")
     image = models.ImageField(
