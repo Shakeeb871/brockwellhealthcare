@@ -560,13 +560,29 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* Rich-text (WYSIWYG) content — shared by .prose and the blog article body. */
 .prose h3, .blog-article__body h3 { font-size: 1.2rem; margin: 1.6rem 0 .7rem; }
 .prose h4, .blog-article__body h4 { font-size: 1.05rem; margin: 1.4rem 0 .6rem; }
-.prose ul, .prose ol,
+.prose ol,
 .blog-article__body ul, .blog-article__body ol {
   margin: 0 0 1.2rem; padding-left: 1.4rem; display: grid; gap: .5rem;
 }
-.prose ul, .blog-article__body ul { list-style: disc; }
+.blog-article__body ul { list-style: disc; }
 .prose ol, .blog-article__body ol { list-style: decimal; }
 .prose li, .blog-article__body li { line-height: 1.7; color: #1f2b3d; }
+
+/* Bullet lists inside service/article content render as professional icon
+   lists — teal check-circle markers, no markup change needed from the editor.
+   (`.checklist` keeps its own dedicated style; `.proc-steps` is styled below.) */
+.prose ul:not(.checklist) {
+  list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: .75rem;
+}
+.prose ul:not(.checklist) > li {
+  position: relative; padding-left: 2.15rem; line-height: 1.7; color: #1f2b3d;
+}
+.prose ul:not(.checklist) > li::before {
+  content: "✓"; position: absolute; left: 0; top: .12em;
+  width: 1.4rem; height: 1.4rem; display: grid; place-items: center;
+  border-radius: 50%; background: var(--mint-50); color: var(--teal-600);
+  font-size: .78rem; font-weight: 800; line-height: 1;
+}
 .prose a, .blog-article__body a { color: var(--teal-600); text-decoration: underline; font-weight: 500; }
 .prose a:hover, .blog-article__body a:hover { color: var(--teal-500); }
 .prose strong, .blog-article__body strong { color: var(--navy-800); }
@@ -575,6 +591,28 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   border-left: 3px solid var(--teal-500); color: var(--slate-600); font-style: italic;
 }
 .prose img, .blog-article__body img { max-width: 100%; height: auto; border-radius: var(--radius); margin: 1rem 0; }
+
+/* Treatment-process timeline — the `|enhance` filter turns consecutive
+   "Step N: Title" blocks into this numbered vertical timeline. */
+.proc-steps { list-style: none; margin: 1.8rem 0 2rem; padding: 0; display: grid; gap: 0; }
+.proc-step {
+  position: relative; display: grid; grid-template-columns: 3rem 1fr;
+  column-gap: 1.15rem; padding-bottom: 1.7rem;
+}
+.proc-step:last-child { padding-bottom: 0; }
+.proc-step:not(:last-child)::before {
+  content: ""; position: absolute; left: 1.5rem; top: 3rem; bottom: 0;
+  width: 2px; background: var(--line); transform: translateX(-1px);
+}
+.proc-step__num {
+  position: relative; z-index: 1; width: 3rem; height: 3rem; border-radius: 50%;
+  display: grid; place-items: center; background: var(--teal-600); color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
+  box-shadow: 0 6px 16px rgba(46, 125, 70, .28);
+}
+.proc-step__body { padding-top: .35rem; min-width: 0; }
+.proc-step__body h3 { margin: 0 0 .4rem; font-size: 1.15rem; }
+.proc-step__body p { margin: 0; color: var(--slate-600); }
 .prose table, .blog-article__body table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; }
 .prose th, .prose td, .blog-article__body th, .blog-article__body td { border: 1px solid var(--line); padding: .6rem .8rem; text-align: left; }
 

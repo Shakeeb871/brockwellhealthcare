@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 
 {% block content %}
 {% rurl 'services:list' as services_url %}
@@ -9,7 +9,7 @@
   <div class="container doc-layout">
     <article class="prose">
       {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
-      {{ service.description|safe }}
+      {{ service.description|enhance }}
 
       {% if service.benefit_list %}
       <h2>Key Benefits</h2>
