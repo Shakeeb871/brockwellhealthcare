@@ -53,13 +53,16 @@ div.breadcrumbs { padding: 11px 40px; font-size: .8rem; }
 .object-tools a { border-radius: 8px; font-weight: 600; }
 
 /* ---- Cards / modules: gentle elevation & rounding --------------------- */
-.module { border-radius: 12px; box-shadow: 0 1px 4px rgba(18,53,31,.06); overflow: hidden; }
+/* No overflow:hidden — it would clip (and block scrolling of) wide changelist
+   tables on small screens. Corners are rounded on the headers instead. */
+.module { border-radius: 12px; box-shadow: 0 1px 4px rgba(18,53,31,.06); }
 /* Section headers: branded green with white text so they're always legible. */
 .module caption, .module > caption,
 .inline-group h2, fieldset.module h2, .module h2 {
   background: #1c4a2b; color: #ffffff; font-weight: 700;
   letter-spacing: .3px; text-transform: none; font-size: .82rem;
   padding: 10px 14px; border-bottom: none;
+  border-top-left-radius: 12px; border-top-right-radius: 12px;
 }
 .module caption a, .module caption a:link, .module caption a:visited,
 .module h2 a { color: #ffffff; }
@@ -128,3 +131,32 @@ body.login .submit-row input { width: 100%; }
 
 /* ---- Messages --------------------------------------------------------- */
 ul.messagelist li.success { background-color: #eaf5ec; color: #1c4a2b; }
+
+/* ---- Responsive ------------------------------------------------------- */
+/* Wide changelist tables scroll horizontally instead of being cut off. */
+#changelist .results { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+#changelist .results > table { min-width: 100%; }
+
+@media (max-width: 767px) {
+  #header { padding: 14px 20px; }
+  div.breadcrumbs { padding: 10px 20px; }
+  #content { padding: 16px 20px; }
+  /* Comfortable tap targets for the inline add/remove controls */
+  .inline-group .inline-deletelink,
+  .inline-related .inline-deletelink,
+  a.inline-deletelink { padding: 6px 14px !important; font-size: .8rem; }
+  .add-row a { display: block; text-align: center; }
+  .inline-related .delete { float: none; display: inline-block; margin-top: 6px; }
+  /* Object-tools (Add / History / View on site) wrap and sit left on mobile */
+  .object-tools { float: none; margin: 8px 0 0; padding: 0; }
+  .object-tools li { display: inline-block; float: none; margin: 0 6px 6px 0; }
+  /* TinyMCE never wider than the screen */
+  .tox-tinymce { max-width: 100%; }
+}
+
+/* Small phones: stack the search box + submit neatly */
+@media (max-width: 480px) {
+  #changelist-search input[type=text] { width: 100%; box-sizing: border-box; }
+  #changelist-search .quick-element,
+  #toolbar form input[type=submit] { margin-top: 8px; }
+}
