@@ -12,6 +12,7 @@ class FAQItemInline(GenericStackedInline):
     extra = 1
     fields = ("question", "answer", "order", "is_published")
     ordering = ("order", "id")
+    can_delete = True
     verbose_name = "FAQ"
     verbose_name_plural = "FAQs — shown below the content (with FAQ schema)"
 
@@ -22,6 +23,7 @@ class ContactLeadAdmin(admin.ModelAdmin):
     list_filter = ("region", "handled", "created_at")
     search_fields = ("name", "email", "phone", "message")
     list_editable = ("handled",)
+    date_hierarchy = "created_at"
     readonly_fields = ("created_at", "updated_at")
 
 
@@ -39,6 +41,7 @@ class PageAdmin(admin.ModelAdmin):
     list_filter = ("region", "is_published")
     search_fields = ("title", "body")
     prepopulated_fields = {"slug": ("title",)}
+    save_on_top = True
     inlines = [FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "slug", "title", "body", "is_published")}),

@@ -43,6 +43,7 @@ class ServiceInline(admin.TabularInline):
     fields = ("name", "slug", "order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
     show_change_link = True
+    can_delete = True
 
 
 @admin.register(ServiceCategory)
@@ -52,6 +53,7 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
     inlines = [ServiceInline, FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
@@ -68,6 +70,7 @@ class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
     prepopulated_fields = {"slug": ("name",)}
+    save_on_top = True
     inlines = [FAQItemInline]
     fieldsets = (
         (None, {"fields": ("region", "category", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
