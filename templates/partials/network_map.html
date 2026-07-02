@@ -39,9 +39,6 @@ network_features (see core.views). Theme colours only; no background image.
               fill="url(#netgrid)"/>
       </svg>
 
-      {# Floating clinic image node (dummy — swap the icon for an <img> later). #}
-      <span class="netreach__node netreach__node--3" aria-hidden="true">{% icon 'stethoscope' %}</span>
-
       {# Interactive location pins. #}
       {% for loc in network_locations %}
       <div class="netpin" style="top:{{ loc.top }};left:{{ loc.left }}">
