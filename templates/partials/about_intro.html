@@ -21,13 +21,6 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
         <figure class="about-shape about-shape--b" aria-label="Modern laboratory">
           <img src="{% static 'img/about/about-2.webp' %}" alt="Clinical team reviewing advanced diagnostic imaging" loading="lazy" decoding="async">
         </figure>
-        <div class="about-float">
-          <span class="about-float__ic" aria-hidden="true">{% icon 'plus' %}</span>
-          <div>
-            <strong>Inpatient Services</strong>
-            <p>Round-the-clock, consultant-led care in a calm, modern setting.</p>
-          </div>
-        </div>
       </div>
 
       <div class="about__content">
@@ -36,15 +29,6 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
           advanced, non-surgical treatments — from stem cell therapy and PRP to peptide and IV protocols.</p>
         <p>Our therapies work with your body’s own ability to heal. We combine regenerative biologics,
           longevity care and precise diagnostics to restore your movement, support recovery and help you age well.</p>
-
-        <ul class="about__features">
-          {% for f in about_features %}
-          <li class="about__feature">
-            <span class="about__feature-ic" aria-hidden="true">{% icon f.icon %}</span>
-            <span>{{ f.text }}</span>
-          </li>
-          {% endfor %}
-        </ul>
 
         <div class="about__appt">
           <span class="about__appt-ic" aria-hidden="true">{% icon 'phone' %}</span>
@@ -84,8 +68,6 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
         <figure class="about-shape about-shape--lg" aria-label="Advanced medical research">
           <img src="{% static 'img/about/about-3.webp' %}" alt="Doctor discussing a personalised treatment plan with a patient" loading="lazy" decoding="async">
         </figure>
-        <span class="about__deco" aria-hidden="true">{% icon 'plus' %}</span>
-        <span class="about__deco about__deco--2" aria-hidden="true">{% icon 'plus' %}</span>
       </div>
     </div>
 
