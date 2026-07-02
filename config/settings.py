@@ -233,6 +233,12 @@ SOCIAL_LINKS = [
      "url": os.getenv("SOCIAL_LINKEDIN", "https://www.linkedin.com/company/brockwell-healthcare")},
 ]
 
+# Google rating shown on the home page. AggregateRating schema is only emitted
+# when GOOGLE_REVIEW_COUNT is set (> 0) so we never publish an unverifiable
+# review count. Set it to your real Google review count to enable the markup.
+GOOGLE_RATING_VALUE = os.getenv("GOOGLE_RATING_VALUE", "4.91")
+GOOGLE_REVIEW_COUNT = int(os.getenv("GOOGLE_REVIEW_COUNT", "0") or 0)
+
 # Site-wide search-engine indexing switch.
 #   True  -> the whole site is de-indexed: every page sends `noindex` via a
 #            <meta> tag AND an X-Robots-Tag response header. robots.txt still

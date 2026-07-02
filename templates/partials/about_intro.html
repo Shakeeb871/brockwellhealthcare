@@ -9,8 +9,8 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
 
     {# ---------- 1. Top introduction ---------- #}
     <header class="about__head">
-      <span class="eyebrow">Welcome to {{ BRAND_NAME }}</span>
-      <h2 id="about-title">The Heart and Science of Medical Care</h2>
+      <span class="eyebrow">About Us</span>
+      <h2 id="about-title">About {{ BRAND_NAME }}</h2>
     </header>
 
     <div class="about__intro">
@@ -31,9 +31,11 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
       </div>
 
       <div class="about__content">
-        <p class="about__lead">There are many regenerative and medical programmes tailored to each
-          patient. Our specialists combine advanced science with compassionate, personalised care —
-          so every treatment plan is built around you.</p>
+        <p class="about__lead">Brockwell Healthcare is one of Dubai’s established regenerative medicine
+          and longevity clinics. We help patients overcome pain, injury and age-related decline using
+          advanced, non-surgical treatments — from stem cell therapy and PRP to peptide and IV protocols.</p>
+        <p>Our medicine works with the body, not against it. We combine regenerative biologics, longevity
+          care and precise diagnostics to restore how you move, recover and age.</p>
 
         <ul class="about__features">
           {% for f in about_features %}
@@ -48,7 +50,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
           <span class="about__appt-ic" aria-hidden="true">{% icon 'phone' %}</span>
           <div class="about__appt-text">
             <span class="about__appt-label">Book Appointment</span>
-            <a class="about__appt-num" href="tel:+12122555511">+1 (212) 255-5511</a>
+            <a class="about__appt-num" href="tel:{{ region.phone }}">{{ region.phone }}</a>
           </div>
         </div>
 
@@ -59,17 +61,17 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
     {# ---------- 2. Stats content area ---------- #}
     <div class="about__stats-row">
       <div class="about__stats-text">
-        <span class="eyebrow">Welcome to {{ BRAND_NAME }}</span>
-        <h3 class="about__stats-title">Joining Hands With Techno Easement</h3>
-        <p>Pairing experienced clinicians with the latest medical technology to deliver
-          measurable, trusted outcomes for every patient we care for.</p>
+        <span class="eyebrow">Medicine That Works With You</span>
+        <h3 class="about__stats-title">A Team You Can Trust With Your Health</h3>
+        <p>A team of board-certified specialists guides every stage of your care. We personalise each
+          plan around your health and your goals, and we hold every recommendation to real clinical evidence.</p>
 
         <div class="about__stats" role="list">
           {% for s in about_stats %}
           <div class="about__stat" role="listitem">
-            <div class="about__ring" data-ring data-value="{{ s.value }}" style="--p: 0">
+            <div class="about__ring" style="--p: {{ s.ring }}">
               <div class="about__ring-inner">
-                <div class="stat__num"><span class="val">{{ s.value }}</span><span class="suffix">%</span></div>
+                <div class="stat__num"><span class="val">{{ s.num }}</span><span class="suffix">{{ s.suffix }}</span></div>
               </div>
             </div>
             <p class="about__stat-label">{{ s.label }}</p>

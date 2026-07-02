@@ -5,12 +5,15 @@
 <section class="hero" style="background-image:url('{% static 'img/brockwell-healthcare.webp' %}')">
   <div class="container hero__inner">
     <div class="hero__content">
-      <span class="eyebrow">Regenerative Medicine · {{ region.short }}</span>
-      <h1>{{ BRAND_TAGLINE }}</h1>
-      <p class="lead">Personalised stem cell and regenerative therapies delivered by experienced clinicians in {{ region.name }} — grounded in science, centred on you.</p>
+      <span class="eyebrow">Regenerative Medicine &amp; Longevity · Dubai</span>
+      <h1>Regenerative Medicine &amp; Longevity Clinic in Dubai</h1>
+      <p class="hero__sub">Feel better, move better, live better.</p>
+      <p class="lead">Brockwell Healthcare helps patients in Dubai move past chronic pain, slow recovery
+        and age-related decline with personalised, non-surgical care. Most clinics treat what you feel —
+        Brockwell looks at <em>why</em> you feel it.</p>
       <div class="hero__cta">
         <a class="btn btn--light" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
-        <a class="btn btn--outline-light" href="{% rurl 'services:list' %}">Explore Services {% icon 'arrow' 'ico' %}</a>
+        <a class="btn btn--outline-light" href="{% rurl 'core:contact' %}">Speak to Our Team {% icon 'arrow' 'ico' %}</a>
       </div>
     </div>
   </div>
@@ -31,8 +34,8 @@
 <!-- Our Team — doctor spotlight (prominent) -->
 {% include "partials/doctor_spotlight.html" %}
 
-<!-- Interactive facilities showcase -->
-{% include "partials/facilities.html" %}
+<!-- Why Choose Brockwell — six differentiators -->
+{% include "partials/why_choose.html" %}
 
 <!-- FAQ (left) + Appointment Booking (right) -->
 {% include "partials/faq_booking.html" %}
@@ -70,4 +73,7 @@
 
 <!-- Recent Articles — news / blog grid -->
 {% include "partials/news_articles.html" %}
+
+<!-- Final call-to-action -->
+{% include "partials/final_cta.html" %}
 {% endblock %}

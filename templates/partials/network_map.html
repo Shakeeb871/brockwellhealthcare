@@ -10,12 +10,14 @@ network_features (see core.views). Theme colours only; no background image.
 
     {# ---------------- LEFT: content ---------------- #}
     <div class="netreach__content">
-      <span class="eyebrow">Our Medical Network</span>
-      <h2 id="netreach-title">Where patients trust regenerative care</h2>
-      <p>From first consultation to advanced regenerative therapy, our connected
-        network of UAE centres gives patients seamless access to expert clinicians,
-        international patient assistance and evidence-based stem cell care — wherever
-        they are.</p>
+      <span class="eyebrow">Where Patients Trust Regenerative Care</span>
+      <h2 id="netreach-title">Regenerative Medicine for Patients Across the UAE</h2>
+      <p>Brockwell Healthcare is based in Dubai and cares for patients across the United Arab
+        Emirates. In-person consultations take place in Dubai, with patients travelling to us from
+        Abu Dhabi, Sharjah, Ajman, Ras Al Khaimah, Fujairah and Umm Al Quwain.</p>
+      <p>For eligible follow-ups, prescription reviews and non-emergency assessments, secure
+        telehealth is available across the UAE. Diagnostic procedures and hands-on treatments are
+        completed in person in Dubai.</p>
 
       <ul class="netreach__features">
         {% for f in network_features %}
@@ -25,7 +27,7 @@ network_features (see core.views). Theme colours only; no background image.
         {% endfor %}
       </ul>
 
-      <a class="btn btn--primary netreach__cta" href="{% rurl 'core:contact' %}">View Locations {% icon 'arrow' 'ico' %}</a>
+      <a class="btn btn--primary netreach__cta" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
     </div>
 
     {# ---------------- RIGHT: UAE map ---------------- #}

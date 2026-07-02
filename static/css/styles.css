@@ -413,7 +413,18 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   text-align: center; box-shadow: var(--shadow-lg);
 }
 .cta-band h2 { color: #fff; }
-.cta-band p { color: #dcecd3; max-width: 50ch; margin-inline: auto; }
+.cta-band p { color: #dcecd3; max-width: 54ch; margin-inline: auto; }
+.cta-band .eyebrow { color: #bfe3c4; }
+.cta-band__actions { display: flex; flex-wrap: wrap; gap: .8rem; justify-content: center; margin-top: 1.7rem; }
+.cta-band__contact { margin-top: 1.25rem; font-size: .92rem; color: rgba(255,255,255,.9); }
+.cta-band__contact a { color: #fff; text-decoration: underline; }
+
+/* Hero sub-line ("Feel better, move better, live better."). */
+.hero__sub {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.15rem, 2.4vw, 1.5rem); color: #eaf3ea;
+  margin: -.15rem 0 .9rem;
+}
 
 /* ---------------------------------------------------------------- Forms */
 .form { display: grid; gap: 1.1rem; }

@@ -10,7 +10,7 @@ changes); a default message is included so it works with or without JS.
     {# ---------------- LEFT: FAQ ---------------- #}
     <div class="rb__faq">
       <span class="eyebrow">Questions, Answered</span>
-      <h2 id="faqbk-title">Frequently Asked Questions</h2>
+      <h2 id="faqbk-title">Regenerative Medicine Questions, Answered</h2>
       {% if faqs %}
       <div class="faq">
         {% for faq in faqs %}
@@ -23,6 +23,8 @@ changes); a default message is included so it works with or without JS.
       {% else %}
       <p class="muted">Have a question? Reach out and our team will be glad to help.</p>
       {% endif %}
+      <p class="rb__faq-note"><em>Regenerative medicine is not suitable for every patient or every
+        condition. A clinical assessment always comes first.</em></p>
     </div>
 
     {# ---------------- RIGHT: appointment form ---------------- #}

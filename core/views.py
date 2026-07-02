@@ -22,14 +22,16 @@ from .regions import region_path
 # Dummy content for the home "About / Medical Center Introduction" section.
 # Replace text/icons later, or move to a model/admin if it should be editable.
 ABOUT_FEATURES = [
-    {"icon": "heart", "text": "Women’s health services, including one-stop breast care centre."},
-    {"icon": "users", "text": "Internationally acclaimed, multi-disciplinary consultants."},
-    {"icon": "shield", "text": "Expert-led teams with rigorous safety standards."},
+    {"icon": "users", "text": "Board-certified specialists guide every stage of your care."},
+    {"icon": "leaf", "text": "Advanced, non-surgical regenerative treatments."},
+    {"icon": "shield", "text": "Every recommendation held to real clinical evidence."},
 ]
+# About stat circles. `num`/`suffix` are shown as-is; `ring` is the decorative
+# arc fill (0–100, visual only — these aren't percentages).
 ABOUT_STATS = [
-    {"value": 85, "label": "Client Satisfaction"},
-    {"value": 95, "label": "Medical Success"},
-    {"value": 100, "label": "Client Referral"},
+    {"num": "15,000", "suffix": "+", "ring": 96, "label": "Patients Treated"},
+    {"num": "25", "suffix": "+", "ring": 80, "label": "Years of Experience"},
+    {"num": "4.91", "suffix": "★", "ring": 98, "label": "Google Rating"},
 ]
 # Partner/brand logos shown in the About section. Put the 6 logo files in
 # static/img/ named brand-1.png … brand-6.png (any image type works — just
@@ -47,25 +49,50 @@ ABOUT_PARTNERS = [
 # edit freely. `decimals`/`suffix` handle the rating; `ring` is the decorative
 # arc fill percentage (visual only, not tied to the value).
 IMPACT_STATS = [
-    {"icon": "bed", "value": 692, "decimals": 0, "suffix": "", "ring": 70, "label": "Hospital Beds"},
-    {"icon": "pulse", "value": 1478, "decimals": 0, "suffix": "", "ring": 82, "label": "Outpatients (per day)"},
-    {"icon": "user-plus", "value": 44478, "decimals": 0, "suffix": "", "ring": 90, "label": "Inpatients (per day)"},
-    {"icon": "scalpel", "value": 1218, "decimals": 0, "suffix": "", "ring": 60, "label": "Surgeries (per day)"},
-    {"icon": "star", "value": 4.9, "decimals": 1, "suffix": "/5.0", "ring": 98, "label": "Worldwide Rating"},
+    {"icon": "users", "value": 50, "decimals": 0, "suffix": "+", "ring": 80, "label": "Expert Specialists"},
+    {"icon": "heart", "value": 98, "decimals": 0, "suffix": "%", "ring": 98, "label": "Patient Satisfaction"},
+    {"icon": "capsule", "value": 12, "decimals": 0, "suffix": "+", "ring": 70, "label": "Regenerative & Wellness Therapies"},
+    {"icon": "leaf", "value": 6, "decimals": 0, "suffix": "", "ring": 60, "label": "Core Service Areas"},
+    {"icon": "pin", "value": 7, "decimals": 0, "suffix": "", "ring": 90, "label": "Emirates Served"},
 ]
 
 
 # Dummy steps for the "Care Journey" process section. Reusable/scalable —
 # add 4 to 8 items; numbers are generated automatically in the template.
 PROCESS_STEPS = [
-    {"icon": "stethoscope", "title": "Initial Consultation & Evaluation",
-     "desc": "A thorough one-to-one assessment of your history, goals and suitability."},
-    {"icon": "microscope", "title": "Diagnostic Assessment & Lab Analysis",
-     "desc": "Advanced imaging and laboratory analysis map your regenerative profile."},
-    {"icon": "dna", "title": "Stem Cell Therapy Planning",
-     "desc": "A personalised, evidence-based regenerative treatment plan is designed."},
-    {"icon": "heart", "title": "Treatment & Recovery Monitoring",
-     "desc": "Care is delivered safely, with progress tracked throughout your recovery."},
+    {"icon": "stethoscope", "title": "Consultation",
+     "desc": "We start by understanding your symptoms, medical history, lifestyle and what you want to improve."},
+    {"icon": "microscope", "title": "Diagnostics & Clinical Review",
+     "desc": "Where needed, we recommend testing or imaging to confirm what is driving the problem before treating."},
+    {"icon": "clipboard", "title": "Personalised Treatment Plan",
+     "desc": "We build your plan around your condition, your safety and the outcomes you can realistically expect."},
+    {"icon": "syringe", "title": "Treatment",
+     "desc": "This may be regenerative medicine, injection therapy, wellness support or a combination chosen for your case."},
+    {"icon": "refresh", "title": "Follow-Up & Outcome Tracking",
+     "desc": "We track your progress and adjust the plan, because real improvement rarely comes from a single visit."},
+]
+
+
+# "Why Choose Brockwell" — six differentiators shown on the home page.
+WHY_CHOOSE = [
+    {"icon": "stethoscope", "title": "Physician-led at every step",
+     "desc": "A specialist assesses, plans and oversees your care from start to finish. You are treated by a "
+             "doctor, not handed to a technician following a template."},
+    {"icon": "refresh", "title": "One coordinated clinical model",
+     "desc": "Regenerative medicine, longevity, diagnostics and functional medicine work from a single plan. "
+             "Your treatment stays joined up instead of split across separate providers."},
+    {"icon": "cells", "title": "Treatments that work with your own biology",
+     "desc": "Where clinically suitable, we use your body’s own cells and tissue to support natural repair. "
+             "This keeps care biologic, targeted and low-risk."},
+    {"icon": "scan", "title": "Image-guided precision",
+     "desc": "Many injections and procedures are carried out under ultrasound guidance. Treatment reaches the "
+             "exact site it needs to, safely and accurately."},
+    {"icon": "chat", "title": "Honest, realistic guidance",
+     "desc": "We explain what may help, what may not suit you and what results are reasonable to expect. If "
+             "regenerative medicine is not right for you, we say so."},
+    {"icon": "shield", "title": "Safety-gated and evidence-based",
+     "desc": "Every therapy follows a clinical assessment and sound medical judgement. Emergencies and cases "
+             "that need surgery are referred to the right specialist service."},
 ]
 
 
@@ -111,22 +138,22 @@ BOOKING_SERVICES = [
 # Dummy UAE clinic network — used by the "Medical Network" map section.
 # top/left are percentage positions on the stylised UAE map. Edit freely.
 NETWORK_LOCATIONS = [
-    {"city": "Abu Dhabi", "name": "Brockwell Abu Dhabi", "icon": "stethoscope",
-     "desc": "Flagship regenerative medicine & diagnostics centre.", "top": "60%", "left": "27%"},
-    {"city": "Dubai", "name": "Brockwell Dubai", "icon": "plus",
-     "desc": "Advanced stem cell therapy & consultation hub.", "top": "42%", "left": "60%"},
-    {"city": "Sharjah", "name": "Brockwell Sharjah", "icon": "shield",
-     "desc": "Clinical evaluation & patient support.", "top": "36%", "left": "67%"},
-    {"city": "Ajman", "name": "Brockwell Ajman", "icon": "microscope",
-     "desc": "Longevity & advanced diagnostics clinic.", "top": "31%", "left": "72%"},
-    {"city": "Ras Al Khaimah", "name": "Brockwell RAK", "icon": "heart",
-     "desc": "Regenerative treatment & recovery care.", "top": "22%", "left": "81%"},
+    {"city": "Abu Dhabi", "name": "Abu Dhabi", "icon": "pin",
+     "desc": "Patients travel to our Dubai clinic; secure telehealth available.", "top": "60%", "left": "27%"},
+    {"city": "Dubai", "name": "Brockwell Healthcare — Dubai", "icon": "plus",
+     "desc": "In-person consultations, diagnostics & hands-on treatment.", "top": "42%", "left": "60%"},
+    {"city": "Sharjah", "name": "Sharjah", "icon": "pin",
+     "desc": "Served via our Dubai clinic and secure telehealth.", "top": "36%", "left": "67%"},
+    {"city": "Ajman", "name": "Ajman", "icon": "pin",
+     "desc": "Served via our Dubai clinic and secure telehealth.", "top": "31%", "left": "72%"},
+    {"city": "Ras Al Khaimah", "name": "Ras Al Khaimah", "icon": "pin",
+     "desc": "Served via our Dubai clinic and secure telehealth.", "top": "22%", "left": "81%"},
 ]
 NETWORK_FEATURES = [
-    "Consultation & Planning Support",
-    "International Patient Assistance",
-    "Clinical Evaluation Services",
-    "Regenerative Treatment Access",
+    "In-person consultations & treatment in Dubai",
+    "Patients cared for across all seven emirates",
+    "Secure telehealth available across the UAE",
+    "Online follow-ups, prescription & non-emergency reviews",
 ]
 
 
@@ -220,15 +247,16 @@ def home(request):
 
     meta = seo.build_meta(
         request,
-        title=f"{settings.BRAND_NAME} — {settings.BRAND_TAGLINE} in {region['name']}",
+        title="Regenerative Medicine & Longevity Clinic Dubai | Brockwell",
         description=(
-            f"{settings.BRAND_NAME} delivers advanced stem cell and regenerative "
-            f"medicine in {region['name']}. Personalised therapies, expert clinicians, "
-            "and evidence-based care. Book a consultation today."
+            "Brockwell Healthcare is a Dubai regenerative medicine and longevity clinic "
+            "offering personalised, non-surgical care for pain, recovery and healthy ageing."
         ),
         path="/",
     )
-    jsonld = [seo.organization_schema(region), seo.website_schema(region)]
+    jsonld = [seo.medical_clinic_schema(region), seo.website_schema(region)]
+    jsonld += [seo.category_schema(c, region) for c in categories]
+    jsonld += [seo.doctor_schema(d, region) for d in doctors]
     faq_ld = seo.faq_schema(faqs)
     if faq_ld:
         jsonld.append(faq_ld)
@@ -248,6 +276,7 @@ def home(request):
             "about_partners": _partners_with_logos(),
             "impact_stats": IMPACT_STATS,
             "process_steps": PROCESS_STEPS,
+            "why_choose": WHY_CHOOSE,
             "patient_reviews": PATIENT_REVIEWS,
             "booking_services": BOOKING_SERVICES,
             "facilities": _facilities_with_images(),

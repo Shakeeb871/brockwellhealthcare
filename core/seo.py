@@ -86,6 +86,34 @@ def organization_schema(region):
     }
 
 
+EMIRATES = [
+    "Dubai", "Abu Dhabi", "Sharjah", "Ajman",
+    "Ras Al Khaimah", "Fujairah", "Umm Al Quwain",
+]
+
+
+def medical_clinic_schema(region):
+    """Richer home-page organization node: MedicalClinic with logo, social
+    profiles, the emirates served and (optionally) an AggregateRating."""
+    from django.templatetags.static import static
+
+    org = organization_schema(region)
+    org["@type"] = ["MedicalBusiness", "MedicalClinic"]
+    org["logo"] = absolute(static("img/brockwell-healthcare-logo.png"))
+    org["image"] = absolute(static("img/brockwell-healthcare.webp"))
+    org["sameAs"] = [s["url"] for s in settings.SOCIAL_LINKS if s.get("url")]
+    org["areaServed"] = [{"@type": "AdministrativeArea", "name": e} for e in EMIRATES]
+    # Only publish a rating if a real, verifiable review count is configured.
+    if getattr(settings, "GOOGLE_REVIEW_COUNT", 0):
+        org["aggregateRating"] = {
+            "@type": "AggregateRating",
+            "ratingValue": settings.GOOGLE_RATING_VALUE,
+            "bestRating": "5",
+            "ratingCount": settings.GOOGLE_REVIEW_COUNT,
+        }
+    return org
+
+
 def website_schema(region):
     return {
         "@context": "https://schema.org",

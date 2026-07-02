@@ -1,0 +1,24 @@
+{% load icons %}
+{% comment %}
+Why Choose Brockwell — six differentiators. Data: `why_choose` (core.views WHY_CHOOSE).
+{% endcomment %}
+{% if why_choose %}
+<section class="section section--soft why" aria-labelledby="why-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Why Brockwell</span>
+      <h2 id="why-title">Why Choose Brockwell for Regenerative Care</h2>
+    </header>
+
+    <div class="why-grid">
+      {% for w in why_choose %}
+      <article class="why-card">
+        <span class="why-card__ico" aria-hidden="true">{% icon w.icon %}</span>
+        <h3>{{ w.title }}</h3>
+        <p>{{ w.desc }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
