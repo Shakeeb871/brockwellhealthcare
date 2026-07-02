@@ -1997,3 +1997,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .blog-grid { grid-template-columns: 1fr; }
   .blog-side { grid-template-columns: 1fr; }
 }
+
+/* ------------------------------------------------- Home section rhythm */
+/* Standard spacing rhythm: content sections alternate white / soft-grey so no
+   two neighbours share a background and the gaps read consistently. Driven by
+   nth-of-type (not fixed classes) so it stays correct even when an optional
+   section — e.g. Upcoming Events — is absent. The hero is a <section> without
+   the .section class, so it keeps its own dark background. */
+#main > section.section:nth-of-type(even) { background: var(--bg); }      /* white */
+#main > section.section:nth-of-type(odd)  { background: var(--bg-soft); } /* soft grey */
