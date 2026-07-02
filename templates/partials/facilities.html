@@ -5,18 +5,18 @@ overlapping circular image. Data: `facilities` (see core.views). Tabs switch
 the content and the circular media (crossfade). Theme colours only.
 The circle shows the facility icon; add an "image" URL to show a photo instead.
 {% endcomment %}
-{% if facilities %}
+{% if why_choose %}
 <section class="section facilities" aria-labelledby="fac-title">
   <div class="container">
     <header class="section__head">
-      <span class="eyebrow">Medical Services</span>
-      <h2 id="fac-title">What Facilities We Provide</h2>
+      <span class="eyebrow">Why Brockwell</span>
+      <h2 id="fac-title">Why Choose Brockwell for Regenerative Care</h2>
     </header>
 
     <div class="fac__panel" data-facilities>
       {# ---------- Left: tab navigation ---------- #}
-      <div class="fac__nav" role="tablist" aria-label="Facilities">
-        {% for f in facilities %}
+      <div class="fac__nav" role="tablist" aria-label="Why choose Brockwell">
+        {% for f in why_choose %}
         <button type="button" class="fac__tab{% if forloop.first %} is-active{% endif %}"
                 role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
                 data-tab="{{ forloop.counter0 }}" aria-controls="fac-card-{{ forloop.counter0 }}">
@@ -29,7 +29,7 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
       {# ---------- Right: stage (overlapping image + content card) ---------- #}
       <div class="fac__stage">
         <div class="fac__media" aria-hidden="true">
-          {% for f in facilities %}
+          {% for f in why_choose %}
           <figure class="fac__media-item{% if forloop.first %} is-active{% endif %}" data-media="{{ forloop.counter0 }}">
             {% if f.image %}
               <img src="{% static f.image %}" alt="{{ f.title }}" loading="lazy" decoding="async">
@@ -41,7 +41,7 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
         </div>
 
         <div class="fac__content">
-          {% for f in facilities %}
+          {% for f in why_choose %}
           <article class="fac__card{% if forloop.first %} is-active{% endif %}"
                    id="fac-card-{{ forloop.counter0 }}" data-card="{{ forloop.counter0 }}"
                    role="tabpanel" aria-label="{{ f.title }}">
