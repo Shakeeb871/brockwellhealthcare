@@ -133,9 +133,29 @@ body.login .submit-row input { width: 100%; }
 ul.messagelist li.success { background-color: #eaf5ec; color: #1c4a2b; }
 
 /* ---- Responsive ------------------------------------------------------- */
-/* Wide changelist tables scroll horizontally instead of being cut off. */
-#changelist .results { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* Root cause of the "page scrolls right / buttons off-screen" bug: Django's
+   #content is a flex child (next to the sticky nav sidebar). Flex children
+   default to min-width:auto, so a wide descendant (editor, table, long button
+   row) makes #content refuse to shrink and pushes the whole page sideways.
+   min-width:0 lets it shrink to the viewport; wide bits then wrap or scroll
+   in their own box — nothing is hidden or cut off. */
+#main, #content, #content-main, #content-related,
+.colM, .colMS, #content-main > form, .content-main { min-width: 0; }
+#content, #content-main, #content-main > form { max-width: 100%; }
+
+/* Action rows wrap instead of overflowing (keeps Delete / View-on-site visible). */
+.submit-row { display: flex; flex-wrap: wrap; row-gap: 8px; }
+.object-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.object-tools li { float: none; margin: 0; }
+
+/* Wide data tables (changelist + tabular inlines) scroll inside their own box. */
+#changelist .results,
+.inline-group .tabular { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 #changelist .results > table { min-width: 100%; }
+
+/* Rich-text editor & form rows never wider than their column. */
+.tox-tinymce { max-width: 100%; }
+.form-row, fieldset.module { max-width: 100%; box-sizing: border-box; }
 
 @media (max-width: 767px) {
   #header { padding: 14px 20px; }
