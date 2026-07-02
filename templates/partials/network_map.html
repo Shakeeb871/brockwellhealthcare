@@ -19,14 +19,6 @@ network_features (see core.views). Theme colours only; no background image.
         telehealth is available across the UAE. We complete diagnostic procedures and hands-on
         treatments in person at our Dubai clinic.</p>
 
-      <ul class="netreach__features">
-        {% for f in network_features %}
-        <li class="netreach__feature">
-          <span class="netreach__fic" aria-hidden="true">{% icon 'check' %}</span>{{ f }}
-        </li>
-        {% endfor %}
-      </ul>
-
       <a class="btn btn--primary netreach__cta" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
     </div>
 
