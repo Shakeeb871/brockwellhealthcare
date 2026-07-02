@@ -20,7 +20,9 @@
         <li class="svc-card">
           <article class="card">
             <div class="card__media">
-              {% if c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
+              {% category_image c.slug as cat_img %}
+              {% if cat_img %}<img src="{{ cat_img }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+              {% elif c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
             </div>
             <h3>{{ c.name }}</h3>
             <p>{{ c.summary }}</p>

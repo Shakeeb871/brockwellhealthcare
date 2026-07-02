@@ -7,9 +7,22 @@ Usage:
 """
 
 from django import template
+from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+
+@register.simple_tag
+def category_image(slug):
+    """URL of a category's homepage image if a file exists at
+    ``static/img/services/categories/<slug>.webp`` — else "" (safe, no crash).
+
+    Lets category images be managed as repo files (like the per-service hero
+    images) without touching the admin. Drop the file in and it appears."""
+    rel = f"img/services/categories/{slug}.webp"
+    return static(rel) if finders.find(rel) else ""
 
 # 24x24 stroke icons (currentColor). Clean, professional line style.
 _ICONS = {
