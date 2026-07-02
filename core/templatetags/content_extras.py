@@ -17,7 +17,32 @@ import re
 from django import template
 from django.utils.safestring import mark_safe
 
+from .icons import _ICONS, _svg
+
 register = template.Library()
+
+# Keyword → icon for content cards (first match on a whole word wins).
+# Lets the card grid show a relevant glyph without any admin-side setup.
+_ICON_KEYWORDS = [
+    ("eboo", "refresh"), ("ozone", "lungs"), ("oxygen", "lungs"),
+    ("glutathione", "iv-bag"), ("vitamin", "vial"), ("infusion", "iv-bag"),
+    ("iv", "iv-bag"), ("pemf", "magnet"), ("magnet", "magnet"),
+    ("laser", "zap"), ("light", "sun"), ("plasma", "plasma"), ("prp", "droplet"),
+    ("stem", "cells"), ("exosome", "molecule"), ("detox", "droplet"),
+    ("nutrition", "apple"), ("lifestyle", "apple"), ("diet", "apple"),
+    ("stress", "spa"), ("massage", "spa"), ("shock", "waveform"),
+    ("hyperbaric", "lungs"), ("genom", "dna"), ("dna", "dna"),
+    ("physio", "hand"), ("sport", "run"), ("bone", "bone"), ("ortho", "bone"),
+]
+_ICON_DEFAULT = "sparkles"
+
+
+def _pick_icon(title):
+    text = title.lower()
+    for kw, name in _ICON_KEYWORDS:
+        if re.search(r"(?<![a-z])" + re.escape(kw) + r"(?![a-z])", text):
+            return name
+    return _ICON_DEFAULT
 
 # One "Step N: Title" heading immediately followed by a paragraph.
 _STEP = re.compile(
@@ -59,8 +84,10 @@ def _build_cards(run_html):
     cards = []
     for m in _CARD.finditer(run_html):
         title, body = m.group(1).strip(), m.group(2).strip()
+        glyph = _svg(_ICONS.get(_pick_icon(title), _ICONS["sparkles"]), "ico")
         cards.append(
             f'<div class="info-card">'
+            f'<span class="info-card__ico" aria-hidden="true">{glyph}</span>'
             f'<h3 class="info-card__title">{title}</h3>'
             f'<p class="info-card__body">{body}</p>'
             f"</div>"
