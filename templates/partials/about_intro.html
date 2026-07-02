@@ -16,10 +16,10 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
     <div class="about__intro">
       <div class="about__media">
         <figure class="about-shape about-shape--a" aria-label="Clinicians at work">
-          <span class="about-shape__ph" aria-hidden="true">{% icon 'microscope' %}</span>
+          <img src="{% static 'img/about/about-1.webp' %}" alt="Doctor consulting a patient at {{ BRAND_NAME }}" loading="lazy" decoding="async">
         </figure>
         <figure class="about-shape about-shape--b" aria-label="Modern laboratory">
-          <span class="about-shape__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>
+          <img src="{% static 'img/about/about-2.webp' %}" alt="Clinical team reviewing advanced diagnostic imaging" loading="lazy" decoding="async">
         </figure>
         <div class="about-float">
           <span class="about-float__ic" aria-hidden="true">{% icon 'plus' %}</span>
@@ -80,7 +80,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
 
       <div class="about__stats-media">
         <figure class="about-shape about-shape--lg" aria-label="Advanced medical research">
-          <span class="about-shape__ph" aria-hidden="true">{% icon 'dna' %}</span>
+          <img src="{% static 'img/about/about-3.webp' %}" alt="Doctor discussing a personalised treatment plan with a patient" loading="lazy" decoding="async">
         </figure>
         <span class="about__deco" aria-hidden="true">{% icon 'plus' %}</span>
         <span class="about__deco about__deco--2" aria-hidden="true">{% icon 'plus' %}</span>
