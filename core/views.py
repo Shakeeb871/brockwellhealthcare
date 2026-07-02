@@ -140,7 +140,7 @@ BOOKING_SERVICES = [
 NETWORK_LOCATIONS = [
     {"city": "Abu Dhabi", "name": "Abu Dhabi", "icon": "pin",
      "desc": "Patients travel to our Dubai clinic; secure telehealth available.", "top": "60%", "left": "27%"},
-    {"city": "Dubai", "name": "Brockwell Healthcare — Dubai", "icon": "plus",
+    {"city": "Dubai", "name": "Brockwell Healthcare — Dubai", "icon": "pin",
      "desc": "In-person consultations, diagnostics & hands-on treatment.", "top": "42%", "left": "60%"},
     {"city": "Sharjah", "name": "Sharjah", "icon": "pin",
      "desc": "Served via our Dubai clinic and secure telehealth.", "top": "36%", "left": "67%"},
