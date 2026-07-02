@@ -63,7 +63,7 @@ PROCESS_STEPS = [
     {"icon": "stethoscope", "title": "Consultation",
      "desc": "We start by understanding your symptoms, medical history, lifestyle and what you want to improve."},
     {"icon": "microscope", "title": "Diagnostics & Clinical Review",
-     "desc": "Where needed, we recommend testing or imaging to confirm what is driving the problem before treating."},
+     "desc": "Where needed, we recommend testing or imaging to confirm what is driving the problem before treatment begins."},
     {"icon": "clipboard", "title": "Personalised Treatment Plan",
      "desc": "We build your plan around your condition, your safety and the outcomes you can realistically expect."},
     {"icon": "syringe", "title": "Treatment",
@@ -76,23 +76,23 @@ PROCESS_STEPS = [
 # "Why Choose Brockwell" — six differentiators shown on the home page.
 WHY_CHOOSE = [
     {"icon": "stethoscope", "title": "Physician-led at every step",
-     "desc": "A specialist assesses, plans and oversees your care from start to finish. You are treated by a "
-             "doctor, not handed to a technician following a template."},
+     "desc": "A specialist assesses, plans and oversees your care from start to finish, so a qualified "
+             "doctor guides every decision."},
     {"icon": "refresh", "title": "One coordinated clinical model",
-     "desc": "Regenerative medicine, longevity, diagnostics and functional medicine work from a single plan. "
-             "Your treatment stays joined up instead of split across separate providers."},
+     "desc": "Regenerative medicine, longevity, diagnostics and functional medicine work from a single plan, "
+             "so your whole treatment stays connected and consistent."},
     {"icon": "cells", "title": "Treatments that work with your own biology",
      "desc": "Where clinically suitable, we use your body’s own cells and tissue to support natural repair. "
-             "This keeps care biologic, targeted and low-risk."},
+             "This keeps your care biologic, targeted and low-risk."},
     {"icon": "scan", "title": "Image-guided precision",
-     "desc": "Many injections and procedures are carried out under ultrasound guidance. Treatment reaches the "
-             "exact site it needs to, safely and accurately."},
+     "desc": "We carry out many injections and procedures under ultrasound guidance, so each treatment "
+             "reaches its precise target, safely and accurately."},
     {"icon": "chat", "title": "Honest, realistic guidance",
      "desc": "We explain what may help, what may not suit you and what results are reasonable to expect. If "
-             "regenerative medicine is not right for you, we say so."},
+             "regenerative medicine is not right for you, we tell you clearly."},
     {"icon": "shield", "title": "Safety-gated and evidence-based",
-     "desc": "Every therapy follows a clinical assessment and sound medical judgement. Emergencies and cases "
-             "that need surgery are referred to the right specialist service."},
+     "desc": "Every therapy follows a clinical assessment and sound medical judgement. We refer emergencies "
+             "and cases that need surgery to the right specialist service."},
 ]
 
 
