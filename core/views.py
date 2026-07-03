@@ -342,27 +342,55 @@ def search(request):
     )
 
 
+# Specialists highlighted on the About page (name/role as approved; photo + URL
+# pulled from the Doctor records by slug).
+ABOUT_SPECIALISTS = [
+    {"slug": "dr-adeel-khan-md", "name": "Dr. Adeel Khan", "role": "Regenerative Medicine & Longevity Physician"},
+    {"slug": "shirley-dsouza", "name": "Dr. Shirley D’Souza", "role": "Precision Nutritionist"},
+    {"slug": "dr-sabine-hazan-md", "name": "Dr. Sabine Hazan", "role": "Diagnostics Director"},
+]
+
+
 def about(request):
     region = request.region
+    code = region["code"]
     meta = seo.build_meta(
         request,
-        title=f"About {settings.BRAND_NAME}",
+        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic Dubai",
         description=(
-            f"Learn about {settings.BRAND_NAME}, a regenerative medicine and stem cell "
-            f"provider serving {region['name']} with a science-first, patient-centred approach."
+            "Brockwell Healthcare is a Dubai regenerative medicine and longevity clinic built on 25+ "
+            "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
         ),
         path="/about/",
     )
     crumbs = seo.breadcrumb_schema(
         [
-            ("Home", seo.absolute(region_path(region["code"], "core:home"))),
+            ("Home", seo.absolute(region_path(code, "core:home"))),
             ("About", meta["canonical"]),
         ]
     )
+
+    categories = ServiceCategory.objects.filter(region=code, is_published=True)[:8]
+    founder = Doctor.objects.filter(region=code, slug="dr-hasnain-haider-shah").first()
+    docs = {d.slug: d for d in Doctor.objects.filter(
+        region=code, slug__in=[s["slug"] for s in ABOUT_SPECIALISTS])}
+    specialists = [
+        {**s, "photo": getattr(docs.get(s["slug"]), "photo", ""),
+         "url": docs[s["slug"]].get_absolute_url() if s["slug"] in docs else ""}
+        for s in ABOUT_SPECIALISTS
+    ]
+
     return render(
         request,
         "core/about.html",
-        {"meta": meta, "jsonld": [crumbs, seo.organization_schema(region)]},
+        {
+            "meta": meta,
+            "jsonld": [crumbs, seo.organization_schema(region)],
+            "categories": categories,
+            "founder": founder,
+            "specialists": specialists,
+            "about_partners": _partners_with_logos(),
+        },
     )
 
 

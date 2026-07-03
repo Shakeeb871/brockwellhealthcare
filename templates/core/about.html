@@ -1,35 +1,246 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons static %}
 
 {% block content %}
-{% include "partials/page_hero.html" with hero_eyebrow="Who We Are" hero_title="About "|add:BRAND_NAME hero_lead="A regenerative medicine practice committed to advancing health through science, integrity and compassionate care in "|add:region.name|add:"." crumb_label="About" %}
+{% include "partials/page_hero.html" with hero_eyebrow="Who We Are" hero_title="About Brockwell Healthcare" hero_lead="A regenerative medicine and longevity clinic in Dubai, built on more than 25 years of clinical experience." crumb_label="About" %}
 
-<section class="section">
-  <div class="container split">
-    <div class="prose">
-      <span class="eyebrow">Our Mission</span>
-      <h2>Pioneering regenerative care</h2>
-      <p>At {{ BRAND_NAME }}, we believe the future of medicine lies in helping the body heal itself. Our team brings together leading specialists in regenerative and cellular medicine to deliver therapies that are innovative, ethical and evidence-based.</p>
-      <p>Every patient who walks through our doors receives a personalised plan, clear guidance, and the attention of a dedicated care team — from first consultation through to recovery.</p>
-      <h2>What sets us apart</h2>
+{# ---------- Stats + intro ---------- #}
+<section class="section abt-lead-sec">
+  <div class="container">
+    <ul class="abt-stats" role="list">
+      <li><span class="abt-stats__num">25+</span><span class="abt-stats__label">Years of Clinical Experience</span></li>
+      <li><span class="abt-stats__num">50+</span><span class="abt-stats__label">Expert Physicians</span></li>
+      <li><span class="abt-stats__num">15,000+</span><span class="abt-stats__label">Patients Treated</span></li>
+      <li><span class="abt-stats__num">98%</span><span class="abt-stats__label">Patient Satisfaction</span></li>
+    </ul>
+    <p class="abt-lead">Brockwell Healthcare is a regenerative medicine and longevity clinic in Dubai, built on
+      more than 25 years of clinical experience. We help patients overcome chronic pain, injury and
+      age-related decline through advanced, non-surgical medicine that looks for the root cause behind a problem.</p>
+  </div>
+</section>
+
+{# ---------- Who we are ---------- #}
+<section class="section section--soft">
+  <div class="container abt-narrow">
+    <div class="section__head">
+      <span class="eyebrow">Our Clinic</span>
+      <h2>A Dubai-Based Regenerative Medicine &amp; Longevity Clinic</h2>
     </div>
-    <div>
-      <ul class="checklist">
-        <li><strong>Expertise</strong> — clinicians with deep experience in regenerative medicine.</li>
-        <li><strong>Safety</strong> — accredited facilities and rigorous clinical standards.</li>
-        <li><strong>Transparency</strong> — honest advice and clear expectations.</li>
-        <li><strong>Care</strong> — a patient-first approach at every stage.</li>
-      </ul>
+    <div class="prose abt-prose">
+      <p>Brockwell brings regenerative medicine, longevity care, diagnostics and functional medicine together
+        under one clinical model in Dubai. Our focus is the root cause of pain, dysfunction and age-related
+        decline, addressed through evidence-based, non-surgical protocols.</p>
+      <p>Patients come to Brockwell with chronic pain, sports and musculoskeletal injuries, slow recovery,
+        age-related decline, and hormonal or metabolic concerns. Not every condition suits regenerative medicine,
+        and emergency or acute surgical cases sit outside our scope, so an honest assessment always comes first.</p>
+      <p>Every patient is different, so every care plan is too. Each one begins with a proper clinical assessment,
+        clear medical reasoning and a treatment path designed around the person in front of us.</p>
+      <p>Our specialists are board-certified and internationally trained. Together, they bring globally recognised
+        regenerative and longevity medicine to patients across the UAE who want lasting improvements in how they
+        move, recover and age.</p>
     </div>
   </div>
 </section>
 
+{# ---------- Mission + Vision ---------- #}
+<section class="section">
+  <div class="container abt-mv">
+    <article class="abt-mv__card">
+      <span class="abt-mv__ic" aria-hidden="true">{% icon 'heart' %}</span>
+      <span class="eyebrow">Our Mission</span>
+      <h3>Better patient outcomes, always the first priority</h3>
+      <p>One standard guides every decision at Brockwell, clinical or otherwise: the patient's outcome comes first.
+        We measure success by how well patients move, recover and live over the long term, and we build every care
+        plan to serve that single goal.</p>
+    </article>
+    <article class="abt-mv__card">
+      <span class="abt-mv__ic" aria-hidden="true">{% icon 'globe' %}</span>
+      <span class="eyebrow">Our Vision</span>
+      <h3>A proactive, root-cause model of medicine</h3>
+      <p>We work toward a future where more patients address the cause of their condition early, with regenerative
+        and functional medicine, and lean on surgery only when it is truly the right choice. Brockwell exists to
+        make that kind of care precise, honest and available in Dubai.</p>
+    </article>
+  </div>
+</section>
+
+{# ---------- Values ---------- #}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head"><span class="eyebrow">What We Stand For</span><h2>Our Values</h2></div>
+    <div class="why-grid">
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'shield' %}</span><h3>Evidence-Based Medicine</h3><p>Every treatment and protocol rests on clinical evidence, medical judgement and each patient's health profile.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'heart' %}</span><h3>Patient-First Care</h3><p>Patients are people, not case numbers. Each one is assessed as an individual, with their own history, goals, risks and recovery needs.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'leaf' %}</span><h3>Root-Cause Healing</h3><p>Reducing symptoms is only the start. Our real aim is to understand what drives pain, dysfunction, slow recovery or age-related decline, then treat it at the source.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'globe' %}</span><h3>Global Standards, Local Care</h3><p>Brockwell brings international medical experience into a Dubai clinical setting, with care shaped around both local and visiting patients.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'sparkles' %}</span><h3>Innovation at the Core</h3><p>As regenerative and longevity science advances, we adopt what is clinically sound and safe, and set aside what is not.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'chat' %}</span><h3>Transparency and Trust</h3><p>Before any treatment begins, we explain what may help, what may not suit you and what results are realistic.</p></article>
+    </div>
+  </div>
+</section>
+
+{# ---------- The Brockwell Approach ---------- #}
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">How We Work</span>
+      <h2>The Brockwell Approach</h2>
+      <p>Care at Brockwell follows a clear, consistent path from the first visit to long-term follow-up.</p>
+    </div>
+    <ol class="abt-steps" role="list">
+      <li class="abt-step"><span class="abt-step__num">1</span><div><h3>Consultation</h3><p>Your specialist reviews your history, symptoms, goals and past treatments in detail.</p></div></li>
+      <li class="abt-step"><span class="abt-step__num">2</span><div><h3>Diagnostics</h3><p>Where needed, imaging and testing confirm the root cause before any treatment begins.</p></div></li>
+      <li class="abt-step"><span class="abt-step__num">3</span><div><h3>Personalised Plan</h3><p>Your doctor designs a non-surgical plan around your condition, your safety and the outcomes you can realistically expect.</p></div></li>
+      <li class="abt-step"><span class="abt-step__num">4</span><div><h3>Treatment &amp; Follow-Up</h3><p>You receive precise, evidence-based care, and follow-up reviews track your progress and adjust the plan as you recover.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+{# ---------- Our Services — core categories from the homepage ---------- #}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">What We Offer</span>
+      <h2>Our Services</h2>
+      <p>Brockwell offers a full range of regenerative medicine, longevity and wellness services in Dubai.</p>
+    </div>
+    <div class="abt-svc-grid">
+      {% for c in categories %}
+      <a class="abt-svc" href="{{ c.get_absolute_url }}">
+        <span class="abt-svc__ic" aria-hidden="true">{% category_icon c.slug %}</span>
+        <span class="abt-svc__name">{{ c.name }}</span>
+        <span class="abt-svc__desc">{{ c.summary }}</span>
+        <span class="abt-svc__more">Explore {% icon 'arrow' 'ico' %}</span>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="abt-note">Not every treatment suits every patient. A clinical assessment always comes first, to confirm your condition, goals and medical suitability.</p>
+  </div>
+</section>
+
+{# ---------- Meet the Founder (image on the right) ---------- #}
+<section class="section abt-founder">
+  <div class="container abt-founder__grid">
+    <div class="abt-founder__content">
+      <span class="eyebrow">Meet the Founder</span>
+      <h2>Dr. Hasnain Haider-Shah</h2>
+      <p class="abt-founder__role">Founder &amp; Lead Specialist · American Board Trained · Neurointerventional &amp; Regenerative Medicine</p>
+      <p>Behind Brockwell Healthcare stands one clear vision: to move medicine beyond symptom-based care and toward
+        real, lasting results. That vision belongs to its founder, Dr. Hasnain Haider-Shah.</p>
+      <p>Dr. Hasnain built his career at the meeting point of three demanding fields: neurointervention,
+        interventional oncology and pain management. That breadth shapes how he sees the body, as one connected
+        system that heals, adapts and performs best when treated at its source.</p>
+      <p>At Brockwell, he brings that thinking to life by pairing advanced medical science with regenerative and
+        functional therapies. His focus holds steady from one patient to the next: restore function, improve
+        performance, and reach long-term health outcomes without unnecessary surgery.</p>
+      <p>His leadership gives Brockwell its character, a model that is proactive, personalised and built for the
+        long term. It is the foundation the entire clinic stands on today.</p>
+      <blockquote class="abt-quote">For Dr. Hasnain, precision medicine means treating the cause, tracking the outcome, and building health that lasts.</blockquote>
+      {% if founder %}<a class="btn btn--primary" href="{{ founder.get_absolute_url }}">View Full Profile {% icon 'arrow' 'ico' %}</a>{% endif %}
+    </div>
+    <div class="abt-founder__media">
+      {% if founder.photo %}
+      <figure class="abt-founder__photo"><img src="{{ founder.photo }}" alt="Dr. Hasnain Haider-Shah, Founder & Lead Specialist" loading="lazy" decoding="async"></figure>
+      {% else %}
+      <figure class="abt-founder__photo abt-founder__photo--ph"><span aria-hidden="true">{% icon 'stethoscope' %}</span></figure>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{# ---------- Our Specialists ---------- #}
+<section class="section section--soft">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Our Team</span>
+      <h2>Our Specialists</h2>
+      <p>Every physician at Brockwell is board-certified, internationally trained and chosen for a commitment to patient-first care.</p>
+    </div>
+    <div class="abt-spec-grid">
+      {% for s in specialists %}
+      <a class="abt-spec" {% if s.url %}href="{{ s.url }}"{% endif %}>
+        <span class="abt-spec__media">{% if s.photo %}<img src="{{ s.photo }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% else %}<span class="abt-spec__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>{% endif %}</span>
+        <span class="abt-spec__name">{{ s.name }}</span>
+        <span class="abt-spec__role">{{ s.role }}</span>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="abt-note">Together, the Brockwell team covers regenerative medicine, longevity, nutrition, diagnostics, sports medicine and personalised wellness care.</p>
+    <div class="abt-center"><a class="btn btn--ghost" href="{% rurl 'team:list' %}">Meet the Full Team {% icon 'arrow' 'ico' %}</a></div>
+  </div>
+</section>
+
+{# ---------- Our Story ---------- #}
+<section class="section abt-story">
+  <div class="container abt-story__grid">
+    <div class="abt-story__text">
+      <span class="eyebrow">Our Story</span>
+      <h2>25 Years, One Uncompromising Standard</h2>
+      <p>Brockwell Healthcare began with a clear purpose: bring advanced, non-surgical medicine to patients who
+        want real, lasting results. That purpose has not changed.</p>
+      <p>Over the years, the clinic has grown into a wider network of specialists across the UAE, supporting
+        knowledge-sharing and access to evolving research in regenerative and longevity medicine.</p>
+      <p>Today, with more than 15,000 patients treated, over 50 specialists and a 4.91 out of 5 patient rating,
+        Brockwell keeps growing toward one goal: better outcomes through science-led, personalised care. We are
+        here to understand what is happening inside the body, build a clear treatment path and support patients
+        toward better movement, recovery and long-term health.</p>
+    </div>
+    <ul class="abt-story__stats" role="list">
+      <li><b>15,000+</b><span>Patients Treated</span></li>
+      <li><b>50+</b><span>Specialists</span></li>
+      <li><b>4.91<i>/5</i></b><span>Patient Rating</span></li>
+    </ul>
+  </div>
+</section>
+
+{# ---------- Across the UAE ---------- #}
+<section class="section section--soft">
+  <div class="container abt-narrow">
+    <div class="section__head"><span class="eyebrow">Across the UAE</span><h2>Caring for Patients Across the UAE</h2></div>
+    <p class="abt-centered">Brockwell Healthcare is based in Dubai and welcomes patients from across the UAE, the GCC
+      and further afield. In-person consultations, diagnostics and treatments take place at the Dubai clinic. For
+      eligible follow-ups, prescription reviews and non-emergency assessments, secure telehealth keeps your care
+      convenient wherever you are.</p>
+  </div>
+</section>
+
+{# ---------- Recognised & Trusted ---------- #}
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Recognised &amp; Trusted</span>
+      <h2>Featured &amp; Trusted by Patients</h2>
+      <p>Brockwell's work has been featured by CNN, Gulf News, Khaleej Times and NMC Healthcare. Patients have rated
+        the clinic <strong>4.91 out of 5</strong> on Google Reviews.</p>
+    </div>
+    <ul class="about__partners abt-partners" aria-label="Featured in">
+      {% for p in about_partners %}
+      <li class="about__partner">
+        {% if p.logo %}
+        <img class="about__partner-logo" src="{% static p.logo %}" alt="{{ p.name }}" loading="lazy"
+             onerror="this.closest('.about__partner').classList.add('no-logo')">
+        {% endif %}
+        <span class="about__partner-fallback">
+          <span class="about__partner-ic" aria-hidden="true">{% icon p.icon %}</span>
+          <span class="about__partner-name">{{ p.name }}</span>
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+{# ---------- Final CTA ---------- #}
 <section class="section section--soft">
   <div class="container">
     <div class="cta-band">
-      <h2>Meet our specialists</h2>
-      <p>Discover how our team can support your health goals with a personalised consultation.</p>
-      <div class="mt-1"><a class="btn btn--light btn--lg" href="{% rurl 'core:contact' %}">Get in touch</a></div>
+      <span class="eyebrow">Start Your Journey</span>
+      <h2>Ready to treat the cause, not just the symptom?</h2>
+      <p>Book a consultation with one of our specialists for a proper clinical assessment and a plan built around you.</p>
+      <div class="cta-band__actions">
+        <a class="btn btn--light" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
+        <a class="btn btn--outline-light" href="tel:{{ region.phone }}">{% icon 'phone' 'ico' %} {{ region.phone }}</a>
+      </div>
     </div>
   </div>
 </section>
