@@ -1,56 +1,114 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 
 {% block content %}
-{% include "partials/page_hero.html" with hero_eyebrow="Get In Touch" hero_title="Contact Us" hero_lead="We're here to answer your questions and help you take the next step. Reach our "|add:region.name|add:" team below." crumb_label="Contact" %}
+{% include "partials/page_hero.html" with hero_eyebrow="Get In Touch" hero_title="Contact Brockwell Healthcare" hero_lead="Questions about a treatment, or ready to book? Our Dubai team is here to help — reach us however suits you best." crumb_label="Contact" %}
 
-<section class="section">
-  <div class="container split">
-    <div>
-      <span class="eyebrow">Send a message</span>
-      <h2>Request a consultation</h2>
-      <form class="form" method="post" novalidate>
-        {% csrf_token %}
-        {{ form.website }}
-        <div class="field">
-          <label for="{{ form.name.id_for_label }}">Full name</label>
-          {{ form.name }}{{ form.name.errors }}
+{# ---------- Quick contact methods ---------- #}
+<section class="section ct-methods-sec">
+  <div class="container">
+    <ul class="ct-methods" role="list">
+      <li>
+        <a class="ct-method" href="tel:{{ region.phone }}">
+          <span class="ct-method__ic" aria-hidden="true">{% icon 'phone' %}</span>
+          <span class="ct-method__label">Call Us</span>
+          <span class="ct-method__val">{{ region.phone }}</span>
+        </a>
+      </li>
+      <li>
+        <a class="ct-method" href="https://wa.me/{{ region.phone|cut:' '|cut:'+' }}" target="_blank" rel="noopener">
+          <span class="ct-method__ic ct-method__ic--wa" aria-hidden="true">{% social 'whatsapp' 'soc' %}</span>
+          <span class="ct-method__label">WhatsApp</span>
+          <span class="ct-method__val">{{ region.phone }}</span>
+        </a>
+      </li>
+      <li>
+        <a class="ct-method" href="mailto:{{ region.email }}">
+          <span class="ct-method__ic" aria-hidden="true">{% icon 'mail' %}</span>
+          <span class="ct-method__label">Email Us</span>
+          <span class="ct-method__val">{{ region.email }}</span>
+        </a>
+      </li>
+      <li>
+        <span class="ct-method ct-method--static">
+          <span class="ct-method__ic" aria-hidden="true">{% icon 'pin' %}</span>
+          <span class="ct-method__label">Visit Us</span>
+          <span class="ct-method__val">{{ region.address }}</span>
+        </span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+{# ---------- Info panel + form ---------- #}
+<section class="section section--soft">
+  <div class="container">
+    <div class="ct-grid">
+
+      {# Left — dark info panel #}
+      <aside class="ct-info">
+        <span class="eyebrow">We're Here to Help</span>
+        <h2>Let's start a conversation</h2>
+        <p>Whether it's a question about regenerative medicine, a specific treatment, or booking your first
+          consultation, our team will get back to you quickly.</p>
+
+        <ul class="ct-info__list" role="list">
+          <li><span class="ct-info__ic" aria-hidden="true">{% icon 'phone' %}</span><div><span class="ct-info__k">Phone</span><a href="tel:{{ region.phone }}">{{ region.phone }}</a></div></li>
+          <li><span class="ct-info__ic" aria-hidden="true">{% icon 'mail' %}</span><div><span class="ct-info__k">Email</span><a href="mailto:{{ region.email }}">{{ region.email }}</a></div></li>
+          <li><span class="ct-info__ic" aria-hidden="true">{% icon 'pin' %}</span><div><span class="ct-info__k">Clinic</span><span>{{ region.address }}</span></div></li>
+          <li><span class="ct-info__ic" aria-hidden="true">{% icon 'clock' %}</span><div><span class="ct-info__k">Response</span><span>We typically reply within one business day.</span></div></li>
+        </ul>
+
+        {% if SOCIAL_LINKS %}
+        <div class="ct-info__social">
+          <span class="ct-info__k">Follow us</span>
+          <div class="ct-info__social-row">
+            {% for s in SOCIAL_LINKS %}<a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.name }}">{% social s.icon 'soc' %}</a>{% endfor %}
+          </div>
         </div>
-        <div class="grid grid--2">
+        {% endif %}
+      </aside>
+
+      {# Right — form with its own background #}
+      <div class="ct-form">
+        <div class="ct-form__head">
+          <span class="ct-form__ic" aria-hidden="true">{% icon 'chat' %}</span>
+          <div>
+            <h3>Send a Message</h3>
+            <p>Fill in the form and we'll be in touch shortly.</p>
+          </div>
+        </div>
+
+        <form class="form ct-form__body" method="post" novalidate>
+          {% csrf_token %}
+          {{ form.website }}
           <div class="field">
-            <label for="{{ form.email.id_for_label }}">Email</label>
-            {{ form.email }}{{ form.email.errors }}
+            <label for="{{ form.name.id_for_label }}">Full name</label>
+            {{ form.name }}{{ form.name.errors }}
+          </div>
+          <div class="ct-form__row">
+            <div class="field">
+              <label for="{{ form.email.id_for_label }}">Email</label>
+              {{ form.email }}{{ form.email.errors }}
+            </div>
+            <div class="field">
+              <label for="{{ form.phone.id_for_label }}">Phone</label>
+              {{ form.phone }}{{ form.phone.errors }}
+            </div>
           </div>
           <div class="field">
-            <label for="{{ form.phone.id_for_label }}">Phone</label>
-            {{ form.phone }}{{ form.phone.errors }}
+            <label for="{{ form.subject.id_for_label }}">Subject</label>
+            {{ form.subject }}{{ form.subject.errors }}
           </div>
-        </div>
-        <div class="field">
-          <label for="{{ form.subject.id_for_label }}">Subject</label>
-          {{ form.subject }}{{ form.subject.errors }}
-        </div>
-        <div class="field">
-          <label for="{{ form.message.id_for_label }}">Message</label>
-          {{ form.message }}{{ form.message.errors }}
-        </div>
-        <button class="btn btn--primary btn--lg" type="submit">Send message</button>
-      </form>
-    </div>
-
-    <div>
-      <div class="card">
-        <h3>Get in touch</h3>
-        <p class="stack" style="margin:0">
-          <span class="muted">Phone</span><br><a href="tel:{{ region.phone }}"><strong>{{ region.phone }}</strong></a>
-        </p>
-        <p class="stack" style="margin-top:1rem">
-          <span class="muted">Email</span><br><a href="mailto:{{ region.email }}">{{ region.email }}</a>
-        </p>
-        <p class="stack" style="margin-top:1rem">
-          <span class="muted">Address</span><br>{{ region.address }}
-        </p>
+          <div class="field">
+            <label for="{{ form.message.id_for_label }}">Message</label>
+            {{ form.message }}{{ form.message.errors }}
+          </div>
+          <button class="btn btn--primary btn--lg ct-form__submit" type="submit">Send Message {% icon 'arrow' 'ico' %}</button>
+          <p class="ct-form__note"><span aria-hidden="true">{% icon 'shield' %}</span> Your details are kept private &amp; secure.</p>
+        </form>
       </div>
+
     </div>
   </div>
 </section>
