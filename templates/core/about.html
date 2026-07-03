@@ -107,10 +107,17 @@
     <div class="abt-svc-grid">
       {% for c in categories %}
       <a class="abt-svc" href="{{ c.get_absolute_url }}">
-        <span class="abt-svc__ic" aria-hidden="true">{% category_icon c.slug %}</span>
-        <span class="abt-svc__name">{{ c.name }}</span>
-        <span class="abt-svc__desc">{{ c.summary }}</span>
-        <span class="abt-svc__more">Explore {% icon 'arrow' 'ico' %}</span>
+        {% category_image c.slug as cat_img %}
+        <span class="abt-svc__media">
+          {% if cat_img %}<img src="{{ cat_img }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+          {% elif c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+          {% else %}<span class="abt-svc__ic" aria-hidden="true">{% category_icon c.slug %}</span>{% endif %}
+        </span>
+        <span class="abt-svc__body">
+          <span class="abt-svc__name">{{ c.name }}</span>
+          <span class="abt-svc__desc">{{ c.summary }}</span>
+          <span class="abt-svc__more">Explore {% icon 'arrow' 'ico' %}</span>
+        </span>
       </a>
       {% endfor %}
     </div>
