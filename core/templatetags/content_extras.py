@@ -12,6 +12,7 @@ at render time — so the admin never has to build components by hand:
   (see ``.prose ul`` in styles.css) — no markup change needed.
 """
 
+import html as html_lib
 import re
 
 from django import template
@@ -153,7 +154,9 @@ def content_sections(html, cat_slug=""):
 
     sections = []
     for m in _H2_SECTION.finditer(html):
-        heading = _TAGS.sub("", m.group(1)).strip()
+        # Strip tags, then unescape entities (e.g. &amp; → &) so the plain-text
+        # heading isn't double-escaped when re-rendered via {{ }}.
+        heading = html_lib.unescape(_TAGS.sub("", m.group(1)).strip())
         # Drop inline "Book …" call-to-action sections everywhere.
         if heading.lower().startswith("book"):
             continue
