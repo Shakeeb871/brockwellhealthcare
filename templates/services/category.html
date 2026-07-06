@@ -45,19 +45,6 @@
       <div class="prose prose--wide svc-sec__prose">{{ sec.body }}</div>
     </div>
   </section>
-  {% elif sec.kind == 'cta' %}
-  <section class="section svc-sec">
-    <div class="container">
-      <div class="cta-band">
-        <h2>{{ sec.heading }}</h2>
-        <div class="cta-band__body">{{ sec.body }}</div>
-        <div class="cta-band__actions">
-          <a class="btn btn--light" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
-          <a class="btn btn--outline-light" href="tel:{{ region.phone }}">{% icon 'phone' 'ico' %} {{ region.phone }}</a>
-        </div>
-      </div>
-    </div>
-  </section>
   {% elif sec.kind == 'list' %}
   <section class="section svc-sec svc-list">
     <div class="container">

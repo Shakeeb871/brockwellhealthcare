@@ -98,13 +98,24 @@ def _build_cards(run_html):
     return '<div class="info-cards">' + "".join(cards) + "</div>"
 
 
+# A trailing "Book …" call-to-action heading and its paragraph(s). We drop these
+# everywhere — booking prompts live in the page's own CTA/booking widgets, so an
+# inline "Book …" section is redundant on every page.
+_BOOK_CTA = re.compile(
+    r"<h2[^>]*>\s*Book\b.*?</h2>(?:\s*<p>.*?</p>)*",
+    re.S | re.I,
+)
+
+
 @register.filter
 def enhance(html):
     """Transform editor conventions into designed components."""
     if not html:
         return ""
+    # Remove any inline "Book …" CTA section first.
+    out = _BOOK_CTA.sub("", html)
     # Steps first — so their headings are consumed before the card pass runs.
-    out = _STEP_RUN.sub(lambda m: _build_timeline(m.group(1)), html)
+    out = _STEP_RUN.sub(lambda m: _build_timeline(m.group(1)), out)
     out = _CARD_RUN.sub(lambda m: _build_cards(m.group(1)), out)
     return mark_safe(out)
 
@@ -134,22 +145,23 @@ def content_sections(html, cat_slug=""):
 
     Returns ``{lead, lead_image, sections}`` where each section is
     ``{heading, body, kind, img_slug, image}``. ``kind`` picks the layout:
-    ``cards`` (Types → card grid), ``steps`` (process timeline), ``cta``
-    (Book … → call-to-action band), ``list`` (benefits / why-choose), or
-    ``plain`` (text + image split). Body HTML is run through ``enhance``."""
+    ``cards`` (Types → card grid), ``steps`` (process timeline), ``list``
+    (benefits / why-choose), or ``plain`` (text + image split). Body HTML is
+    run through ``enhance``. Inline "Book …" CTA sections are dropped."""
     if not html:
         return {"lead": "", "lead_image": "", "sections": []}
 
     sections = []
     for m in _H2_SECTION.finditer(html):
         heading = _TAGS.sub("", m.group(1)).strip()
+        # Drop inline "Book …" call-to-action sections everywhere.
+        if heading.lower().startswith("book"):
+            continue
         body = enhance(m.group(2).strip())
         if "info-cards" in body:
             kind = "cards"
         elif "proc-steps" in body:
             kind = "steps"
-        elif heading.lower().startswith("book"):
-            kind = "cta"
         elif "<ul" in body:
             kind = "list"
         else:
