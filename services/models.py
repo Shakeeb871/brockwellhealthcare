@@ -60,6 +60,14 @@ class ServiceCategory(TimeStamped):
         # Only top-level services (a nested child is reached via its parent).
         return self.services.filter(is_published=True, parent__isnull=True)
 
+    @property
+    def has_nested_services(self):
+        # True if any top-level service in this category has published sub-pages
+        # (so its dropdown needs to allow a third-level flyout to escape).
+        return self.services.filter(
+            is_published=True, parent__isnull=True, children__is_published=True
+        ).exists()
+
 
 class Service(TimeStamped):
     """A sub-service belonging to a main category.
