@@ -15,7 +15,10 @@ at render time — so the admin never has to build components by hand:
 import re
 
 from django import template
+from django.contrib.staticfiles import finders
+from django.templatetags.static import static
 from django.utils.safestring import mark_safe
+from django.utils.text import slugify
 
 from .icons import _ICONS, _svg
 
@@ -104,3 +107,66 @@ def enhance(html):
     out = _STEP_RUN.sub(lambda m: _build_timeline(m.group(1)), html)
     out = _CARD_RUN.sub(lambda m: _build_cards(m.group(1)), out)
     return mark_safe(out)
+
+
+# --- Section splitter for the professional (homepage-style) category page ----
+
+# One <h2> heading and everything up to the next <h2> (or end of string).
+_H2_SECTION = re.compile(r"<h2[^>]*>(.*?)</h2>(.*?)(?=<h2[^>]*>|$)", re.S | re.I)
+# Everything before the first <h2> (the intro / lead paragraphs).
+_LEAD = re.compile(r"^(.*?)(?=<h2[^>]*>)", re.S | re.I)
+_TAGS = re.compile(r"<[^>]+>")
+
+
+def _section_image(cat_slug, name):
+    """Static URL for an optional per-section image, or "" if the file is
+    absent — so image slots are placeholders until a file is dropped in at
+    ``static/img/services/categories/<cat_slug>/<name>.webp``."""
+    if not cat_slug:
+        return ""
+    rel = f"img/services/categories/{cat_slug}/{name}.webp"
+    return static(rel) if finders.find(rel) else ""
+
+
+@register.simple_tag
+def content_sections(html, cat_slug=""):
+    """Split rich category content into a designed, homepage-style layout.
+
+    Returns ``{lead, lead_image, sections}`` where each section is
+    ``{heading, body, kind, img_slug, image}``. ``kind`` picks the layout:
+    ``cards`` (Types → card grid), ``steps`` (process timeline), ``cta``
+    (Book … → call-to-action band), ``list`` (benefits / why-choose), or
+    ``plain`` (text + image split). Body HTML is run through ``enhance``."""
+    if not html:
+        return {"lead": "", "lead_image": "", "sections": []}
+
+    sections = []
+    for m in _H2_SECTION.finditer(html):
+        heading = _TAGS.sub("", m.group(1)).strip()
+        body = enhance(m.group(2).strip())
+        if "info-cards" in body:
+            kind = "cards"
+        elif "proc-steps" in body:
+            kind = "steps"
+        elif heading.lower().startswith("book"):
+            kind = "cta"
+        elif "<ul" in body:
+            kind = "list"
+        else:
+            kind = "plain"
+        img_slug = slugify(heading)
+        image = _section_image(cat_slug, img_slug) if kind in ("plain", "list") else ""
+        sections.append(
+            {"heading": heading, "body": body, "kind": kind,
+             "img_slug": img_slug, "image": image}
+        )
+
+    if sections:
+        lm = _LEAD.match(html)
+        lead_html = lm.group(1).strip() if lm else ""
+        lead = enhance(lead_html) if lead_html else ""
+    else:
+        lead = enhance(html.strip())
+
+    return {"lead": lead, "lead_image": _section_image(cat_slug, "intro"),
+            "sections": sections}

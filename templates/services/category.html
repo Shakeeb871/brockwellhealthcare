@@ -1,24 +1,92 @@
 {% extends "base.html" %}
-{% load region_tags icons content_extras %}
+{% load region_tags icons content_extras static %}
 
 {% block content %}
 {% rurl 'services:list' as services_url %}
-{% include "partials/page_hero.html" with hero_eyebrow="Our Services" hero_title=category.hero_heading|default:category.name hero_lead=category.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_label=category.name %}
+{% include "partials/page_hero.html" with hero_eyebrow="Our Services" hero_title=category.hero_heading|default:category.name hero_lead=category.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_label=category.name hero_image=hero_image %}
 
-{% if category.description %}
-<section class="section">
-  <div class="container">
-    <article class="prose prose--wide">{{ category.description|enhance }}</article>
+{% content_sections category.description category.slug as parsed %}
+
+{# ---------- Intro: lead + image ---------- #}
+{% if parsed.lead %}
+<section class="section svc-intro">
+  <div class="container svc-intro__grid">
+    <div class="svc-intro__content">
+      <span class="eyebrow">{{ category.name }}</span>
+      <div class="prose">{{ parsed.lead }}</div>
+      <div class="svc-intro__actions">
+        <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
+        <a class="svc-intro__call" href="tel:{{ region.phone }}">
+          <span class="svc-intro__call-ic" aria-hidden="true">{% icon 'phone' %}</span>
+          <span class="svc-intro__call-txt"><small>Speak to our team</small>{{ region.phone }}</span>
+        </a>
+      </div>
+    </div>
+    <figure class="svc-media{% if not parsed.lead_image %} svc-media--ph{% endif %}" aria-hidden="{% if not parsed.lead_image %}true{% else %}false{% endif %}">
+      {% if parsed.lead_image %}<img src="{{ parsed.lead_image }}" alt="{{ category.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
+    </figure>
   </div>
 </section>
 {% endif %}
 
+{# ---------- Content sections ---------- #}
+{% for sec in parsed.sections %}
+  {% if sec.kind == 'cards' %}
+  <section class="section svc-sec">
+    <div class="container">
+      <div class="section__head"><span class="eyebrow">Treatments</span><h2>{{ sec.heading }}</h2></div>
+      <div class="prose prose--wide svc-sec__prose">{{ sec.body }}</div>
+    </div>
+  </section>
+  {% elif sec.kind == 'steps' %}
+  <section class="section svc-sec">
+    <div class="container">
+      <div class="section__head"><span class="eyebrow">Our Process</span><h2>{{ sec.heading }}</h2></div>
+      <div class="prose prose--wide svc-sec__prose">{{ sec.body }}</div>
+    </div>
+  </section>
+  {% elif sec.kind == 'cta' %}
+  <section class="section svc-sec">
+    <div class="container">
+      <div class="cta-band">
+        <h2>{{ sec.heading }}</h2>
+        <div class="cta-band__body">{{ sec.body }}</div>
+        <div class="cta-band__actions">
+          <a class="btn btn--light" href="{% rurl 'core:contact' %}">Book a Consultation {% icon 'arrow' 'ico' %}</a>
+          <a class="btn btn--outline-light" href="tel:{{ region.phone }}">{% icon 'phone' 'ico' %} {{ region.phone }}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% elif sec.kind == 'list' %}
+  <section class="section svc-sec svc-list">
+    <div class="container">
+      <div class="section__head"><h2>{{ sec.heading }}</h2></div>
+      <div class="prose prose--wide svc-list__prose">{{ sec.body }}</div>
+    </div>
+  </section>
+  {% else %}
+  <section class="section svc-sec svc-split {% cycle '' 'svc-split--rev' %}">
+    <div class="container svc-split__grid">
+      <div class="svc-split__content">
+        <h2>{{ sec.heading }}</h2>
+        <div class="prose">{{ sec.body }}</div>
+      </div>
+      <figure class="svc-media{% if not sec.image %} svc-media--ph{% endif %}" aria-hidden="{% if not sec.image %}true{% else %}false{% endif %}">
+        {% if sec.image %}<img src="{{ sec.image }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
+      </figure>
+    </div>
+  </section>
+  {% endif %}
+{% endfor %}
+
+{# ---------- Sub-services ---------- #}
 {% if services %}
-<section class="section">
+<section class="section svc-sec">
   <div class="container">
     <div class="section__head">
       <span class="eyebrow">Explore Treatments</span>
-      <h2>Regenerative Wellness Treatments in Dubai</h2>
+      <h2>{{ category.name }} Treatments in Dubai</h2>
       <p>Doctor-selected therapies within the {{ category.name }} framework. Explore each to see how it works and what it supports.</p>
     </div>
     <div class="grid grid--3">
@@ -40,15 +108,14 @@
 </section>
 {% endif %}
 
+{# ---------- FAQ ---------- #}
 {% if faqs %}
-<section class="section">
-  <div class="container">
-    {% include "partials/faqs.html" %}
-  </div>
+<section class="section svc-sec">
+  <div class="container">{% include "partials/faqs.html" %}</div>
 </section>
 {% endif %}
 
-{% if not services and not faqs %}
+{% if not parsed.lead and not parsed.sections and not services %}
 <section class="section">
   <div class="container">
     <div class="card" style="max-width:560px">

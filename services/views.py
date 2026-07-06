@@ -16,6 +16,13 @@ def _hero_image_for(slug):
     return rel if finders.find(rel) else None
 
 
+def _category_hero_image(slug):
+    """Per-category hero background: static img/services/categories/<slug>/hero.webp
+    if present — else None so the shared default hero image is used."""
+    rel = f"img/services/categories/{slug}/hero.webp"
+    return rel if finders.find(rel) else None
+
+
 def service_overview(request):
     region = request.region
     categories = (
@@ -74,7 +81,8 @@ def category_detail(request, category):
     return render(
         request,
         "services/category.html",
-        {"meta": meta, "jsonld": jsonld, "category": cat, "services": services, "faqs": faqs},
+        {"meta": meta, "jsonld": jsonld, "category": cat, "services": services,
+         "faqs": faqs, "hero_image": _category_hero_image(cat.slug)},
     )
 
 
