@@ -14,6 +14,11 @@ class ServiceCategory(TimeStamped):
 
     region = models.CharField(max_length=8, choices=REGION_CHOICES, default="uae")
     name = models.CharField(max_length=160)
+    hero_heading = models.CharField(
+        max_length=200, blank=True,
+        help_text="Keyword-rich H1 for the page hero, e.g. 'Regenerative Wellness in Dubai'. "
+        "Falls back to the category name if left blank.",
+    )
     slug = models.SlugField(max_length=180)
     icon = models.CharField(max_length=8, default="🧬", help_text="Emoji shown on cards.")
     image = models.ImageField(

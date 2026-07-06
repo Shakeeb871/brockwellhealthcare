@@ -1,23 +1,34 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 
 {% block content %}
 {% rurl 'services:list' as services_url %}
-{% include "partials/page_hero.html" with hero_eyebrow="Our Services" hero_title=category.name hero_lead=category.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_label=category.name %}
+{% include "partials/page_hero.html" with hero_eyebrow="Our Services" hero_title=category.hero_heading|default:category.name hero_lead=category.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_label=category.name %}
 
+{% if category.description %}
 <section class="section">
   <div class="container">
-    {% if category.description %}
-    <div class="prose" style="margin-bottom:2.5rem">{{ category.description|safe }}</div>
-    {% endif %}
+    <article class="prose prose--wide">{{ category.description|enhance }}</article>
+  </div>
+</section>
+{% endif %}
 
-    {% if services %}
+{% if services %}
+<section class="section">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Explore Treatments</span>
+      <h2>Regenerative Wellness Treatments in Dubai</h2>
+      <p>Doctor-selected therapies within the {{ category.name }} framework. Explore each to see how it works and what it supports.</p>
+    </div>
     <div class="grid grid--3">
       {% for s in services %}
       <article class="card">
-        <div class="card__media">
-          {% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
-        </div>
+        {% if s.image %}
+        <div class="card__media"><img src="{{ s.image.url }}" alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
+        {% else %}
+        <span class="card__icon" aria-hidden="true">{{ s.icon }}</span>
+        {% endif %}
         <h3>{{ s.name }}</h3>
         <p>{{ s.summary }}</p>
         {% if s.price %}<p class="card__price">From {{ region.currency_symbol }} {{ s.price }}</p>{% endif %}
@@ -25,18 +36,29 @@
       </article>
       {% endfor %}
     </div>
-    {% else %}
-    {# Standalone category (no sub-services) — acts as its own service page. #}
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section class="section">
+  <div class="container">
+    {% include "partials/faqs.html" %}
+  </div>
+</section>
+{% endif %}
+
+{% if not services and not faqs %}
+<section class="section">
+  <div class="container">
     <div class="card" style="max-width:560px">
       <h3>Interested in {{ category.name }}?</h3>
       <p class="muted">Speak with our specialists to learn more about this treatment.</p>
       <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Book a Consultation</a>
     </div>
-    {% endif %}
-
-    {% include "partials/faqs.html" %}
   </div>
 </section>
+{% endif %}
 {% endblock %}
 
 {% block head_extra %}{{ category.custom_head|safe }}{% endblock %}

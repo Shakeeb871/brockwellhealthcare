@@ -56,7 +56,7 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
     save_on_top = True
     inlines = [ServiceInline, FAQItemInline]
     fieldsets = (
-        (None, {"fields": ("region", "name", "slug", "icon", "image", "summary", "order", "is_published")}),
+        (None, {"fields": ("region", "name", "hero_heading", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description",), "description": CONTENT_HELP}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
         ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),

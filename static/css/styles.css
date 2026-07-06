@@ -566,6 +566,10 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 /* ---------------------------------------------------------------- Article */
 .prose { max-width: 760px; }
+/* Full-width prose (category / landing pages with no sidebar) — a touch wider
+   so the enhanced card grids and process timeline have room to breathe, while
+   paragraphs stay comfortably readable. */
+.prose--wide { max-width: 940px; margin-inline: auto; }
 .prose p { color: #1f2b3d; margin: 0 0 1.1rem; }
 .prose h2 { margin-top: 2rem; }
 /* Rich-text (WYSIWYG) content — shared by .prose and the blog article body. */
