@@ -65,15 +65,16 @@ class ServiceCategoryAdmin(RichDescriptionMixin, admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(RichDescriptionMixin, admin.ModelAdmin):
-    list_display = ("name", "category", "region", "price", "order", "is_published")
-    list_filter = ("region", "category", "is_published")
+    list_display = ("name", "category", "parent", "region", "order", "is_published")
+    list_filter = ("region", "category", "parent", "is_published")
     search_fields = ("name", "summary", "description")
     list_editable = ("order", "is_published")
+    autocomplete_fields = ("parent",)
     prepopulated_fields = {"slug": ("name",)}
     save_on_top = True
     inlines = [FAQItemInline]
     fieldsets = (
-        (None, {"fields": ("region", "category", "name", "hero_heading", "slug", "icon", "image", "summary", "order", "is_published")}),
+        (None, {"fields": ("region", "category", "parent", "name", "hero_heading", "slug", "icon", "image", "summary", "order", "is_published")}),
         ("Content", {"fields": ("description", "benefits", "price"), "description": CONTENT_HELP}),
         ("SEO (optional)", {"fields": ("seo_title", "seo_description"), "classes": ("collapse",)}),
         ("Custom code / schema", {"fields": ("custom_head",), "classes": ("collapse",)}),

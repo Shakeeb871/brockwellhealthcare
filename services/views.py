@@ -57,7 +57,7 @@ def category_detail(request, category):
     cat = get_object_or_404(
         ServiceCategory, region=region["code"], slug=category, is_published=True
     )
-    services = cat.services.filter(is_published=True)
+    services = cat.services.filter(is_published=True, parent__isnull=True)
 
     title = cat.seo_title or f"{cat.name} in {region['name']}"
     description = cat.seo_description or cat.summary
@@ -86,14 +86,26 @@ def category_detail(request, category):
     )
 
 
-def service_detail(request, category, slug):
+def service_detail(request, category, slug, parent=None):
     region = request.region
     cat = get_object_or_404(
         ServiceCategory, region=region["code"], slug=category, is_published=True
     )
-    service = get_object_or_404(
-        Service, region=region["code"], category=cat, slug=slug, is_published=True
-    )
+    parent_service = None
+    if parent:
+        parent_service = get_object_or_404(
+            Service, region=region["code"], category=cat, slug=parent,
+            parent__isnull=True, is_published=True,
+        )
+        service = get_object_or_404(
+            Service, region=region["code"], category=cat, slug=slug,
+            parent=parent_service, is_published=True,
+        )
+    else:
+        service = get_object_or_404(
+            Service, region=region["code"], category=cat, slug=slug,
+            parent__isnull=True, is_published=True,
+        )
 
     # Sidebar booking form — saves an enquiry tagged with this service.
     form = ContactForm(request.POST or None)
@@ -110,30 +122,34 @@ def service_detail(request, category, slug):
         )
         return redirect(service.get_absolute_url())
 
+    if parent_service:
+        path = f"/services/{cat.slug}/{parent_service.slug}/{service.slug}/"
+    else:
+        path = f"/services/{cat.slug}/{service.slug}/"
+
     title = service.seo_title or f"{service.name} in {region['name']}"
     description = service.seo_description or service.summary
     meta = seo.build_meta(
-        request,
-        title=title,
-        description=description,
-        path=f"/services/{cat.slug}/{service.slug}/",
-        og_type="article",
+        request, title=title, description=description, path=path, og_type="article",
     )
+    crumbs = [
+        ("Home", seo.absolute(region_path(region["code"], "core:home"))),
+        ("Services", seo.absolute(region_path(region["code"], "services:list"))),
+        (cat.name, seo.absolute(region_path(region["code"], "services:category", category=cat.slug))),
+    ]
+    if parent_service:
+        crumbs.append((parent_service.name, seo.absolute(parent_service.get_absolute_url())))
+    crumbs.append((service.name, meta["canonical"]))
     jsonld = [
         seo.service_schema(service, region),
-        seo.breadcrumb_schema(
-            [
-                ("Home", seo.absolute(region_path(region["code"], "core:home"))),
-                ("Services", seo.absolute(region_path(region["code"], "services:list"))),
-                (cat.name, seo.absolute(region_path(region["code"], "services:category", category=cat.slug))),
-                (service.name, meta["canonical"]),
-            ]
-        ),
+        seo.breadcrumb_schema(crumbs),
     ]
     faqs = list(service.faqs.filter(is_published=True))
     faq_ld = seo.faq_schema(faqs)
     if faq_ld:
         jsonld.append(faq_ld)
+
+    children = list(service.published_children)
 
     return render(
         request,
@@ -143,6 +159,8 @@ def service_detail(request, category, slug):
             "jsonld": jsonld,
             "category": cat,
             "service": service,
+            "parent_service": parent_service,
+            "children": children,
             "form": form,
             "faqs": faqs,
             "hero_image": _hero_image_for(service.slug),

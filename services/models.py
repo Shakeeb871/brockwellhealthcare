@@ -57,15 +57,27 @@ class ServiceCategory(TimeStamped):
 
     @property
     def published_services(self):
-        return self.services.filter(is_published=True)
+        # Only top-level services (a nested child is reached via its parent).
+        return self.services.filter(is_published=True, parent__isnull=True)
 
 
 class Service(TimeStamped):
-    """A sub-service belonging to a main category."""
+    """A sub-service belonging to a main category.
+
+    A service may optionally nest under another service (``parent``), giving a
+    third navigation level: Category → Service (hub) → Service (sub-page).
+    """
 
     region = models.CharField(max_length=8, choices=REGION_CHOICES, default="uae")
     category = models.ForeignKey(
         ServiceCategory, related_name="services", on_delete=models.CASCADE
+    )
+    parent = models.ForeignKey(
+        "self", null=True, blank=True, related_name="children",
+        on_delete=models.CASCADE, limit_choices_to={"parent__isnull": True},
+        help_text="Optional. Nest this service under another service to create a "
+        "third-level sub-page (e.g. NAD+ IV Therapy under Longevity IVs). Leave "
+        "blank for a normal top-level service.",
     )
     name = models.CharField(max_length=160)
     hero_heading = models.CharField(
@@ -103,9 +115,22 @@ class Service(TimeStamped):
         return f"{self.name} [{self.region}]"
 
     def get_absolute_url(self):
+        if self.parent_id:
+            return f"/{self.region}" + reverse(
+                "services:subdetail",
+                kwargs={
+                    "category": self.category.slug,
+                    "parent": self.parent.slug,
+                    "slug": self.slug,
+                },
+            )
         return f"/{self.region}" + reverse(
             "services:detail", kwargs={"category": self.category.slug, "slug": self.slug}
         )
+
+    @property
+    def published_children(self):
+        return self.children.filter(is_published=True)
 
     @property
     def benefit_list(self):

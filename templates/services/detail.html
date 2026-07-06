@@ -3,13 +3,29 @@
 
 {% block content %}
 {% rurl 'services:list' as services_url %}
-{% include "partials/page_hero.html" with hero_title=service.hero_heading|default:service.name hero_lead=service.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_parent2_label=category.name crumb_parent2_url=category.get_absolute_url crumb_label=service.name hero_image=hero_image %}
+{% include "partials/page_hero.html" with hero_title=service.hero_heading|default:service.name hero_lead=service.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_parent2_label=category.name crumb_parent2_url=category.get_absolute_url crumb_parent3_label=parent_service.name crumb_parent3_url=parent_service.get_absolute_url crumb_label=service.name hero_image=hero_image %}
 
 <section class="section">
   <div class="container doc-layout">
     <article class="prose">
       {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
       {{ service.description|enhance }}
+
+      {% if children %}
+      <h2>Explore {{ service.name }}</h2>
+      <div class="subsvc-grid">
+        {% for c in children %}
+        <a class="subsvc-card" href="{{ c.get_absolute_url }}">
+          <span class="subsvc-card__ic" aria-hidden="true">{{ c.icon }}</span>
+          <span class="subsvc-card__body">
+            <span class="subsvc-card__name">{{ c.name }}</span>
+            <span class="subsvc-card__sum">{{ c.summary }}</span>
+          </span>
+          {% icon 'arrow' 'ico' %}
+        </a>
+        {% endfor %}
+      </div>
+      {% endif %}
 
       {% if service.benefit_list %}
       <h2>Key Benefits</h2>
@@ -23,13 +39,31 @@
 
     <aside class="doc-aside">
       <div class="card svc-nav">
+        {% if parent_service %}
+        {# Third-level page: show sibling sub-pages within the parent hub. #}
+        <span class="svc-nav__eyebrow">In This Group</span>
+        <h3 class="svc-nav__title"><a href="{{ parent_service.get_absolute_url }}">{{ parent_service.name }}</a></h3>
+        <ul class="svc-nav__list">
+          {% for s in parent_service.published_children %}
+          <li><a href="{{ s.get_absolute_url }}"{% if s.pk == service.pk %} class="is-active" aria-current="page"{% endif %}><span>{{ s.name }}</span>{% icon 'arrow' %}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
         <span class="svc-nav__eyebrow">In This Category</span>
         <h3 class="svc-nav__title">{{ category.name }}</h3>
         <ul class="svc-nav__list">
           {% for s in category.published_services %}
-          <li><a href="{{ s.get_absolute_url }}"{% if s.pk == service.pk %} class="is-active" aria-current="page"{% endif %}><span>{{ s.name }}</span>{% icon 'arrow' %}</a></li>
+          <li>
+            <a href="{{ s.get_absolute_url }}"{% if s.pk == service.pk %} class="is-active" aria-current="page"{% endif %}><span>{{ s.name }}</span>{% icon 'arrow' %}</a>
+            {% with kids=s.published_children %}{% if kids %}
+            <ul class="svc-nav__sub">
+              {% for k in kids %}<li><a href="{{ k.get_absolute_url }}"><span>{{ k.name }}</span>{% icon 'arrow' %}</a></li>{% endfor %}
+            </ul>
+            {% endif %}{% endwith %}
+          </li>
           {% endfor %}
         </ul>
+        {% endif %}
       </div>
 
       <div class="card booking">
