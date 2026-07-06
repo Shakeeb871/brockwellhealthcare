@@ -75,7 +75,7 @@
           {% with kids=s.published_children %}
           {% if kids %}
           <div class="dd__item has-sub">
-            <a class="dd__link dd__link--parent" href="{{ s.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ s.name }}</span><span class="dd__caret" aria-hidden="true">▾</span></a>
+            <a class="dd__link dd__link--parent" href="{{ s.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ s.name }}</span><span class="dd__caret" aria-hidden="true">›</span></a>
             <div class="dd__sub" role="group" aria-label="{{ s.name }} sub-pages">
               {% for child in kids %}
               <a class="dd__link dd__link--sub" href="{{ child.get_absolute_url }}">{% icon 'chevron' 'mega-sub-ico' %}<span>{{ child.name }}</span></a>

@@ -209,11 +209,8 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   box-shadow: var(--shadow-lg); padding: .7rem; z-index: 60;
   opacity: 0; visibility: hidden; transform: translateX(-50%) translateY(10px);
   transition: opacity .22s ease, transform .22s ease, visibility .22s;
-  /* Long service lists must never spill below the fold: cap to the space left
-     under the sticky header and scroll INSIDE the dropdown instead. */
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-  overscroll-behavior: contain;   /* don't scroll the page behind the dropdown */
+  /* overflow stays visible so a third-level flyout can escape the panel. */
+  overflow: visible;
 }
 .catbar__item.has-dd:hover .dd, .catbar__item.has-dd:focus-within .dd {
   opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
@@ -222,21 +219,28 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .dd__link { display: flex; align-items: center; gap: .45rem; padding: .45rem .55rem; border-radius: 7px; color: var(--ink); font-size: .9rem; transition: background .15s, color .15s; }
 .dd__link:hover { background: var(--mint-50); color: var(--teal-600); }
 
-/* Third level — a service that has sub-pages. The children stay hidden until
-   the parent row is hovered (or focused), then expand beneath it. */
-.dd__item { display: block; }
-.dd__link--parent .dd__caret { margin-left: auto; font-size: .6rem; opacity: .55; transition: transform .2s ease; }
+/* Third level — a service that has sub-pages. Hovering the parent row opens a
+   flyout panel to the side (same behaviour as a category dropdown). */
+.dd__item { position: relative; }
+.dd__link--parent .dd__caret { margin-left: auto; font-size: .8rem; opacity: .55; transition: transform .2s ease, opacity .2s ease; }
 .dd__item.has-sub:hover > .dd__link--parent .dd__caret,
-.dd__item.has-sub:focus-within > .dd__link--parent .dd__caret { transform: rotate(180deg); opacity: 1; }
+.dd__item.has-sub:focus-within > .dd__link--parent .dd__caret { transform: translateX(2px); opacity: 1; }
 .dd__sub {
-  max-height: 0; overflow: hidden; opacity: 0;
-  transition: max-height .26s ease, opacity .2s ease;
-  margin-left: .8rem; padding-left: .35rem; border-left: 1px solid var(--line);
+  position: absolute; top: -.7rem; left: 100%; margin-left: .45rem;
+  min-width: 232px; background: #fff; border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg); padding: .7rem; z-index: 70;
+  opacity: 0; visibility: hidden; transform: translateX(6px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
 }
+/* Invisible bridge so the pointer can cross the gap without closing the flyout. */
+.dd__sub::before { content: ""; position: absolute; top: 0; left: -.6rem; width: .6rem; height: 100%; }
 .dd__item.has-sub:hover > .dd__sub,
-.dd__item.has-sub:focus-within > .dd__sub { max-height: 480px; opacity: 1; }
-.dd__link--sub { font-size: .85rem; color: var(--slate-600); }
+.dd__item.has-sub:focus-within > .dd__sub { opacity: 1; visibility: visible; transform: none; }
+.dd__link--sub { font-size: .88rem; color: var(--ink); }
 .dd__link--sub:hover { color: var(--teal-600); }
+/* Near the right edge, open the flyout to the left instead of overflowing. */
+.catbar__item:nth-last-child(-n+2) .dd__sub { left: auto; right: 100%; margin-left: 0; margin-right: .45rem; }
+.catbar__item:nth-last-child(-n+2) .dd__sub::before { left: auto; right: -.6rem; }
 
 .nav-toggle { display: none; }
 
