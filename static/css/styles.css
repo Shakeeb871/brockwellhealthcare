@@ -221,8 +221,22 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .dd__head { display: flex; align-items: center; gap: .5rem; font-family: var(--font-display); font-weight: 600; color: var(--navy-800); font-size: .9rem; padding: .3rem .5rem .6rem; border-bottom: 1px solid var(--line); margin-bottom: .4rem; }
 .dd__link { display: flex; align-items: center; gap: .45rem; padding: .45rem .55rem; border-radius: 7px; color: var(--ink); font-size: .9rem; transition: background .15s, color .15s; }
 .dd__link:hover { background: var(--mint-50); color: var(--teal-600); }
-/* Third-level (nested) sub-page inside a mega-menu column. */
-.dd__link--child { margin-left: 1.1rem; padding-left: .5rem; font-size: .85rem; color: var(--slate-600); border-left: 1px solid var(--line); border-radius: 0 7px 7px 0; }
+
+/* Third level — a service that has sub-pages. The children stay hidden until
+   the parent row is hovered (or focused), then expand beneath it. */
+.dd__item { display: block; }
+.dd__link--parent .dd__caret { margin-left: auto; font-size: .6rem; opacity: .55; transition: transform .2s ease; }
+.dd__item.has-sub:hover > .dd__link--parent .dd__caret,
+.dd__item.has-sub:focus-within > .dd__link--parent .dd__caret { transform: rotate(180deg); opacity: 1; }
+.dd__sub {
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .26s ease, opacity .2s ease;
+  margin-left: .8rem; padding-left: .35rem; border-left: 1px solid var(--line);
+}
+.dd__item.has-sub:hover > .dd__sub,
+.dd__item.has-sub:focus-within > .dd__sub { max-height: 480px; opacity: 1; }
+.dd__link--sub { font-size: .85rem; color: var(--slate-600); }
+.dd__link--sub:hover { color: var(--teal-600); }
 
 .nav-toggle { display: none; }
 
