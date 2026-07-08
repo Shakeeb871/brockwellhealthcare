@@ -334,14 +334,19 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .card h3 { margin: 0 0 .4rem; }
 .card p { color: var(--ink); font-size: 1rem; }
 /* Standard grid-card CTA link — used site-wide (no background). */
+/* CTA in card grids: a small filled button matching the primary "Book a Consultation"
+   button (teal, square, arrow), sized down for cards. */
 .card__link {
   margin-top: auto; align-self: flex-start;
-  display: inline-flex; align-items: center; gap: .35rem;
-  font-weight: 600; font-size: .82rem; color: var(--teal-600);
-  padding-top: .9rem; text-decoration: none; transition: gap .15s ease;
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-weight: 500; font-size: .82rem; line-height: 1;
+  color: #fff; background: var(--teal-600);
+  border: 1px solid var(--teal-600); border-radius: 0;
+  padding: 8px 15px; text-decoration: none;
+  transition: transform .15s ease, background .2s ease, border-color .2s ease, gap .15s ease;
 }
-.card__link svg { width: 15px; height: 15px; }
-.card__link:hover { gap: .6rem; color: var(--teal-600); }
+.card__link svg { width: 14px; height: 14px; }
+.card__link:hover { gap: .65rem; color: #fff; background: var(--teal-500); border-color: var(--teal-500); transform: translateY(-2px); }
 .card__price { font-weight: 600; color: var(--navy-800); font-family: var(--font-display); }
 
 /* ---------------------------------------------------------------- Feature list */
