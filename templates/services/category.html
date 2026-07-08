@@ -82,7 +82,7 @@
         {% if s.image %}
         <div class="card__media"><img src="{{ s.image.url }}" alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
         {% else %}
-        <span class="card__icon" aria-hidden="true">{{ s.icon }}</span>
+        <span class="card__icon" aria-hidden="true">{% service_icon s.slug 'ico' category.slug %}</span>
         {% endif %}
         <h3>{{ s.name }}</h3>
         <p>{{ s.summary }}</p>

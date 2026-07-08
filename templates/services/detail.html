@@ -16,7 +16,7 @@
       <div class="subsvc-grid">
         {% for c in children %}
         <a class="subsvc-card" href="{{ c.get_absolute_url }}">
-          <span class="subsvc-card__ic" aria-hidden="true">{{ c.icon }}</span>
+          <span class="subsvc-card__ic" aria-hidden="true">{% service_icon c.slug 'ico' category.slug %}</span>
           <span class="subsvc-card__body">
             <span class="subsvc-card__name">{{ c.name }}</span>
             <span class="subsvc-card__sum">{{ c.summary }}</span>

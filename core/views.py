@@ -31,7 +31,7 @@ ABOUT_FEATURES = [
 ABOUT_STATS = [
     {"num": "15,000", "suffix": "+", "ring": 96, "label": "Patients Treated"},
     {"num": "25", "suffix": "+", "ring": 80, "label": "Years of Experience"},
-    {"num": "4.91", "suffix": "★", "ring": 98, "label": "Google Rating"},
+    {"num": "4.91", "suffix": "", "suffix_icon": "star", "ring": 98, "label": "Google Rating"},
 ]
 # Partner/brand logos shown in the About section. Put the 6 logo files in
 # static/img/ named brand-1.png … brand-6.png (any image type works — just

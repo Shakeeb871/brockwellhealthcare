@@ -66,7 +66,7 @@
       {% for cat in nav_categories %}
       <div class="catbar__item{% if cat.published_services %} has-dd{% endif %}{% if cat.has_nested_services %} catbar__item--has-sub{% endif %}">
         <a class="catbar__link" href="{{ cat.get_absolute_url }}">
-          {{ cat.name }}{% if cat.published_services %} <span class="caret" aria-hidden="true">▾</span>{% endif %}
+          {{ cat.name }}{% if cat.published_services %} <span class="caret" aria-hidden="true">{% icon 'chevron' 'caret-svg' %}</span>{% endif %}
         </a>
         {% if cat.published_services %}
         <div class="dd">

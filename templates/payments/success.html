@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load region_tags %}
+{% load region_tags icons %}
 {% block content %}
 <section class="section" style="text-align:center">
   <div class="container" style="max-width:640px">
-    <div class="card__icon" style="margin:0 auto 1.2rem">✓</div>
+    <div class="card__icon" style="margin:0 auto 1.2rem">{% icon 'check' %}</div>
     <h1>Booking confirmed</h1>
     <p class="muted">Thank you! Your booking is confirmed and a confirmation has been sent to your email. We look forward to seeing you.</p>
     <div class="mt-1">

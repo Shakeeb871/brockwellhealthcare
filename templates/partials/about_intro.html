@@ -55,7 +55,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
           <div class="about__stat" role="listitem">
             <div class="about__ring" style="--p: {{ s.ring }}">
               <div class="about__ring-inner">
-                <div class="stat__num"><span class="val">{{ s.num }}</span><span class="suffix">{{ s.suffix }}</span></div>
+                <div class="stat__num"><span class="val">{{ s.num }}</span><span class="suffix">{% if s.suffix_icon %}{% icon s.suffix_icon 'suffix-ic' %}{% else %}{{ s.suffix }}{% endif %}</span></div>
               </div>
             </div>
             <p class="about__stat-label">{{ s.label }}</p>

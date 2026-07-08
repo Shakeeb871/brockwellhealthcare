@@ -111,6 +111,9 @@ _SERVICE = {
     "shock-wave-therapy": "waveform",
     "stress-management": "spa",
     "urology-services": "kidney",
+    "regenerative-iv-therapy": "iv-bag",
+    "ozone-therapy": "lungs",
+    "iv-drips": "droplet",
     # regenerative-medicine
     "regenerative-orthopedics": "bone",
     "biological-integrative-medicine": "flask",
@@ -126,6 +129,7 @@ _SERVICE = {
     "stress-reset": "refresh",
     "ketamine-therapy": "capsule",
     "longevity-ivs": "vial",
+    "nad-iv-therapy": "iv-bag",
     # anti-aging-aesthetics
     "pure-plasma": "plasma",
     "emsella": "chair",
