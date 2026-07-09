@@ -14,15 +14,17 @@ from django.utils.safestring import mark_safe
 register = template.Library()
 
 
-@register.simple_tag
-def category_image(slug):
-    """URL of a category's homepage image if a file exists at
-    ``static/img/services/categories/<slug>.webp`` — else "" (safe, no crash).
+@register.simple_tag(takes_context=True)
+def category_image(context, slug):
+    """Region-aware URL of a category's homepage card image
+    (``static/img/[<region>/]services/categories/<slug>.webp``) — the region's own
+    file if present, else the shared one, else "" (safe, no crash)."""
+    from django.conf import settings
 
-    Lets category images be managed as repo files (like the per-service hero
-    images) without touching the admin. Drop the file in and it appears."""
-    rel = f"img/services/categories/{slug}.webp"
-    return static(rel) if finders.find(rel) else ""
+    from core.regions import region_asset
+
+    region_code = context.get("region_code") or settings.DEFAULT_REGION
+    return region_asset(region_code, f"services/categories/{slug}.webp")
 
 # 24x24 stroke icons (currentColor). Clean, professional line style.
 _ICONS = {

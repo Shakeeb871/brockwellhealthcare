@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% load region_tags static icons %}
+{% load region_tags static icons content_extras %}
 
 {% block content %}
-<section class="hero" style="background-image:url('{% static 'img/brockwell-healthcare.webp' %}')">
+<section class="hero" style="background-image:url('{% region_img 'brockwell-healthcare.webp' %}')">
   <div class="container hero__inner">
     <div class="hero__content">
       <span class="eyebrow">Regenerative Medicine &amp; Longevity{{ region.dot_city }}</span>

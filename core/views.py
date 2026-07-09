@@ -16,7 +16,7 @@ from team.models import Doctor
 from . import seo
 from .forms import ContactForm
 from .models import FAQ, Page
-from .regions import region_path
+from .regions import region_asset_rel, region_path
 
 
 # Dummy content for the home "About / Medical Center Introduction" section.
@@ -285,7 +285,7 @@ def home(request):
             "offering personalised, non-surgical care for pain, recovery and healthy ageing."
         ),
         path="/",
-        image="img/og/default.jpg",
+        image=region_asset_rel(code, "og/default.jpg"),
     )
     # Region-aware home content: US names for reviews, the emirate map only for the
     # UAE, and a region-appropriate "reach" stat.
@@ -406,7 +406,7 @@ def about(request):
             "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
         ),
         path="/about/",
-        image="img/og/about.jpg",
+        image=region_asset_rel(code, "og/about.jpg"),
     )
     crumbs = seo.breadcrumb_schema(
         [

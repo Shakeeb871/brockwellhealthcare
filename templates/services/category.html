@@ -5,7 +5,7 @@
 {% rurl 'services:list' as services_url %}
 {% include "partials/page_hero.html" with hero_eyebrow="Our Services" hero_title=category.hero_heading|default:category.name hero_lead=category.summary crumb_parent_label="Services" crumb_parent_url=services_url crumb_label=category.name hero_image=hero_image %}
 
-{% content_sections category.description category.slug as parsed %}
+{% content_sections category.description category.slug region_code as parsed %}
 
 {# ---------- Intro: lead + image ---------- #}
 {% if parsed.lead %}

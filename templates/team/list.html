@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 
 {% block content %}
 {% include "partials/page_hero.html" with hero_eyebrow="Our Specialists" hero_title="Our Team" hero_lead="Meet the experienced clinicians and specialists behind "|add:BRAND_NAME|add:" — dedicated to your regenerative health and longevity." crumb_label="Our Team" %}
@@ -11,7 +11,7 @@
       {% for d in doctors %}
       <article class="team-card">
         <a href="{{ d.get_absolute_url }}" class="team-card__media" aria-label="{{ d.name }}">
-          {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
+          {% if d.photo %}<img src="{{ d.photo|region_media:region_code }}" alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
         </a>
         <div class="team-card__body">
           <h3 class="team-card__name"><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>

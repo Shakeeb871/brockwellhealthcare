@@ -5,38 +5,31 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from core import seo
 from core.forms import ContactForm
-from core.regions import region_path
+from core.regions import region_asset_rel, region_path
 
 from .models import Service, ServiceCategory
 
 
-def _hero_image_for(slug):
-    """Per-service hero background: static img/services/<slug>-hero.webp if present."""
-    rel = f"img/services/{slug}-hero.webp"
-    return rel if finders.find(rel) else None
+def _hero_image_for(slug, region_code):
+    """Per-service hero background, region-aware: the region's own
+    ``img/<code>/services/<slug>-hero.webp`` if present, else the shared file."""
+    return region_asset_rel(region_code, f"services/{slug}-hero.webp")
 
 
-def _category_hero_image(slug):
-    """Per-category hero background: static img/services/categories/<slug>/hero.webp
-    if present — else None so the shared default hero image is used."""
-    rel = f"img/services/categories/{slug}/hero.webp"
-    return rel if finders.find(rel) else None
+def _category_hero_image(slug, region_code):
+    """Per-category hero background, region-aware (falls back to the shared file)."""
+    return region_asset_rel(region_code, f"services/categories/{slug}/hero.webp")
 
 
-def _service_og_image(service):
-    """Pre-rendered 1200x630 JPEG social-share card for a service page
-    (``img/og/svc-<slug>.jpg``). JPEG so WhatsApp/Facebook/X actually render the
-    preview — webp is unreliable for link previews. Returns None so build_meta falls
-    back to the brand default when no card exists yet."""
-    rel = f"img/og/svc-{service.slug}.jpg"
-    return rel if finders.find(rel) else None
+def _service_og_image(service, region_code):
+    """Region-aware 1200x630 JPEG social-share card for a service page. JPEG so
+    WhatsApp/Facebook/X actually render the preview. None → build_meta default."""
+    return region_asset_rel(region_code, f"og/svc-{service.slug}.jpg")
 
 
-def _category_og_image(slug):
-    """Pre-rendered 1200x630 JPEG social-share card for a category page
-    (``img/og/cat-<slug>.jpg``). Returns None so build_meta falls back to default."""
-    rel = f"img/og/cat-{slug}.jpg"
-    return rel if finders.find(rel) else None
+def _category_og_image(slug, region_code):
+    """Region-aware 1200x630 JPEG social-share card for a category page."""
+    return region_asset_rel(region_code, f"og/cat-{slug}.jpg")
 
 
 def service_overview(request):
@@ -79,7 +72,7 @@ def category_detail(request, category):
     description = cat.seo_description or cat.summary
     meta = seo.build_meta(
         request, title=title, description=description, path=f"/services/{cat.slug}/",
-        image=_category_og_image(cat.slug),
+        image=_category_og_image(cat.slug, region['code']),
     )
     jsonld = [
         seo.category_schema(cat, region),
@@ -99,7 +92,7 @@ def category_detail(request, category):
         request,
         "services/category.html",
         {"meta": meta, "jsonld": jsonld, "category": cat, "services": services,
-         "faqs": faqs, "hero_image": _category_hero_image(cat.slug)},
+         "faqs": faqs, "hero_image": _category_hero_image(cat.slug, region["code"])},
     )
 
 
@@ -148,7 +141,7 @@ def service_detail(request, category, slug, parent=None):
     description = service.seo_description or service.summary
     meta = seo.build_meta(
         request, title=title, description=description, path=path, og_type="article",
-        image=_service_og_image(service),
+        image=_service_og_image(service, region['code']),
     )
     crumbs = [
         ("Home", seo.absolute(region_path(region["code"], "core:home"))),
@@ -181,6 +174,6 @@ def service_detail(request, category, slug, parent=None):
             "children": children,
             "form": form,
             "faqs": faqs,
-            "hero_image": _hero_image_for(service.slug),
+            "hero_image": _hero_image_for(service.slug, region["code"]),
         },
     )

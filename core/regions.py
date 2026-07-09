@@ -16,6 +16,37 @@ def get_region(code: str) -> dict:
     return settings.REGIONS.get(code, settings.REGIONS[settings.DEFAULT_REGION])
 
 
+# --------------------------------------------------------------------------- #
+# Region-aware static assets
+# --------------------------------------------------------------------------- #
+# Every region can override any image by dropping it under ``static/img/<code>/``
+# mirroring the shared layout. The resolver prefers that region-specific file and
+# otherwise falls back to the shared ``static/img/…`` file — so nothing has to be
+# duplicated, only the images a region wants to differ.
+
+def region_asset_rel(region_code: str, tail: str):
+    """Return the *static-relative* path of the best asset for a region, i.e.
+    ``img/<code>/<tail>`` if it exists, else ``img/<tail>`` if it exists, else
+    ``None``. ``tail`` is the path under ``img/`` e.g. ``services/x-hero.webp``."""
+    from django.contrib.staticfiles import finders
+
+    tail = tail.lstrip("/")
+    if tail.startswith("img/"):
+        tail = tail[4:]
+    for candidate in (f"img/{region_code}/{tail}", f"img/{tail}"):
+        if finders.find(candidate):
+            return candidate
+    return None
+
+
+def region_asset(region_code: str, tail: str) -> str:
+    """Full static URL for the best region asset, or "" if none exists."""
+    from django.templatetags.static import static
+
+    rel = region_asset_rel(region_code, tail)
+    return static(rel) if rel else ""
+
+
 def enabled_regions() -> list[dict]:
     """All regions currently switched on, in declaration order."""
     return [r for r in settings.REGIONS.values() if r.get("enabled")]

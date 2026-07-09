@@ -9,7 +9,7 @@
   <div class="container doc-layout">
     <article class="prose">
       {% if service.price %}<p><span class="tag">From {{ region.currency_symbol }} {{ service.price }}</span></p>{% endif %}
-      {{ service.description|enhance }}
+      {{ service.description|enhance|region_media:region_code }}
 
       {% if children %}
       <h2>Explore {{ service.name }}</h2>

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 
 {% block content %}
 <section class="doc-hero">
   <div class="container doc-hero__inner">
     <div class="doc-hero__photo">
-      {% if doctor.photo %}<img src="{{ doctor.photo }}" alt="{{ doctor.name }}">{% else %}<span class="doc-hero__initials">{{ doctor.initials }}</span>{% endif %}
+      {% if doctor.photo %}<img src="{{ doctor.photo|region_media:region_code }}" alt="{{ doctor.name }}">{% else %}<span class="doc-hero__initials">{{ doctor.initials }}</span>{% endif %}
       {% if doctor.available_today %}<span class="doc-hero__badge">{% icon 'check' %} Available Today</span>{% endif %}
     </div>
 

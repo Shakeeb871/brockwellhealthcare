@@ -16,14 +16,35 @@ import html as html_lib
 import re
 
 from django import template
+from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
+from core.regions import region_asset, region_asset_rel
+
 from .icons import _ICONS, _svg
 
 register = template.Library()
+
+# Inline ``/static/img/<path>`` URLs (in editor content, doctor photos, etc.).
+_STATIC_IMG = re.compile(r"/static/img/([^\"')\s]+)")
+
+
+@register.filter
+def region_media(value, region_code):
+    """Rewrite ``/static/img/<path>`` URLs to a region's own override
+    (``/static/img/<code>/<path>``) when that file exists, else keep the shared
+    path. Works on a full HTML block or a single URL string."""
+    if not value or not region_code:
+        return value
+
+    def repl(m):
+        rel = region_asset_rel(region_code, m.group(1))
+        return f"/static/{rel}" if rel else m.group(0)
+
+    return mark_safe(_STATIC_IMG.sub(repl, value))
 
 # Keyword → icon for content cards (first match on a whole word wins).
 # Lets the card grid show a relevant glyph without any admin-side setup.
@@ -130,32 +151,40 @@ _LEAD = re.compile(r"^(.*?)(?=<h2[^>]*>)", re.S | re.I)
 _TAGS = re.compile(r"<[^>]+>")
 
 
-def _section_image(cat_slug, name):
-    """Static URL for an optional per-section image, or "" if the file is
-    absent — so image slots are placeholders until a file is dropped in at
-    ``static/img/services/categories/<cat_slug>/<name>.webp``."""
+def _section_image(cat_slug, name, region_code=""):
+    """Region-aware static URL for an optional per-section image, or "" if absent
+    — the region's ``img/<code>/services/categories/<cat>/<name>.webp`` if present,
+    else the shared file, else a placeholder slot."""
     if not cat_slug:
         return ""
-    rel = f"img/services/categories/{cat_slug}/{name}.webp"
-    return static(rel) if finders.find(rel) else ""
+    return region_asset(region_code, f"services/categories/{cat_slug}/{name}.webp")
 
 
-@register.simple_tag
-def service_thumb(slug):
-    """Static thumbnail for a sub-service card. Prefers a dedicated card image
-    (``img/services/<slug>-card.webp``), then the service hero
-    (``img/services/<slug>-hero.webp``); returns "" so the card falls back to
-    its icon when neither exists."""
+@register.simple_tag(takes_context=True)
+def region_img(context, tail):
+    """Region-aware static URL for any image under ``img/`` (region override →
+    shared → ""). ``tail`` is the path under ``img/``, e.g. ``brockwell-healthcare.webp``."""
+    region_code = context.get("region_code") or settings.DEFAULT_REGION
+    return region_asset(region_code, tail)
+
+
+@register.simple_tag(takes_context=True)
+def service_thumb(context, slug):
+    """Region-aware thumbnail for a sub-service card. Prefers a dedicated card
+    image, then the service hero; region override wins over the shared file.
+    Returns "" so the card falls back to its icon when neither exists."""
     if not slug:
         return ""
-    for rel in (f"img/services/{slug}-card.webp", f"img/services/{slug}-hero.webp"):
-        if finders.find(rel):
-            return static(rel)
+    region_code = context.get("region_code") or settings.DEFAULT_REGION
+    for tail in (f"services/{slug}-card.webp", f"services/{slug}-hero.webp"):
+        url = region_asset(region_code, tail)
+        if url:
+            return url
     return ""
 
 
 @register.simple_tag
-def content_sections(html, cat_slug=""):
+def content_sections(html, cat_slug="", region_code=""):
     """Split rich category content into a designed, homepage-style layout.
 
     Returns ``{lead, lead_image, sections}`` where each section is
@@ -174,7 +203,7 @@ def content_sections(html, cat_slug=""):
         # Drop inline "Book …" call-to-action sections everywhere.
         if heading.lower().startswith("book"):
             continue
-        body = enhance(m.group(2).strip())
+        body = region_media(enhance(m.group(2).strip()), region_code)
         if "info-cards" in body:
             kind = "cards"
         elif "proc-steps" in body:
@@ -184,7 +213,8 @@ def content_sections(html, cat_slug=""):
         else:
             kind = "plain"
         img_slug = slugify(heading)
-        image = _section_image(cat_slug, img_slug) if kind in ("plain", "list") else ""
+        image = (_section_image(cat_slug, img_slug, region_code)
+                 if kind in ("plain", "list") else "")
         sections.append(
             {"heading": heading, "body": body, "kind": kind,
              "img_slug": img_slug, "image": image}
@@ -193,9 +223,10 @@ def content_sections(html, cat_slug=""):
     if sections:
         lm = _LEAD.match(html)
         lead_html = lm.group(1).strip() if lm else ""
-        lead = enhance(lead_html) if lead_html else ""
+        lead = region_media(enhance(lead_html), region_code) if lead_html else ""
     else:
-        lead = enhance(html.strip())
+        lead = region_media(enhance(html.strip()), region_code)
 
-    return {"lead": lead, "lead_image": _section_image(cat_slug, "intro"),
+    return {"lead": lead,
+            "lead_image": _section_image(cat_slug, "intro", region_code),
             "sections": sections}

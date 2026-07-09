@@ -1,4 +1,4 @@
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 {% if doctors %}
 <section class="section spotlight" aria-labelledby="spotlight-title">
   <div class="container">
@@ -38,7 +38,7 @@
                  aria-labelledby="doctab-{{ forloop.counter0 }}" tabindex="0">
           <div class="docpanel__media">
             {% if d.photo %}
-              <img src="{{ d.photo }}" alt="{{ d.name }}, {{ d.title }}" {% if not forloop.first %}loading="lazy"{% endif %}>
+              <img src="{{ d.photo|region_media:region_code }}" alt="{{ d.name }}, {{ d.title }}" {% if not forloop.first %}loading="lazy"{% endif %}>
             {% else %}
               <span class="avatar avatar--xl" aria-hidden="true">{{ d.initials }}</span>
             {% endif %}

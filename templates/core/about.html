@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags icons static %}
+{% load region_tags icons static content_extras %}
 
 {% block content %}
 {% include "partials/page_hero.html" with hero_eyebrow="Who We Are" hero_title="About Brockwell Healthcare" hero_lead="A regenerative medicine and longevity clinic built on more than 25 years of clinical experience." crumb_label="About" %}
@@ -146,7 +146,7 @@
     </div>
     <div class="abt-founder__media">
       {% if founder.photo %}
-      <figure class="abt-founder__photo"><img src="{{ founder.photo }}" alt="Dr. Hasnain Haider-Shah, Founder & Lead Specialist" loading="lazy" decoding="async"></figure>
+      <figure class="abt-founder__photo"><img src="{{ founder.photo|region_media:region_code }}" alt="Dr. Hasnain Haider-Shah, Founder & Lead Specialist" loading="lazy" decoding="async"></figure>
       {% else %}
       <figure class="abt-founder__photo abt-founder__photo--ph"><span aria-hidden="true">{% icon 'stethoscope' %}</span></figure>
       {% endif %}
@@ -165,7 +165,7 @@
     <div class="abt-spec-grid">
       {% for s in specialists %}
       <a class="abt-spec" {% if s.url %}href="{{ s.url }}"{% endif %}>
-        <span class="abt-spec__media">{% if s.photo %}<img src="{{ s.photo }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% else %}<span class="abt-spec__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>{% endif %}</span>
+        <span class="abt-spec__media">{% if s.photo %}<img src="{{ s.photo|region_media:region_code }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% else %}<span class="abt-spec__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>{% endif %}</span>
         <span class="abt-spec__name">{{ s.name }}</span>
         <span class="abt-spec__role">{{ s.role }}</span>
       </a>
