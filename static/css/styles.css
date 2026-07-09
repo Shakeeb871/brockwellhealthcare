@@ -785,6 +785,14 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .site-footer__legal a { color: var(--mint-50); opacity: .85; font-size: .85rem; transition: color .2s ease, opacity .2s ease; }
 .site-footer__legal a:hover { color: var(--teal-400); opacity: 1; }
 
+/* Region switcher (UAE / USA) */
+.site-footer__regions { display: inline-flex; align-items: center; gap: .5rem; font-size: .85rem; }
+.site-footer__regions-label { display: inline-flex; align-items: center; gap: .35rem; color: var(--mint-50); opacity: .7; }
+.site-footer__regions-label .ico { width: 15px; height: 15px; }
+.site-footer__region { display: inline-flex; align-items: center; padding: .2rem .6rem; border: 1px solid var(--navy-700); border-radius: 7px; color: var(--mint-50); opacity: .85; transition: color .2s ease, border-color .2s ease, background .2s ease, opacity .2s ease; }
+.site-footer__region:hover { color: var(--teal-400); border-color: var(--teal-500); opacity: 1; }
+.site-footer__region.is-active { background: var(--teal-600); border-color: var(--teal-600); color: #fff; opacity: 1; }
+
 /* Footer responsive */
 @media (max-width: 900px) {
   .newsletter { padding-inline: 16px; }   /* keep the teal card off the screen edges */

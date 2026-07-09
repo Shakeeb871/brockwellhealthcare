@@ -93,6 +93,12 @@
   <div class="site-footer__bottom-wrap">
     <div class="container site-footer__bottom">
       <p>&copy; {% now "Y" %} {{ BRAND_NAME }}. All rights reserved.</p>
+      <nav class="site-footer__regions" aria-label="Choose your region">
+        <span class="site-footer__regions-label">{% icon 'globe' 'ico' %} Region</span>
+        {% for r in enabled_regions %}
+        <a href="{% rurl_for r.code 'core:home' %}" class="site-footer__region{% if r.code == region_code %} is-active{% endif %}"{% if r.code == region_code %} aria-current="page"{% endif %}>{{ r.short }}</a>
+        {% endfor %}
+      </nav>
       <nav class="site-footer__legal" aria-label="Legal">
         <a href="{% rurl 'core:privacy' %}">Privacy Policy</a>
         <a href="{% rurl 'core:terms' %}">Terms &amp; Conditions</a>
