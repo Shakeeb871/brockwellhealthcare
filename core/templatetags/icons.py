@@ -130,7 +130,10 @@ _SERVICE = {
     "ketamine-therapy": "capsule",
     "longevity-ivs": "vial",
     "nad-iv-therapy": "iv-bag",
+    "peptide-therapy": "molecule",
     "therapeutic-plasma-exchange": "plasma",
+    # chronic-pain
+    "emsculpt-for-pain": "zap",
     # anti-aging-aesthetics
     "pure-plasma": "plasma",
     "emsella": "chair",
