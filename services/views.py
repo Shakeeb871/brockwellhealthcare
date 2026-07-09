@@ -23,6 +23,35 @@ def _category_hero_image(slug):
     return rel if finders.find(rel) else None
 
 
+def _service_og_image(service):
+    """Best social-share (og:image) for a service page: its hero, then its inline
+    content image, then its category hero/card image. Returns None so build_meta
+    falls back to the brand default when the service has no image of its own yet."""
+    candidates = [
+        f"img/services/{service.slug}-hero.webp",
+        f"img/services/{service.slug}-content.webp",
+    ]
+    if service.category_id:
+        candidates.append(f"img/services/categories/{service.category.slug}/hero.webp")
+        candidates.append(f"img/services/categories/{service.category.slug}.webp")
+    for rel in candidates:
+        if finders.find(rel):
+            return rel
+    return None
+
+
+def _category_og_image(slug):
+    """Best social-share (og:image) for a category page: its hero, then its homepage
+    card image. Returns None so build_meta falls back to the brand default."""
+    for rel in (
+        f"img/services/categories/{slug}/hero.webp",
+        f"img/services/categories/{slug}.webp",
+    ):
+        if finders.find(rel):
+            return rel
+    return None
+
+
 def service_overview(request):
     region = request.region
     categories = (
@@ -62,7 +91,8 @@ def category_detail(request, category):
     title = cat.seo_title or f"{cat.name} in {region['name']}"
     description = cat.seo_description or cat.summary
     meta = seo.build_meta(
-        request, title=title, description=description, path=f"/services/{cat.slug}/"
+        request, title=title, description=description, path=f"/services/{cat.slug}/",
+        image=_category_og_image(cat.slug),
     )
     jsonld = [
         seo.category_schema(cat, region),
@@ -131,6 +161,7 @@ def service_detail(request, category, slug, parent=None):
     description = service.seo_description or service.summary
     meta = seo.build_meta(
         request, title=title, description=description, path=path, og_type="article",
+        image=_service_og_image(service),
     )
     crumbs = [
         ("Home", seo.absolute(region_path(region["code"], "core:home"))),

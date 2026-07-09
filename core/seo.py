@@ -50,13 +50,22 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
     brand = settings.BRAND_NAME
     full_title = title if brand in title else f"{title} | {brand}"
 
+    # ``image`` may be: a media/absolute URL (starts with "/" or "http", e.g. an
+    # uploaded blog/event image) used as-is, a static-relative path prefixed with
+    # STATIC_URL, or None → the brand default. Always emitted as an absolute URL so
+    # link previews (WhatsApp, Facebook, X, LinkedIn) resolve it.
+    if image and (image.startswith("http") or image.startswith("/")):
+        og_image = image
+    else:
+        og_image = settings.STATIC_URL + (image or settings.DEFAULT_OG_IMAGE)
+
     return {
         "title": full_title,
         "description": description,
         "canonical": canonical,
         "robots": robots,
         "og_type": og_type,
-        "image": absolute(settings.STATIC_URL + (image or settings.DEFAULT_OG_IMAGE)),
+        "image": absolute(og_image),
         "alternates": alternates,
     }
 

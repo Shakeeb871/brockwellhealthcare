@@ -57,6 +57,8 @@ def event_detail(request, slug):
         path=f"/events/{event.slug}/",
         og_type="article",
     )
+    if event.image:
+        meta["image"] = seo.absolute(event.image.url)
     jsonld = [
         seo.event_schema(event, region),
         seo.breadcrumb_schema(
