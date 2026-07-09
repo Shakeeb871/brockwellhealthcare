@@ -92,7 +92,7 @@ _CATEGORY = {
     "longevity-healthspan": "clock",
     "anti-aging-aesthetics": "sparkles",
     "advanced-diagnostics": "microscope",
-    "emsculpt-for-pain": "zap",
+    "chronic-pain": "pulse",
 }
 
 # Unique, relevant glyph per sub-service (falls back to its category icon).
