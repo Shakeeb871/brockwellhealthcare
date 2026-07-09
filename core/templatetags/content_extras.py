@@ -141,6 +141,16 @@ def _section_image(cat_slug, name):
 
 
 @register.simple_tag
+def service_thumb(slug):
+    """Static thumbnail for a sub-service card: ``img/services/<slug>-hero.webp``
+    if that file exists, else "" so the card falls back to its icon."""
+    if not slug:
+        return ""
+    rel = f"img/services/{slug}-hero.webp"
+    return static(rel) if finders.find(rel) else ""
+
+
+@register.simple_tag
 def content_sections(html, cat_slug=""):
     """Split rich category content into a designed, homepage-style layout.
 
