@@ -14,7 +14,8 @@
       <div class="spotlight__selector" role="tablist" aria-label="Select a specialist">
         {% for d in doctors %}
         <button type="button" class="docchip{% if forloop.first %} is-active{% endif %}"
-                role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                role="tab" id="doctab-{{ forloop.counter0 }}"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
                 aria-controls="docpanel-{{ forloop.counter0 }}" data-index="{{ forloop.counter0 }}">
           <span class="docchip__name">{{ d.name }}</span>
         </button>
@@ -32,8 +33,9 @@
         </div>
 
         {% for d in doctors %}
-        <article class="docpanel{% if forloop.first %} is-active{% endif %}" id="docpanel-{{ forloop.counter0 }}"
-                 role="tabpanel" data-index="{{ forloop.counter0 }}" aria-label="{{ d.name }}">
+        <div class="docpanel{% if forloop.first %} is-active{% endif %}" id="docpanel-{{ forloop.counter0 }}"
+                 role="tabpanel" data-index="{{ forloop.counter0 }}"
+                 aria-labelledby="doctab-{{ forloop.counter0 }}" tabindex="0">
           <div class="docpanel__media">
             {% if d.photo %}
               <img src="{{ d.photo }}" alt="{{ d.name }}, {{ d.title }}" {% if not forloop.first %}loading="lazy"{% endif %}>
@@ -64,7 +66,7 @@
               <a class="btn btn--primary" href="{{ d.get_absolute_url }}">View Full Profile {% icon 'arrow' 'ico' %}</a>
             </div>
           </div>
-        </article>
+        </div>
         {% endfor %}
       </div>
     </div>
