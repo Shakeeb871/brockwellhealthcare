@@ -24,32 +24,19 @@ def _category_hero_image(slug):
 
 
 def _service_og_image(service):
-    """Best social-share (og:image) for a service page: its hero, then its inline
-    content image, then its category hero/card image. Returns None so build_meta
-    falls back to the brand default when the service has no image of its own yet."""
-    candidates = [
-        f"img/services/{service.slug}-hero.webp",
-        f"img/services/{service.slug}-content.webp",
-    ]
-    if service.category_id:
-        candidates.append(f"img/services/categories/{service.category.slug}/hero.webp")
-        candidates.append(f"img/services/categories/{service.category.slug}.webp")
-    for rel in candidates:
-        if finders.find(rel):
-            return rel
-    return None
+    """Pre-rendered 1200x630 JPEG social-share card for a service page
+    (``img/og/svc-<slug>.jpg``). JPEG so WhatsApp/Facebook/X actually render the
+    preview — webp is unreliable for link previews. Returns None so build_meta falls
+    back to the brand default when no card exists yet."""
+    rel = f"img/og/svc-{service.slug}.jpg"
+    return rel if finders.find(rel) else None
 
 
 def _category_og_image(slug):
-    """Best social-share (og:image) for a category page: its hero, then its homepage
-    card image. Returns None so build_meta falls back to the brand default."""
-    for rel in (
-        f"img/services/categories/{slug}/hero.webp",
-        f"img/services/categories/{slug}.webp",
-    ):
-        if finders.find(rel):
-            return rel
-    return None
+    """Pre-rendered 1200x630 JPEG social-share card for a category page
+    (``img/og/cat-<slug>.jpg``). Returns None so build_meta falls back to default."""
+    rel = f"img/og/cat-{slug}.jpg"
+    return rel if finders.find(rel) else None
 
 
 def service_overview(request):

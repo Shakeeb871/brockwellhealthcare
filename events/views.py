@@ -59,6 +59,11 @@ def event_detail(request, slug):
     )
     if event.image:
         meta["image"] = seo.absolute(event.image.url)
+        try:
+            meta["image_w"], meta["image_h"] = event.image.width, event.image.height
+        except Exception:
+            meta["image_w"] = meta["image_h"] = None
+        meta["image_type"] = ""
     jsonld = [
         seo.event_schema(event, region),
         seo.breadcrumb_schema(

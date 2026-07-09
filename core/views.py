@@ -253,7 +253,7 @@ def home(request):
             "offering personalised, non-surgical care for pain, recovery and healthy ageing."
         ),
         path="/",
-        image="img/brockwell-healthcare.webp",
+        image="img/og/default.jpg",
     )
     jsonld = [seo.medical_clinic_schema(region), seo.website_schema(region)]
     jsonld += [seo.category_schema(c, region) for c in categories]
@@ -363,7 +363,7 @@ def about(request):
             "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
         ),
         path="/about/",
-        image="img/brockwell-services-content.webp",
+        image="img/og/about.jpg",
     )
     crumbs = seo.breadcrumb_schema(
         [

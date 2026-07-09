@@ -27,7 +27,11 @@
   <meta property="og:description" content="{{ meta.description }}">
   <meta property="og:url" content="{{ meta.canonical }}">
   <meta property="og:image" content="{{ meta.image }}">
+  <meta property="og:image:secure_url" content="{{ meta.image }}">
   <meta property="og:image:alt" content="{{ meta.title }}">
+  {% if meta.image_type %}<meta property="og:image:type" content="{{ meta.image_type }}">{% endif %}
+  {% if meta.image_w %}<meta property="og:image:width" content="{{ meta.image_w }}">{% endif %}
+  {% if meta.image_h %}<meta property="og:image:height" content="{{ meta.image_h }}">{% endif %}
   <meta property="og:locale" content="{{ region.locale|og_locale }}">
 
   {# ---------- Twitter ---------- #}

@@ -216,9 +216,10 @@ BRAND_TAGLINE = os.getenv(
     "BRAND_TAGLINE", "Advanced Regenerative & Stem Cell Therapies"
 )
 SITE_DOMAIN = os.getenv("SITE_DOMAIN", "brockwellhealthcare.com")
-# Raster (webp) so link previews actually render — SVG og:images are not
-# supported by WhatsApp, Facebook, LinkedIn, X and most social/chat platforms.
-DEFAULT_OG_IMAGE = "img/brockwell-healthcare.webp"
+# Pre-rendered 1200x630 JPEG so link previews actually render. SVG is unsupported by
+# social/chat crawlers, and webp is unreliable for link previews (WhatsApp/Facebook),
+# so the shared og:image cards under img/og/ are JPEG.
+DEFAULT_OG_IMAGE = "img/og/default.jpg"
 
 # Social media profiles (shown in the header). Override any via .env; leave a
 # value blank to hide that icon.

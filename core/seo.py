@@ -66,6 +66,11 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
         "robots": robots,
         "og_type": og_type,
         "image": absolute(og_image),
+        # Dimensions/type of the standard 1200x630 JPEG cards. Views that override
+        # ``image`` with an uploaded media file (blog/events) also override these.
+        "image_w": 1200,
+        "image_h": 630,
+        "image_type": "image/jpeg",
         "alternates": alternates,
     }
 

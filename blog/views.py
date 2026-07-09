@@ -110,6 +110,11 @@ def _render_post(request, region, post):
     )
     if post.image:
         meta["image"] = seo.absolute(post.image.url)
+        try:
+            meta["image_w"], meta["image_h"] = post.image.width, post.image.height
+        except Exception:
+            meta["image_w"] = meta["image_h"] = None
+        meta["image_type"] = ""
 
     crumbs = [("Home", seo.absolute(region_path(code, "core:home"))),
               ("Insights", seo.absolute(region_path(code, "blog:list")))]
