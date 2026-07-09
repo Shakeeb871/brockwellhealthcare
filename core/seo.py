@@ -89,7 +89,16 @@ def organization_schema(region):
         "url": f"https://{settings.SITE_DOMAIN}/{region['code']}/",
         "telephone": region["phone"],
         "email": region["email"],
-        "medicalSpecialty": "RegenerativeMedicine",
+        # `medicalSpecialty` only accepts schema.org's fixed MedicalSpecialty
+        # enumeration (no "RegenerativeMedicine" member), so the clinic's focus is
+        # expressed with `knowsAbout`, which accepts free text and validates cleanly.
+        "knowsAbout": [
+            "Regenerative Medicine",
+            "Stem Cell Therapy",
+            "Longevity Medicine",
+            "Functional Medicine",
+            "Chronic Pain Management",
+        ],
         "areaServed": region["name"],
         "address": {
             "@type": "PostalAddress",
@@ -193,15 +202,18 @@ def service_schema(service, region):
 
 
 def doctor_schema(doctor, region):
+    # An individual doctor is a Person (schema.org's `Physician` is an
+    # organization type, so `jobTitle`/`worksFor` warn on it). `hasOccupation`
+    # keeps the physician signal without any invalid property.
     data = {
         "@context": "https://schema.org",
-        "@type": "Physician",
+        "@type": "Person",
         "name": doctor.name,
         "description": doctor.short_bio,
         "url": region_absolute(region["code"], "team:detail", slug=doctor.slug),
         "jobTitle": doctor.title,
         "worksFor": {"@id": f"https://{settings.SITE_DOMAIN}/{region['code']}/#organization"},
-        "areaServed": region["name"],
+        "hasOccupation": {"@type": "Occupation", "name": "Physician"},
     }
     if doctor.photo:
         data["image"] = doctor.photo
