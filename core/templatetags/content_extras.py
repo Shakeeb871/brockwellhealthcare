@@ -142,12 +142,16 @@ def _section_image(cat_slug, name):
 
 @register.simple_tag
 def service_thumb(slug):
-    """Static thumbnail for a sub-service card: ``img/services/<slug>-hero.webp``
-    if that file exists, else "" so the card falls back to its icon."""
+    """Static thumbnail for a sub-service card. Prefers a dedicated card image
+    (``img/services/<slug>-card.webp``), then the service hero
+    (``img/services/<slug>-hero.webp``); returns "" so the card falls back to
+    its icon when neither exists."""
     if not slug:
         return ""
-    rel = f"img/services/{slug}-hero.webp"
-    return static(rel) if finders.find(rel) else ""
+    for rel in (f"img/services/{slug}-card.webp", f"img/services/{slug}-hero.webp"):
+        if finders.find(rel):
+            return static(rel)
+    return ""
 
 
 @register.simple_tag
