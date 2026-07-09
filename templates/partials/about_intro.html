@@ -24,7 +24,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
       </div>
 
       <div class="about__content">
-        <p class="about__lead">Brockwell Healthcare is one of {{ region.city }}’s established regenerative medicine
+        <p class="about__lead">Brockwell Healthcare is one of {% if region.code == 'uae' %}Dubai’s{% else %}the country’s{% endif %} established regenerative medicine
           and longevity clinics. We help patients overcome pain, injury and age-related decline using
           advanced, non-surgical treatments — from stem cell therapy and PRP to peptide and IV protocols.</p>
         <p>Our therapies work with your body’s own ability to heal. We combine regenerative biologics,

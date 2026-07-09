@@ -276,6 +276,13 @@ REGIONS = {
         "name": "United Arab Emirates",
         "short": "UAE",
         "city": "Dubai",
+        # Location phrasing used in shared templates (region-neutral wording keeps
+        # the US pages location-light with a single country mention).
+        "in_loc": " in Dubai",
+        "h1_loc": "in Dubai",
+        "across": "across the UAE",
+        "area": "the UAE",
+        "dot_city": " · Dubai",
         "enabled": True,
         "currency": "AED",
         "currency_symbol": "AED",
@@ -290,6 +297,13 @@ REGIONS = {
         "name": "United States",
         "short": "USA",
         "city": "Philadelphia",
+        # US pages stay location-light: no city in body copy, country mentioned
+        # sparingly (only the home/hero H1 via ``h1_loc``).
+        "in_loc": "",
+        "h1_loc": "in the USA",
+        "across": "nationwide",
+        "area": "the US",
+        "dot_city": "",
         "enabled": env_bool("US_ENABLED", True),
         "currency": "USD",
         "currency_symbol": "$",

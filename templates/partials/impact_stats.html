@@ -9,7 +9,7 @@ icon, value, decimals, suffix, ring (decorative arc %), label.
   <div class="container">
     <header class="section__head">
       <span class="eyebrow">Our Impact</span>
-      <h2 id="impact-title">Trusted by Patients Across the {{ region.short }}</h2>
+      <h2 id="impact-title">Trusted by Patients {% if region.code == 'uae' %}Across the UAE{% else %}Nationwide{% endif %}</h2>
       <p>Recognised by CNN, Gulf News, Khaleej Times and NMC Healthcare.</p>
     </header>
 

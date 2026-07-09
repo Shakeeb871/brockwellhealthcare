@@ -2,7 +2,7 @@
 {% load region_tags icons static %}
 
 {% block content %}
-{% include "partials/page_hero.html" with hero_eyebrow="Who We Are" hero_title="About Brockwell Healthcare" hero_lead="A regenerative medicine and longevity clinic in {{ region.city }}, built on more than 25 years of clinical experience." crumb_label="About" %}
+{% include "partials/page_hero.html" with hero_eyebrow="Who We Are" hero_title="About Brockwell Healthcare" hero_lead="A regenerative medicine and longevity clinic built on more than 25 years of clinical experience." crumb_label="About" %}
 
 {# ---------- Stats + intro ---------- #}
 <section class="section abt-lead-sec">
@@ -13,7 +13,7 @@
       <li><span class="abt-stats__num">15,000+</span><span class="abt-stats__label">Patients Treated</span></li>
       <li><span class="abt-stats__num">98%</span><span class="abt-stats__label">Patient Satisfaction</span></li>
     </ul>
-    <p class="abt-lead">Brockwell Healthcare is a regenerative medicine and longevity clinic in {{ region.city }}, built on
+    <p class="abt-lead">Brockwell Healthcare is a regenerative medicine and longevity clinic{{ region.in_loc }}, built on
       more than 25 years of clinical experience. We help patients overcome chronic pain, injury and
       age-related decline through advanced, non-surgical medicine that looks for the root cause behind a problem.</p>
   </div>
@@ -24,11 +24,11 @@
   <div class="container abt-narrow">
     <div class="section__head">
       <span class="eyebrow">Our Clinic</span>
-      <h2>A {{ region.city }}-Based Regenerative Medicine &amp; Longevity Clinic</h2>
+      <h2>{% if region.code == 'uae' %}A Dubai-Based{% else %}A{% endif %} Regenerative Medicine &amp; Longevity Clinic</h2>
     </div>
     <div class="prose abt-prose">
       <p>Brockwell brings regenerative medicine, longevity care, diagnostics and functional medicine together
-        under one clinical model in {{ region.city }}. Our focus is the root cause of pain, dysfunction and age-related
+        under one clinical model{{ region.in_loc }}. Our focus is the root cause of pain, dysfunction and age-related
         decline, addressed through evidence-based, non-surgical protocols.</p>
       <p>Patients come to Brockwell with chronic pain, sports and musculoskeletal injuries, slow recovery,
         age-related decline, and hormonal or metabolic concerns. Not every condition suits regenerative medicine,
@@ -36,7 +36,7 @@
       <p>Every patient is different, so every care plan is too. Each one begins with a proper clinical assessment,
         clear medical reasoning and a treatment path designed around the person in front of us.</p>
       <p>Our specialists are board-certified and internationally trained. Together, they bring globally recognised
-        regenerative and longevity medicine to patients across the {{ region.short }} who want lasting improvements in how they
+        regenerative and longevity medicine to patients {{ region.across }} who want lasting improvements in how they
         move, recover and age.</p>
     </div>
   </div>
@@ -59,7 +59,7 @@
       <h3>A proactive, root-cause model of medicine</h3>
       <p>We work toward a future where more patients address the cause of their condition early, with regenerative
         and functional medicine, and lean on surgery only when it is truly the right choice. Brockwell exists to
-        make that kind of care precise, honest and available in {{ region.city }}.</p>
+        make that kind of care precise, honest and available{{ region.in_loc }}.</p>
     </article>
   </div>
 </section>
@@ -72,7 +72,7 @@
       <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'shield' %}</span><h3>Evidence-Based Medicine</h3><p>Every treatment and protocol rests on clinical evidence, medical judgement and each patient's health profile.</p></article>
       <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'heart' %}</span><h3>Patient-First Care</h3><p>Patients are people, not case numbers. Each one is assessed as an individual, with their own history, goals, risks and recovery needs.</p></article>
       <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'leaf' %}</span><h3>Root-Cause Healing</h3><p>Reducing symptoms is only the start. Our real aim is to understand what drives pain, dysfunction, slow recovery or age-related decline, then treat it at the source.</p></article>
-      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'globe' %}</span><h3>Global Standards, Local Care</h3><p>Brockwell brings international medical experience into a {{ region.city }} clinical setting, with care shaped around both local and visiting patients.</p></article>
+      <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'globe' %}</span><h3>Global Standards, Local Care</h3><p>Brockwell brings international medical experience into {% if region.code == 'uae' %}a Dubai{% else %}our{% endif %} clinical setting, with care shaped around both local and visiting patients.</p></article>
       <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'sparkles' %}</span><h3>Innovation at the Core</h3><p>As regenerative and longevity science advances, we adopt what is clinically sound and safe, and set aside what is not.</p></article>
       <article class="why-card"><span class="why-card__ico" aria-hidden="true">{% icon 'chat' %}</span><h3>Transparency and Trust</h3><p>Before any treatment begins, we explain what may help, what may not suit you and what results are realistic.</p></article>
     </div>
@@ -102,7 +102,7 @@
     <div class="section__head">
       <span class="eyebrow">What We Offer</span>
       <h2>Our Services</h2>
-      <p>Brockwell offers a full range of regenerative medicine, longevity and wellness services in {{ region.city }}.</p>
+      <p>Brockwell offers a full range of regenerative medicine, longevity and wellness services{{ region.in_loc }}.</p>
     </div>
     <div class="abt-svc-grid">
       {% for c in categories %}
@@ -184,7 +184,7 @@
       <h2>25 Years, One Uncompromising Standard</h2>
       <p>Brockwell Healthcare began with a clear purpose: bring advanced, non-surgical medicine to patients who
         want real, lasting results. That purpose has not changed.</p>
-      <p>Over the years, the clinic has grown into a wider network of specialists across the {{ region.short }}, supporting
+      <p>Over the years, the clinic has grown into a wider network of specialists {{ region.across }}, supporting
         knowledge-sharing and access to evolving research in regenerative and longevity medicine.</p>
       <p>Today, with more than 15,000 patients treated, over 50 specialists and a 4.91 out of 5 patient rating,
         Brockwell keeps growing toward one goal: better outcomes through science-led, personalised care. We are
@@ -202,9 +202,8 @@
 {# ---------- Across the UAE ---------- #}
 <section class="section section--soft">
   <div class="container abt-narrow">
-    <div class="section__head"><span class="eyebrow">Across the {{ region.short }}</span><h2>Caring for Patients Across the {{ region.short }}</h2></div>
-    <p class="abt-centered">Brockwell Healthcare is based in {{ region.city }} and welcomes patients from across the {{ region.short }}
-      and beyond. In-person consultations, diagnostics and treatments take place at the {{ region.city }} clinic. For
+    <div class="section__head"><span class="eyebrow">{% if region.code == 'uae' %}Across the UAE</span><h2>Caring for Patients Across the UAE{% else %}Nationwide</span><h2>Caring for Patients Nationwide{% endif %}</h2></div>
+    <p class="abt-centered">{% if region.code == 'uae' %}Brockwell Healthcare is based in Dubai and welcomes patients from across the UAE and beyond. In-person consultations, diagnostics and treatments take place at the Dubai clinic.{% else %}Brockwell Healthcare welcomes patients from across the country and beyond. In-person consultations, diagnostics and treatments take place at our clinic.{% endif %} For
       eligible follow-ups, prescription reviews and non-emergency assessments, secure telehealth keeps your care
       convenient wherever you are.</p>
   </div>

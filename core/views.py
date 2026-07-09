@@ -273,12 +273,15 @@ def home(request):
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
     latest_posts = BlogPost.objects.filter(region=code, is_published=True).select_related("category")[:3]
 
-    city = region.get("city", region["name"])
+    # UAE keeps the city in its meta; the US site stays location-light (city lives
+    # only in the header/footer address).
+    loc = f" {region['city']}" if code == "uae" else ""
+    article = f"a {region['city']}" if code == "uae" else "a"
     meta = seo.build_meta(
         request,
-        title=f"Regenerative Medicine & Longevity Clinic {city} | Brockwell",
+        title=f"Regenerative Medicine & Longevity Clinic{loc} | Brockwell",
         description=(
-            f"Brockwell Healthcare is a {city} regenerative medicine and longevity clinic "
+            f"Brockwell Healthcare is {article} regenerative medicine and longevity clinic "
             "offering personalised, non-surgical care for pain, recovery and healthy ageing."
         ),
         path="/",
@@ -393,12 +396,13 @@ ABOUT_SPECIALISTS = [
 def about(request):
     region = request.region
     code = region["code"]
-    city = region.get("city", region["name"])
+    loc = f" {region['city']}" if code == "uae" else ""
+    article = f"a {region['city']}" if code == "uae" else "a"
     meta = seo.build_meta(
         request,
-        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic {city}",
+        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic{loc}",
         description=(
-            f"Brockwell Healthcare is a {city} regenerative medicine and longevity clinic built on 25+ "
+            f"Brockwell Healthcare is {article} regenerative medicine and longevity clinic built on 25+ "
             "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
         ),
         path="/about/",
