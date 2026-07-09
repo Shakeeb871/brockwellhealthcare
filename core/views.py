@@ -124,6 +124,34 @@ PATIENT_REVIEWS = [
              "confidently recommend them to family and friends."},
 ]
 
+# US patient reviews (same praise, US names) — shown on the /us/ home page.
+US_PATIENT_REVIEWS = [
+    {"name": "Michael Anderson", "initial": "M", "time": "2 weeks ago",
+     "text": "From my first consultation the team was thorough and reassuring. The "
+             "regenerative plan was explained clearly and my recovery has been remarkable."},
+    {"name": "Jennifer Martinez", "initial": "J", "time": "3 weeks ago",
+     "text": "Exceptional, science-led care. The specialists genuinely listened and the "
+             "results have exceeded my expectations. Highly recommended."},
+    {"name": "David Thompson", "initial": "D", "time": "1 month ago",
+     "text": "A truly premium clinical experience — spotless facilities, advanced "
+             "diagnostics and a dedicated team that supported me throughout."},
+    {"name": "Sarah Williams", "initial": "S", "time": "1 month ago",
+     "text": "Professional and compassionate from start to finish. I felt in safe, "
+             "expert hands during every stage of my treatment."},
+    {"name": "Robert Johnson", "initial": "R", "time": "2 months ago",
+     "text": "The consultants are world-class. Clear communication, honest advice and "
+             "a treatment plan tailored precisely to my needs."},
+    {"name": "Emily Davis", "initial": "E", "time": "2 months ago",
+     "text": "Outstanding regenerative care. The follow-up and recovery monitoring made "
+             "a real difference to my results. Thank you to the whole team."},
+    {"name": "James Miller", "initial": "J", "time": "3 months ago",
+     "text": "State-of-the-art clinic with genuinely caring staff. Booking was simple "
+             "and the entire experience felt calm and premium."},
+    {"name": "Ashley Brown", "initial": "A", "time": "4 months ago",
+     "text": "Highly skilled specialists and a warm, welcoming environment. I would "
+             "confidently recommend them to family and friends."},
+]
+
 # Dummy services for the appointment dropdown (edit freely).
 BOOKING_SERVICES = [
     "Regenerative Wellness",
@@ -245,16 +273,26 @@ def home(request):
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
     latest_posts = BlogPost.objects.filter(region=code, is_published=True).select_related("category")[:3]
 
+    city = region.get("city", region["name"])
     meta = seo.build_meta(
         request,
-        title="Regenerative Medicine & Longevity Clinic Dubai | Brockwell",
+        title=f"Regenerative Medicine & Longevity Clinic {city} | Brockwell",
         description=(
-            "Brockwell Healthcare is a Dubai regenerative medicine and longevity clinic "
+            f"Brockwell Healthcare is a {city} regenerative medicine and longevity clinic "
             "offering personalised, non-surgical care for pain, recovery and healthy ageing."
         ),
         path="/",
         image="img/og/default.jpg",
     )
+    # Region-aware home content: US names for reviews, the emirate map only for the
+    # UAE, and a region-appropriate "reach" stat.
+    reviews = PATIENT_REVIEWS if code == "uae" else US_PATIENT_REVIEWS
+    network_locations = NETWORK_LOCATIONS if code == "uae" else []
+    network_features = NETWORK_FEATURES if code == "uae" else []
+    impact_stats = list(IMPACT_STATS)
+    if code != "uae":
+        impact_stats[-1] = {"icon": "pin", "value": 50, "decimals": 0, "suffix": "",
+                            "ring": 90, "label": "States Served"}
     jsonld = [seo.medical_clinic_schema(region), seo.website_schema(region)]
     jsonld += [seo.category_schema(c, region) for c in categories]
     jsonld += [seo.doctor_schema(d, region) for d in doctors]
@@ -275,14 +313,14 @@ def home(request):
             "about_features": ABOUT_FEATURES,
             "about_stats": ABOUT_STATS,
             "about_partners": _partners_with_logos(),
-            "impact_stats": IMPACT_STATS,
+            "impact_stats": impact_stats,
             "process_steps": PROCESS_STEPS,
             "why_choose": WHY_CHOOSE,
-            "patient_reviews": PATIENT_REVIEWS,
+            "patient_reviews": reviews,
             "booking_services": BOOKING_SERVICES,
             "facilities": _facilities_with_images(),
-            "network_locations": NETWORK_LOCATIONS,
-            "network_features": NETWORK_FEATURES,
+            "network_locations": network_locations,
+            "network_features": network_features,
             "news_posts": latest_posts,
         },
     )
@@ -355,11 +393,12 @@ ABOUT_SPECIALISTS = [
 def about(request):
     region = request.region
     code = region["code"]
+    city = region.get("city", region["name"])
     meta = seo.build_meta(
         request,
-        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic Dubai",
+        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic {city}",
         description=(
-            "Brockwell Healthcare is a Dubai regenerative medicine and longevity clinic built on 25+ "
+            f"Brockwell Healthcare is a {city} regenerative medicine and longevity clinic built on 25+ "
             "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
         ),
         path="/about/",

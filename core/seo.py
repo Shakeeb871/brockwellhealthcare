@@ -125,7 +125,12 @@ def medical_clinic_schema(region):
     org["logo"] = absolute(static("img/brockwell-healthcare-logo.png"))
     org["image"] = absolute(static("img/brockwell-healthcare.webp"))
     org["sameAs"] = [s["url"] for s in settings.SOCIAL_LINKS if s.get("url")]
-    org["areaServed"] = [{"@type": "AdministrativeArea", "name": e} for e in EMIRATES]
+    # The emirate list only makes sense for the UAE clinic; other regions serve
+    # their own country.
+    if region["code"] == "uae":
+        org["areaServed"] = [{"@type": "AdministrativeArea", "name": e} for e in EMIRATES]
+    else:
+        org["areaServed"] = {"@type": "Country", "name": region["short"]}
     # Only publish a rating if a real, verifiable review count is configured.
     if getattr(settings, "GOOGLE_REVIEW_COUNT", 0):
         org["aggregateRating"] = {
