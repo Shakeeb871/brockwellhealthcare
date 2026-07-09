@@ -267,9 +267,10 @@ GOOGLE_REVIEW_COUNT = int(os.getenv("GOOGLE_REVIEW_COUNT", "0") or 0)
 # to go live in search engines. Currently defaults to de-indexed.
 SITE_NOINDEX = env_bool("SITE_NOINDEX", True)
 
-# Region configuration. UAE is live now; US is reserved and plugs in later
-# by simply flipping ``enabled`` to True (no code changes required).
-DEFAULT_REGION = "uae"
+# Region configuration. The bare domain opens on the US site by default; UAE
+# visitors are routed to /uae/ (by geo-detection), and /uae/ is always reachable
+# directly. Change DEFAULT_REGION to flip which region the root serves.
+DEFAULT_REGION = "us"
 REGIONS = {
     "uae": {
         "code": "uae",
