@@ -11,6 +11,7 @@ from pathlib import Path
 import os
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -109,6 +110,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Defence-in-depth response headers (CSP, Permissions-Policy, COOP, …).
+    "core.middleware.SecurityHeadersMiddleware",
     # Detects the active region (UAE/US) for every request.
     "core.middleware.RegionMiddleware",
     # Adds X-Robots-Tag: noindex on every response while SITE_NOINDEX is on.
@@ -204,6 +207,18 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
     X_FRAME_OPTIONS = "DENY"
+    SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+    # Cookies not readable by JavaScript and not sent on cross-site requests.
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+
+    # Fail closed: never boot production on the shipped development SECRET_KEY.
+    if SECRET_KEY.startswith("django-insecure-"):
+        raise ImproperlyConfigured(
+            "SECRET_KEY is unset in production — set a strong SECRET_KEY env var."
+        )
 
 
 # --------------------------------------------------------------------------- #

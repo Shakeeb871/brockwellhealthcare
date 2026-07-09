@@ -73,6 +73,62 @@ class RegionMiddleware:
         return redirect(f"/{target_region}{path}")
 
 
+class SecurityHeadersMiddleware:
+    """Add defence-in-depth response headers that Django core does not set.
+
+    Covers the gaps SEO can't be harmed by:
+
+    * ``Content-Security-Policy`` — blocks injected/external scripts, framing,
+      plugins, ``<base>`` hijacking and off-site form posts. Inline first-party
+      scripts, JSON-LD structured data (SEO), inline styles and image ``onerror``
+      fallbacks are kept working via ``'unsafe-inline'``; no external script host
+      is allowed, so an injected ``<script src=evil>`` cannot load.
+    * ``Permissions-Policy`` — switches off device APIs the site never uses and
+      opts out of FLoC/Topics.
+    * ``Cross-Origin-Opener-Policy`` — isolates the browsing context.
+    * ``Referrer-Policy`` — set here too so it applies in every environment.
+    * ``Server`` header — overwritten so the response does not advertise the web
+      server / framework to anyone inspecting requests.
+
+    Crawlers ignore these headers, so indexing and rich results are unaffected.
+    """
+
+    CSP = (
+        "default-src 'self'; "
+        "base-uri 'self'; "
+        "object-src 'none'; "
+        "frame-ancestors 'none'; "
+        "form-action 'self'; "
+        "img-src 'self' data:; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "script-src 'self' 'unsafe-inline'; "
+        "connect-src 'self'; "
+        "manifest-src 'self'; "
+        "frame-src 'self'; "
+        "upgrade-insecure-requests"
+    )
+    PERMISSIONS_POLICY = (
+        "geolocation=(), microphone=(), camera=(), payment=(), usb=(), "
+        "magnetometer=(), gyroscope=(), accelerometer=(), browsing-topics=()"
+    )
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.csp = getattr(settings, "CONTENT_SECURITY_POLICY", self.CSP)
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        response.setdefault("Content-Security-Policy", self.csp)
+        response.setdefault("Permissions-Policy", self.PERMISSIONS_POLICY)
+        response.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+        response.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.setdefault("X-Content-Type-Options", "nosniff")
+        # Do not advertise the server / framework.
+        response["Server"] = settings.BRAND_NAME.replace(" ", "")
+        return response
+
+
 class NoIndexMiddleware:
     """Emit ``X-Robots-Tag: noindex`` on every response when ``SITE_NOINDEX``.
 
