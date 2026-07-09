@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 
+from core.regions import region_prefix
+
 from core.models import REGION_CHOICES, TimeStamped
 
 
@@ -46,7 +48,7 @@ class Doctor(TimeStamped):
         return f"{self.name} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("team:detail", kwargs={"slug": self.slug})
+        return region_prefix(self.region) + reverse("team:detail", kwargs={"slug": self.slug})
 
     @property
     def initials(self):

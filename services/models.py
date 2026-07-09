@@ -2,6 +2,8 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 
+from core.regions import region_prefix
+
 from core.models import CUSTOM_HEAD_HELP, REGION_CHOICES, TimeStamped
 
 
@@ -49,7 +51,7 @@ class ServiceCategory(TimeStamped):
         return f"{self.name} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("services:category", kwargs={"category": self.slug})
+        return region_prefix(self.region) + reverse("services:category", kwargs={"category": self.slug})
 
     @property
     def paragraphs(self):
@@ -124,7 +126,7 @@ class Service(TimeStamped):
 
     def get_absolute_url(self):
         if self.parent_id:
-            return f"/{self.region}" + reverse(
+            return region_prefix(self.region) + reverse(
                 "services:subdetail",
                 kwargs={
                     "category": self.category.slug,
@@ -132,7 +134,7 @@ class Service(TimeStamped):
                     "slug": self.slug,
                 },
             )
-        return f"/{self.region}" + reverse(
+        return region_prefix(self.region) + reverse(
             "services:detail", kwargs={"category": self.category.slug, "slug": self.slug}
         )
 

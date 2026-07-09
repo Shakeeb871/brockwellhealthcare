@@ -29,12 +29,19 @@ def is_enabled(code: str) -> bool:
 def region_path(region_code: str, urlname: str, *args, **kwargs) -> str:
     """Reverse a URL name and prefix it with the region segment.
 
-    ``reverse('core:home')`` -> ``/`` becomes ``/uae/`` and
-    ``reverse('services:detail', ...)`` -> ``/services/x/`` becomes
+    The default region is served at the root (no prefix), so e.g. for the US
+    default ``reverse('core:home')`` -> ``/`` stays ``/`` and ``/services/x/``
+    stays ``/services/x/``; for the UAE it becomes ``/uae/`` and
     ``/uae/services/x/``.
     """
     base = reverse(urlname, args=args, kwargs=kwargs)
-    return f"/{region_code}{base}"
+    return f"{region_prefix(region_code)}{base}"
+
+
+def region_prefix(region_code: str) -> str:
+    """URL prefix for a region: empty for the default region (served at the
+    root), ``/<code>`` for every other region."""
+    return "" if region_code == settings.DEFAULT_REGION else f"/{region_code}"
 
 
 def region_absolute(region_code: str, urlname: str, *args, **kwargs) -> str:

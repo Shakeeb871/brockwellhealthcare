@@ -14,7 +14,7 @@ own canonical URLs, locale and contact details.
 
 from django.conf import settings
 
-from .regions import enabled_regions, region_absolute, region_path
+from .regions import enabled_regions, region_absolute, region_path, region_prefix
 
 
 def absolute(path: str) -> str:
@@ -32,7 +32,7 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
     ``/services/`` — hreflang/canonical are derived per region from it.
     """
     region_code = getattr(request, "region_code", settings.DEFAULT_REGION)
-    canonical = absolute(f"/{region_code}{path}")
+    canonical = absolute(f"{region_prefix(region_code)}{path}")
 
     # hreflang alternates: one per enabled region + an x-default.
     alternates = []
@@ -40,11 +40,12 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
         alternates.append(
             {
                 "hreflang": region["locale"],
-                "href": absolute(f"/{region['code']}{path}"),
+                "href": absolute(f"{region_prefix(region['code'])}{path}"),
             }
         )
     alternates.append(
-        {"hreflang": "x-default", "href": absolute(f"/{settings.DEFAULT_REGION}{path}")}
+        {"hreflang": "x-default",
+         "href": absolute(f"{region_prefix(settings.DEFAULT_REGION)}{path}")}
     )
 
     brand = settings.BRAND_NAME

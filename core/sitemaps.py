@@ -8,7 +8,7 @@ from services.models import Service, ServiceCategory
 from team.models import Doctor
 
 from .models import Page
-from .regions import enabled_regions, region_path
+from .regions import enabled_regions, region_path, region_prefix
 
 
 class StaticViewSitemap(Sitemap):
@@ -105,7 +105,7 @@ class PageSitemap(Sitemap):
         return list(Page.objects.filter(region__in=_codes(), is_published=True))
 
     def location(self, obj):
-        return f"/{obj.region}/{obj.slug}/"
+        return f"{region_prefix(obj.region)}/{obj.slug}/"
 
     def lastmod(self, obj):
         return obj.updated_at

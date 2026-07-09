@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+
+from core.regions import region_prefix
 from django.utils import timezone
 
 from core.models import REGION_CHOICES, TimeStamped
@@ -40,7 +42,7 @@ class Event(TimeStamped):
         return f"{self.title} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("events:detail", kwargs={"slug": self.slug})
+        return region_prefix(self.region) + reverse("events:detail", kwargs={"slug": self.slug})
 
     @property
     def is_upcoming(self):

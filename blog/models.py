@@ -1,6 +1,8 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
+
+from core.regions import region_prefix
 from django.utils import timezone
 
 from core.models import CUSTOM_HEAD_HELP, REGION_CHOICES, TimeStamped
@@ -26,7 +28,7 @@ class BlogCategory(TimeStamped):
         return f"{self.name} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("blog:entry", kwargs={"slug": self.slug})
+        return region_prefix(self.region) + reverse("blog:entry", kwargs={"slug": self.slug})
 
     @property
     def published_posts(self):
@@ -73,7 +75,7 @@ class BlogPost(TimeStamped):
         return f"{self.title} [{self.region}]"
 
     def get_absolute_url(self):
-        return f"/{self.region}" + reverse("blog:entry", kwargs={"slug": self.slug})
+        return region_prefix(self.region) + reverse("blog:entry", kwargs={"slug": self.slug})
 
     @property
     def reading_time(self):

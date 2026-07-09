@@ -49,11 +49,12 @@ class RegionMiddleware:
             request.region = get_region(settings.DEFAULT_REGION)
             return self.get_response(request)
 
+        default = settings.DEFAULT_REGION
         segments = [s for s in path.split("/") if s != ""]
         first = segments[0] if segments else ""
 
-        if first in settings.REGIONS and is_enabled(first):
-            # Valid, live region prefix: record it and strip for resolution.
+        # A non-default, live region prefix (e.g. /uae/...): record it and strip.
+        if first in settings.REGIONS and first != default and is_enabled(first):
             request.region_code = first
             request.region = get_region(first)
             stripped = "/" + "/".join(segments[1:])
@@ -62,15 +63,27 @@ class RegionMiddleware:
             request.path_info = stripped
             return self.get_response(request)
 
-        if first in settings.REGIONS and not is_enabled(first):
-            # Region exists but is not live yet -> send to the live default.
-            request.region_code = settings.DEFAULT_REGION
-            request.region = get_region(settings.DEFAULT_REGION)
-            return redirect(f"/{settings.DEFAULT_REGION}/")
+        # The default region is served at the root, so its own prefix (/us/...)
+        # is redundant -> 301 to the clean, prefix-less URL.
+        if first == default:
+            rest = "/" + "/".join(segments[1:])
+            if not rest.endswith("/"):
+                rest += "/"
+            return redirect(rest, permanent=True)
 
-        # No region prefix: redirect to the visitor's region (geo-aware).
-        target_region = detect_region(request)
-        return redirect(f"/{target_region}{path}")
+        # A reserved/disabled region prefix -> the default root.
+        if first in settings.REGIONS and not is_enabled(first):
+            return redirect("/")
+
+        # No region prefix: this is the default region, served at the root.
+        # Geo-route visitors from a non-default live region (e.g. the UAE) to
+        # their prefix; everyone else stays on the root (default) site.
+        detected = detect_region(request)
+        if detected != default and is_enabled(detected):
+            return redirect(f"/{detected}{path}")
+        request.region_code = default
+        request.region = get_region(default)
+        return self.get_response(request)
 
 
 class SecurityHeadersMiddleware:
