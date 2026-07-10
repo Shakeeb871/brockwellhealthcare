@@ -52,19 +52,17 @@ base.html. Pricing tiers post to the live Stripe package checkout.
 .evtx-avatars .more{background:var(--pc);color:#fff;font-size:11px;}
 .evtx-hero__faculty .t small{display:block;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.08em;font-size:11px;}
 .evtx-hero__faculty .t b{color:#fff;font-family:var(--font-display);font-size:18px;}
-/* Key details */
-.evtx-keys{padding:44px 0;background:#fff;border-bottom:1px solid var(--line);}
-.evtx-keys__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;}
-.evtx-key{display:flex;align-items:center;gap:14px;padding:18px 20px;background:var(--soft);border-radius:14px;border:1px solid var(--line);}
-.evtx-key--dark{background:var(--p);border-color:var(--pc);}
-.evtx-key__ic{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;}
-.evtx-key__ic svg{width:22px;height:22px;}
-.evtx-key--dark .evtx-key__ic{background:var(--accent2);color:var(--navy-900);}
-.evtx-key h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:3px;font-family:var(--font-sans);font-weight:600;}
-.evtx-key--dark h3{color:var(--accent2);}
-.evtx-key p{font-family:var(--font-display);font-size:18px;color:var(--ink);margin:0;}
-.evtx-key--dark p{color:#fff;}
-.evtx-key .sm{font-family:var(--font-sans);font-size:14px;line-height:1.4;}
+/* Key details — glass overlay bar inside the hero */
+.evtx-hero__details{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,.18);}
+.evtx-hd{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:13px 15px;min-width:0;}
+.evtx-hd__ic{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--accent2);color:var(--navy-900);}
+.evtx-hd__ic svg{width:21px;height:21px;}
+.evtx-hd>div{min-width:0;}
+.evtx-hd h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin:0 0 2px;font-family:var(--font-sans);font-weight:600;}
+.evtx-hd p{font-family:var(--font-display);font-size:16px;color:#fff;margin:0;line-height:1.3;}
+.evtx-hd__contact{display:flex;flex-direction:column;font-family:var(--font-sans)!important;font-size:12.5px!important;line-height:1.45!important;}
+.evtx-hd__contact a{color:#fff;overflow-wrap:anywhere;}
+.evtx-hd__contact a:hover{color:var(--accent2);}
 /* Cards grid */
 .evtx-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;}
 .evtx-card{background:#fff;padding:26px 24px;border-radius:16px;border:1px solid var(--line);transition:transform .25s,box-shadow .25s;}
@@ -123,13 +121,15 @@ base.html. Pricing tiers post to the live Stripe package checkout.
 .evtx-biz__gridbg{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:40px 40px;}
 .evtx-biz__inner{position:relative;text-align:center;}
 .evtx-tag{display:inline-block;background:rgba(156,192,111,.18);color:var(--accent2);padding:5px 15px;border-radius:9999px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;border:1px solid rgba(156,192,111,.4);}
-.evtx-biz h2{font-size:clamp(24px,3vw,31px);margin-bottom:18px;}
-.evtx-biz__lead{color:rgba(255,255,255,.8);font-size:16px;max-width:680px;margin:0 auto 40px;}
+.evtx-biz h2{font-size:clamp(24px,3vw,31px);margin-bottom:18px;color:#fff;}
+.evtx-biz__lead{color:rgba(255,255,255,.82);font-size:16px;max-width:680px;margin:0 auto 42px;}
 .evtx-glass{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;text-align:left;}
-.evtx-glass>div{background:rgba(255,255,255,.08);padding:24px;border-radius:14px;border:1px solid rgba(255,255,255,.18);}
-.evtx-glass svg{width:32px;height:32px;color:var(--accent2);margin-bottom:14px;display:block;}
-.evtx-glass h3{font-size:19px;margin-bottom:6px;}
-.evtx-glass p{color:rgba(255,255,255,.8);margin:0;font-size:15px;}
+.evtx-glass>div{background:rgba(255,255,255,.06);padding:28px 26px;border-radius:16px;border:1px solid rgba(255,255,255,.14);transition:transform .25s,background .25s,border-color .25s;}
+.evtx-glass>div:hover{transform:translateY(-4px);background:rgba(255,255,255,.1);border-color:rgba(156,192,111,.5);}
+.evtx-glass__ic{width:52px;height:52px;border-radius:14px;background:rgba(156,192,111,.16);display:grid;place-items:center;margin-bottom:18px;}
+.evtx-glass__ic svg{width:26px;height:26px;color:var(--accent2);}
+.evtx-glass h3{font-size:19px;margin-bottom:8px;color:#fff;}
+.evtx-glass p{color:rgba(255,255,255,.8);margin:0;font-size:15px;line-height:1.55;}
 /* Faculty */
 .evtx-fac__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px;}
 .evtx-fac{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;}
@@ -149,7 +149,7 @@ base.html. Pricing tiers post to the live Stripe package checkout.
 .evtx-vip__ic{flex:1 1 160px;text-align:center;}
 .evtx-vip__ic svg{width:92px;height:92px;color:var(--accent2);margin:0 auto;}
 .evtx-vip__body{flex:2 1 380px;}
-.evtx-vip h2{font-size:clamp(23px,3vw,29px);margin-bottom:14px;}
+.evtx-vip h2{font-size:clamp(23px,3vw,29px);margin-bottom:14px;color:#fff;}
 .evtx-vip__body>p{color:rgba(255,255,255,.9);font-size:16px;margin-bottom:20px;}
 .evtx-vip__list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;}
 .evtx-vip__list div{display:flex;align-items:center;gap:10px;font-size:15px;}
@@ -210,30 +210,28 @@ base.html. Pricing tiers post to the live Stripe package checkout.
           <div class="t"><small>Learn directly from</small><b>World-Class Faculty</b></div>
         </div>
       </div>
+
+      <!-- Key details as a glass overlay bar inside the hero -->
+      <div class="evtx-hero__details" id="overview">
+          <div class="evtx-hd">
+            <span class="evtx-hd__ic">{% icon 'calendar' 'evtx-ic' %}</span>
+            <div><h3>Date</h3><p>{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</p></div>
+          </div>
+          <div class="evtx-hd">
+            <span class="evtx-hd__ic">{% icon 'pin' 'evtx-ic' %}</span>
+            <div><h3>Location</h3><p>{{ event.location }}</p></div>
+          </div>
+          <div class="evtx-hd">
+            <span class="evtx-hd__ic">{% icon 'users' 'evtx-ic' %}</span>
+            <div><h3>Availability</h3><p>Strictly {{ event.capacity }} Seats</p></div>
+          </div>
+          <div class="evtx-hd">
+            <span class="evtx-hd__ic">{% icon 'mail' 'evtx-ic' %}</span>
+            <div><h3>Contact</h3><p class="evtx-hd__contact"><a href="mailto:fathima@brockwellhealthcare.com">fathima@brockwellhealthcare.com</a><a href="tel:7253122125">725-312-2125</a></p></div>
+          </div>
+      </div>
     </div>
   </header>
-
-  <!-- 2. KEY DETAILS -->
-  <section class="evtx-keys" id="overview">
-    <div class="evtx-c evtx-keys__grid">
-      <div class="evtx-key">
-        <div class="evtx-key__ic">{% icon 'calendar' 'evtx-ic' %}</div>
-        <div><h3>Date</h3><p>{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</p></div>
-      </div>
-      <div class="evtx-key">
-        <div class="evtx-key__ic">{% icon 'pin' 'evtx-ic' %}</div>
-        <div><h3>Location</h3><p>{{ event.location }}</p></div>
-      </div>
-      <div class="evtx-key evtx-key--dark">
-        <div class="evtx-key__ic">{% icon 'users' 'evtx-ic' %}</div>
-        <div><h3>Availability</h3><p>Strictly {{ event.capacity }} Seats</p></div>
-      </div>
-      <div class="evtx-key">
-        <div class="evtx-key__ic">{% icon 'mail' 'evtx-ic' %}</div>
-        <div><h3>Contact</h3><p class="sm">fathima@brockwellhealthcare.com<br>725-312-2125</p></div>
-      </div>
-    </div>
-  </section>
 
   <!-- 3. WHY BROCKWELL ACADEMY -->
   <section class="evtx-sec evtx-bg-surface" id="why-us">
@@ -322,9 +320,9 @@ base.html. Pricing tiers post to the live Stripe package checkout.
       <h2>Build a Thriving Cash-Pay Practice</h2>
       <p class="evtx-biz__lead">Clinical excellence must be paired with operational efficiency. Learn how to successfully market, price, and deliver high-ticket regenerative services.</p>
       <div class="evtx-glass">
-        <div>{% icon 'chat' 'evtx-ic' %}<h3>Patient Marketing</h3><p>Ethical, effective strategies to attract and educate patients seeking alternatives to surgery.</p></div>
-        <div>{% icon 'clipboard' 'evtx-ic' %}<h3>Pricing Strategies</h3><p>Structuring packages and optimizing revenue streams for cash-based procedures.</p></div>
-        <div>{% icon 'shield' 'evtx-ic' %}<h3>Compliance &amp; Legal</h3><p>Navigate the regulatory landscape confidently with expert guidance on biologics compliance.</p></div>
+        <div><span class="evtx-glass__ic">{% icon 'chat' 'evtx-ic' %}</span><h3>Patient Marketing</h3><p>Ethical, effective strategies to attract and educate patients seeking alternatives to surgery.</p></div>
+        <div><span class="evtx-glass__ic">{% icon 'clipboard' 'evtx-ic' %}</span><h3>Pricing Strategies</h3><p>Structuring packages and optimizing revenue streams for cash-based procedures.</p></div>
+        <div><span class="evtx-glass__ic">{% icon 'shield' 'evtx-ic' %}</span><h3>Compliance &amp; Legal</h3><p>Navigate the regulatory landscape confidently with expert guidance on biologics compliance.</p></div>
       </div>
     </div>
   </section>
