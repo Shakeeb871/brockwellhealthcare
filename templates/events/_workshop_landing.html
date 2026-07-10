@@ -1,434 +1,513 @@
 {% load region_tags content_extras icons static %}
 {% comment %}
-Workshop landing page (Stitch "Brockwell Final Event Page" design), rebuilt
-CSP-safe: local images, inline SVG icons (no external icon font), self-hosted
-fonts loaded in detail.html head, no Tailwind CDN. Header/footer come from
-base.html. Pricing tiers post to the live Stripe package checkout.
+Workshop landing ("Clinical Precision" template) rebuilt in the site theme:
+site colours (navy/teal/mint), site typography (Montserrat/Poppins), pill
+buttons, inline SVG icons (no external icon font), local images, no Tailwind.
+Header/footer come from base.html. Pricing posts to the live Stripe checkout.
 {% endcomment %}
 {% region_img 'events/faculty/dr-syed-hasnain-haider-shah.webp' as fac_syed %}
 {% region_img 'events/faculty/rachel-ann-garcia.webp' as fac_rachel %}
 
 <style>
-.evtx{--p:var(--navy-800);--pc:var(--navy-700);--accent:var(--teal-600);--accent2:var(--teal-400);--soft:var(--mint-50);--surface:var(--bg-soft);--muted:var(--slate-600);font-family:var(--font-sans);color:var(--ink);background:var(--surface);line-height:1.65;}
+.evtx{--p:var(--navy-800);--pd:var(--navy-900);--pc:var(--navy-700);--accent:var(--teal-600);--accent2:var(--teal-400);--soft:var(--mint-50);--surface:var(--bg-soft);--muted:var(--slate-600);font-family:var(--font-sans);color:var(--ink);line-height:1.6;}
 .evtx img{display:block;max-width:100%;}
-.evtx h1,.evtx h2,.evtx h3,.evtx h4{font-family:var(--font-display);margin:0;line-height:1.22;letter-spacing:-.01em;}
+.evtx h1,.evtx h2,.evtx h3,.evtx h4{font-family:var(--font-display);margin:0;line-height:1.2;letter-spacing:-.01em;}
 .evtx svg{flex:none;}
 .evtx-c{max-width:1160px;margin:0 auto;padding:0 22px;}
-.evtx-sec{padding:66px 0;}
-.evtx-bg-white{background:#fff;}.evtx-bg-surface{background:var(--surface);}
-.evtx-mesh{background:var(--surface);}
-.evtx-head{text-align:center;max-width:600px;margin:0 auto 38px;}
-.evtx-head h2{font-size:clamp(24px,3vw,31px);color:var(--p);margin-bottom:12px;}
-.evtx-head p{color:var(--muted);font-size:16px;}
-.evtx-btn{display:inline-flex;align-items:center;gap:8px;border-radius:9999px;font-weight:600;font-size:14px;letter-spacing:.02em;padding:12px 24px;cursor:pointer;border:none;transition:.2s;text-decoration:none;font-family:var(--font-sans);}
-.evtx-btn svg{width:17px;height:17px;}
-.evtx-btn--lime{background:var(--accent);color:#fff;}.evtx-btn--lime:hover{background:var(--p);}
-.evtx-btn--primary{background:var(--p);color:#fff;}.evtx-btn--primary:hover{background:var(--accent);}
-.evtx-btn--outline{background:transparent;border:2px solid var(--accent);color:var(--accent);}.evtx-btn--outline:hover{background:var(--soft);}
-/* Hero */
-.evtx-hero{position:relative;min-height:74vh;display:flex;align-items:center;overflow:hidden;}
-.evtx-hero__bg{position:absolute;inset:0;z-index:0;}
-.evtx-hero__bg img{width:100%;height:100%;object-fit:cover;}
-.evtx-hero__bg::after{content:"";position:absolute;inset:0;background:var(--navy-900);opacity:.8;mix-blend-mode:multiply;}
-.evtx-hero__inner{position:relative;z-index:2;width:100%;padding:92px 0 60px;}
-.evtx-hero__content{max-width:760px;}
-.evtx-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent2);color:var(--navy-900);padding:7px 15px;border-radius:9999px;font-size:13px;font-weight:600;letter-spacing:.04em;}
-.evtx-badge svg{width:17px;height:17px;}
-.evtx-hero__collab{color:var(--accent2);text-transform:uppercase;letter-spacing:.14em;font-size:13px;font-weight:600;margin:20px 0 8px;}
-.evtx-hero h1{font-size:clamp(29px,5vw,44px);color:#fff;margin-bottom:14px;}
-.evtx-hero h1 .lime{color:var(--accent2);}
-.evtx-hero__sub{font-family:var(--font-display);font-size:clamp(18px,2.4vw,22px);font-weight:500;color:rgba(255,255,255,.9);margin-bottom:28px;max-width:600px;}
-.evtx-hero__checks{list-style:none;padding:0;margin:0 0 32px;display:flex;flex-direction:column;gap:12px;}
-.evtx-hero__checks li{display:flex;align-items:center;gap:12px;color:#fff;font-size:16px;}
-.evtx-hero__checks svg{width:21px;height:21px;color:var(--accent2);}
-.evtx-hero__cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
-.evtx-hero__meta{color:rgba(255,255,255,.85);font-size:15px;}
-.evtx-hero__faculty{display:flex;align-items:center;gap:14px;margin-top:40px;flex-wrap:wrap;}
-.evtx-avatars{display:flex;}
-.evtx-avatars img,.evtx-avatars .mono{width:52px;height:52px;border-radius:50%;border:2px solid #fff;margin-left:-13px;}
-.evtx-avatars img{object-fit:cover;object-position:top center;}
-.evtx-avatars :first-child{margin-left:0;}
-.evtx-avatars .mono{display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--navy-800));color:var(--navy-900);font-weight:700;font-family:var(--font-display);font-size:14px;}
-.evtx-avatars .more{background:var(--pc);color:#fff;font-size:11px;}
-.evtx-hero__faculty .t small{display:block;color:rgba(255,255,255,.8);text-transform:uppercase;letter-spacing:.08em;font-size:11px;}
-.evtx-hero__faculty .t b{color:#fff;font-family:var(--font-display);font-size:18px;}
-/* Key details — glass overlay bar inside the hero */
-.evtx-hero__details{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,.18);}
-.evtx-hd{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:13px 15px;min-width:0;}
-.evtx-hd__ic{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--accent2);color:var(--navy-900);}
-.evtx-hd__ic svg{width:21px;height:21px;}
-.evtx-hd>div{min-width:0;}
-.evtx-hd h3{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2);margin:0 0 2px;font-family:var(--font-sans);font-weight:600;}
-.evtx-hd p{font-family:var(--font-display);font-size:16px;color:#fff;margin:0;line-height:1.3;}
-.evtx-hd__contact{display:flex;flex-direction:column;font-family:var(--font-sans)!important;font-size:12.5px!important;line-height:1.45!important;}
-.evtx-hd__contact a{color:#fff;overflow-wrap:anywhere;}
-.evtx-hd__contact a:hover{color:var(--accent2);}
-/* Cards grid */
-.evtx-grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;}
-.evtx-card{background:#fff;padding:26px 24px;border-radius:16px;border:1px solid var(--line);transition:transform .25s,box-shadow .25s;}
-.evtx-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
-.evtx-card svg{width:32px;height:32px;color:var(--accent);margin-bottom:14px;display:block;}
-.evtx-card h3{font-size:19px;color:var(--p);margin-bottom:8px;}
-.evtx-card p{color:var(--muted);font-size:15px;}
-/* Split */
-.evtx-split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
-@media(max-width:900px){.evtx-split{grid-template-columns:1fr;gap:32px;}}
-.evtx-split h2{font-size:clamp(24px,3vw,31px);color:var(--p);margin-bottom:18px;}
-.evtx-split h2 .pc{color:var(--accent);}
-.evtx-split .lead{color:var(--muted);font-size:16px;margin-bottom:30px;}
-.evtx-checklist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
-.evtx-checklist li{display:flex;align-items:flex-start;gap:14px;}
-.evtx-checklist .ic{flex:none;width:34px;height:34px;border-radius:50%;background:var(--p);color:var(--accent2);display:grid;place-items:center;margin-top:2px;}
-.evtx-checklist .ic svg{width:18px;height:18px;}
-.evtx-checklist h4{font-size:15px;color:var(--ink);margin-bottom:3px;font-family:var(--font-display);}
-.evtx-checklist p{color:var(--muted);font-size:15px;margin:0;}
-.evtx-imgcard{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);height:460px;}
-.evtx-imgcard>img{width:100%;height:100%;object-fit:cover;}
-.evtx-imgcard__ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(12,38,22,.85),transparent 60%);display:flex;align-items:flex-end;padding:26px;}
-.evtx-imgcard__ov .box{background:rgba(255,255,255,.94);padding:20px;border-radius:12px;width:100%;}
-.evtx-imgcard__ov h3{color:var(--p);font-size:19px;margin-bottom:6px;}
-.evtx-imgcard__ov p{color:var(--muted);margin:0;font-size:15px;}
-/* Curriculum bento */
-.evtx-bento{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;grid-auto-rows:200px;}
-@media(max-width:900px){.evtx-bento{grid-template-columns:1fr;grid-auto-rows:auto;}}
-.evtx-bento>div{border-radius:18px;padding:28px;display:flex;flex-direction:column;justify-content:center;}
-.b-8-2{grid-column:span 8;grid-row:span 2;}.b-4{grid-column:span 4;}.b-6{grid-column:span 6;}
-@media(max-width:900px){.b-8-2,.b-4,.b-6{grid-column:auto;grid-row:auto;}}
-.b-dark{background:var(--p);color:#fff;position:relative;overflow:hidden;justify-content:space-between;}
-.b-dark h3{color:var(--accent2);font-size:26px;margin-bottom:14px;position:relative;z-index:1;}
-.b-dark ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;font-size:16px;position:relative;z-index:1;}
-.b-dark ul li{display:flex;align-items:center;gap:10px;}
-.b-dark ul svg{width:18px;height:18px;color:var(--accent2);}
-.b-dark__bgic{position:absolute;right:-26px;top:-26px;width:240px;height:240px;opacity:.1;pointer-events:none;color:#fff;}
-.b-white{background:#fff;border:1px solid var(--line);}
-.b-white svg{width:32px;height:32px;color:var(--accent);margin-bottom:12px;display:block;}
-.b-white h3{font-size:19px;color:var(--p);margin-bottom:6px;}.b-white p{color:var(--muted);margin:0;font-size:14px;}
-.b-gl{background:var(--soft);border:1px solid var(--line);}
-.b-gl h3{color:var(--p);font-size:19px;margin-bottom:6px;}.b-gl p{color:var(--muted);margin:0;font-size:14px;}
-.b-lime{background:var(--accent2);color:var(--navy-900);}
-.b-lime h3{font-size:19px;margin-bottom:6px;}.b-lime p{margin:0;font-size:14px;}
-.b-syll{margin-top:20px;position:relative;z-index:1;}
-/* Live hands-on */
-.evtx-live__img{position:relative;height:400px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);}
-.evtx-live__img img{width:100%;height:100%;object-fit:cover;}
-.evtx-live__badge{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.94);padding:7px 14px;border-radius:8px;color:var(--p);font-weight:600;font-size:13px;}
-.evtx-live__badge b{color:var(--accent);}
-.evtx-hl{background:var(--soft);padding:20px;border-radius:14px;border:1px solid var(--line);margin-bottom:26px;}
-.evtx-hl h4{color:var(--p);font-size:19px;margin-bottom:6px;}
-.evtx-hl p{color:var(--muted);margin:0;font-size:15px;}
-/* Business */
-.evtx-biz{background:var(--p);color:#fff;position:relative;overflow:hidden;}
-.evtx-biz__gridbg{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:40px 40px;}
-.evtx-biz__inner{position:relative;text-align:center;}
-.evtx-tag{display:inline-block;background:rgba(156,192,111,.18);color:var(--accent2);padding:5px 15px;border-radius:9999px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px;border:1px solid rgba(156,192,111,.4);}
-.evtx-biz h2{font-size:clamp(24px,3vw,31px);margin-bottom:18px;color:#fff;}
-.evtx-biz__lead{color:rgba(255,255,255,.82);font-size:16px;max-width:680px;margin:0 auto 42px;}
-.evtx-glass{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;text-align:left;}
-.evtx-glass>div{background:rgba(255,255,255,.06);padding:28px 26px;border-radius:16px;border:1px solid rgba(255,255,255,.14);transition:transform .25s,background .25s,border-color .25s;}
-.evtx-glass>div:hover{transform:translateY(-4px);background:rgba(255,255,255,.1);border-color:rgba(156,192,111,.5);}
-.evtx-glass__ic{width:52px;height:52px;border-radius:14px;background:rgba(156,192,111,.16);display:grid;place-items:center;margin-bottom:18px;}
-.evtx-glass__ic svg{width:26px;height:26px;color:var(--accent2);}
-.evtx-glass h3{font-size:19px;margin-bottom:8px;color:#fff;}
-.evtx-glass p{color:rgba(255,255,255,.8);margin:0;font-size:15px;line-height:1.55;}
-/* Faculty */
-.evtx-fac__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px;}
-.evtx-fac{background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;}
-.evtx-fac:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
-.evtx-fac__media{height:250px;}
-.evtx-fac__media img{width:100%;height:100%;object-fit:cover;object-position:top center;}
-.evtx-fac__mono{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--navy-800));color:#fff;font-family:var(--font-display);font-size:46px;font-weight:700;}
-.evtx-fac__body{padding:20px;flex:1;display:flex;flex-direction:column;}
-.evtx-fac__body h3{font-size:19px;color:var(--p);margin-bottom:3px;}
-.evtx-fac__role{color:var(--accent);font-weight:600;font-size:13px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line);font-family:var(--font-sans);}
-.evtx-fac ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;flex:1;}
-.evtx-fac ul li{display:flex;gap:7px;color:var(--muted);font-size:14px;}
-.evtx-fac ul li b{color:var(--accent);font-weight:700;}
-/* VIP */
-.evtx-vip{background:var(--pc);color:#fff;padding:58px 0;}
-.evtx-vip__inner{display:flex;align-items:center;gap:40px;flex-wrap:wrap;}
-.evtx-vip__ic{flex:1 1 160px;text-align:center;}
-.evtx-vip__ic svg{width:92px;height:92px;color:var(--accent2);margin:0 auto;}
-.evtx-vip__body{flex:2 1 380px;}
-.evtx-vip h2{font-size:clamp(23px,3vw,29px);margin-bottom:14px;color:#fff;}
-.evtx-vip__body>p{color:rgba(255,255,255,.9);font-size:16px;margin-bottom:20px;}
-.evtx-vip__list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;}
-.evtx-vip__list div{display:flex;align-items:center;gap:10px;font-size:15px;}
-.evtx-vip__list svg{width:20px;height:20px;color:var(--accent2);}
-/* Pricing */
-.evtx-price__banner{margin-top:14px;display:inline-flex;align-items:center;gap:8px;background:#fff;padding:7px 20px;border-radius:9999px;border:1px solid var(--line);}
-.evtx-price__banner svg{width:15px;height:15px;color:var(--accent);}
-.evtx-price__banner p{font-size:12px;color:var(--p);letter-spacing:.02em;margin:0;}
-.evtx-price__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;align-items:stretch;}
-.evtx-price{background:#fff;border-radius:16px;padding:26px 24px;border:1px solid var(--line);display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s;margin:0;}
-.evtx-price:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
-.evtx-price h3{font-size:19px;color:var(--p);margin-bottom:6px;}
-.evtx-price__amt{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--p);margin-bottom:20px;}
-.evtx-price ul{list-style:none;padding:0;margin:0 0 24px;flex:1;display:flex;flex-direction:column;gap:12px;}
-.evtx-price ul li{display:flex;align-items:flex-start;gap:8px;color:var(--muted);font-size:15px;}
-.evtx-price ul li svg{width:19px;height:19px;color:var(--accent);margin-top:1px;}
-.evtx-price ul li.no{opacity:.55;}
-.evtx-price ul li.no svg{color:var(--muted);}
-.evtx-price__badge{position:absolute;top:0;right:0;background:var(--accent);color:#fff;padding:4px 14px;border-bottom-left-radius:8px;font-size:11px;}
-.evtx-price--vip{background:var(--p);border:2px solid var(--accent2);box-shadow:var(--shadow-lg);transform:translateY(-12px);}
-@media(max-width:900px){.evtx-price--vip{transform:none;}}
-.evtx-price--vip h3{color:#fff;}.evtx-price--vip .evtx-price__amt{color:var(--accent2);}
-.evtx-price--vip ul li{color:rgba(255,255,255,.9);}.evtx-price--vip ul li svg{color:var(--accent2);}
-.evtx-price--vip .evtx-price__badge{background:var(--accent2);color:var(--navy-900);font-weight:700;}
-.evtx-price__btn{width:100%;justify-content:center;}
-@media(max-width:900px){.evtx-sec{padding:48px 0;}.evtx-imgcard{height:340px;}.evtx-live__img{height:300px;}.evtx-hero__inner{padding:96px 0 48px;}}
+.evtx-sec{padding:72px 0;}
+.evx-eyebrow{display:block;color:var(--accent);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px;}
+.evx-head{text-align:center;max-width:680px;margin:0 auto 44px;}
+.evx-head h2{font-size:clamp(25px,3.2vw,32px);color:var(--p);margin-bottom:12px;}
+.evx-head p{color:var(--muted);font-size:16px;}
+/* Buttons (site pill style) */
+.evx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-sans);font-weight:600;font-size:14px;padding:13px 28px;border-radius:9999px;border:2px solid transparent;cursor:pointer;transition:.2s;text-decoration:none;text-align:center;}
+.evx-btn svg{width:17px;height:17px;}
+.evx-btn--primary{background:var(--accent);color:#fff;}.evx-btn--primary:hover{background:var(--p);}
+.evx-btn--outline{background:transparent;border-color:var(--accent);color:var(--accent);}.evx-btn--outline:hover{background:var(--soft);}
+.evx-btn--light{background:#fff;color:var(--p);}.evx-btn--light:hover{background:var(--soft);}
+.evx-btn--outline-light{background:transparent;border-color:rgba(255,255,255,.55);color:#fff;}.evx-btn--outline-light:hover{background:rgba(255,255,255,.12);}
+.evx-btn--dark{background:var(--pd);color:#fff;}.evx-btn--dark:hover{background:var(--accent);}
+.evx-btn--full{width:100%;}
+/* 1. Hero */
+.evx-hero{position:relative;background:var(--pd);color:#fff;overflow:hidden;}
+.evx-hero__bg{position:absolute;inset:0;z-index:0;}
+.evx-hero__bg img{width:100%;height:100%;object-fit:cover;opacity:.30;mix-blend-mode:overlay;}
+.evx-hero__bg::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,var(--pd) 0%,rgba(12,38,22,.6) 55%,rgba(12,38,22,.35) 100%);}
+.evx-hero__in{position:relative;z-index:2;max-width:900px;margin:0 auto;text-align:center;padding:92px 22px 72px;}
+.evx-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--accent2);padding:8px 16px;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+.evx-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 0 rgba(46,125,70,.5);animation:evxpulse 2s infinite;}
+@keyframes evxpulse{0%{box-shadow:0 0 0 0 rgba(46,125,70,.5);}70%{box-shadow:0 0 0 8px rgba(46,125,70,0);}100%{box-shadow:0 0 0 0 rgba(46,125,70,0);}}
+.evx-hero h1{font-size:clamp(30px,5.2vw,50px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:#fff;max-width:18ch;margin:22px auto 20px;}
+.evx-hero__sub{font-size:clamp(16px,2vw,18px);color:rgba(255,255,255,.9);max-width:60ch;margin:0 auto 34px;line-height:1.6;}
+.evx-hero__cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;}
+.evx-hero__strip{position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.28);}
+.evx-hero__strip-in{max-width:1160px;margin:0 auto;padding:18px 22px;display:flex;flex-wrap:wrap;gap:14px 30px;align-items:center;justify-content:center;}
+.evx-hero__strip .lbl{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:600;}
+.evx-avatars{display:flex;}
+.evx-avatars img,.evx-avatars .mono{width:40px;height:40px;border-radius:50%;border:2px solid var(--accent);margin-left:-12px;}
+.evx-avatars img{object-fit:cover;object-position:top center;}
+.evx-avatars :first-child{margin-left:0;}
+.evx-avatars .mono{display:grid;place-items:center;background:var(--pc);color:#fff;font-size:12px;font-weight:700;font-family:var(--font-display);}
+.evx-hero__strip .cnt{font-size:14px;color:#fff;font-weight:600;}
+/* 2. Key details */
+.evx-keys{padding:56px 0;background:var(--surface);}
+.evx-keys__card{background:var(--pd);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+.evx-keycol{padding:34px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;border-left:1px solid rgba(255,255,255,.08);}
+.evx-keycol:first-child{border-left:none;}
+@media(max-width:900px){.evx-keycol{border-left:none;border-top:1px solid rgba(255,255,255,.08);}.evx-keycol:first-child{border-top:none;}}
+.evx-keycol__ic{width:56px;height:56px;border-radius:50%;background:rgba(46,125,70,.2);border:1px solid rgba(46,125,70,.4);color:var(--accent2);display:grid;place-items:center;margin-bottom:18px;}
+.evx-keycol__ic svg{width:26px;height:26px;}
+.evx-keycol .lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:8px;}
+.evx-keycol h3{font-size:20px;color:#fff;font-weight:700;}
+.evx-keycol p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;}
+/* 3. Why */
+.evx-why{background:#fff;}
+.evx-why__grid{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center;}
+@media(max-width:900px){.evx-why__grid{grid-template-columns:1fr;gap:40px;}}
+.evx-why h2{font-size:clamp(25px,3.2vw,30px);color:var(--p);margin-bottom:16px;}
+.evx-why__lead{color:var(--muted);font-size:17px;margin-bottom:28px;}
+.evx-feat{display:flex;gap:16px;padding:20px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:16px;transition:transform .25s;}
+.evx-feat:hover{transform:translateY(-3px);}
+.evx-feat__ic{flex:none;width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;}
+.evx-feat__ic svg{width:24px;height:24px;}
+.evx-feat h4{font-size:16px;color:var(--p);margin-bottom:4px;}
+.evx-feat p{font-size:14px;color:var(--muted);margin:0;}
+.evx-why__media{position:relative;}
+.evx-why__media img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow-lg);}
+.evx-why__badge{position:absolute;left:-16px;bottom:-16px;background:var(--pd);color:#fff;border-radius:14px;padding:18px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-lg);}
+.evx-why__badge svg{width:34px;height:34px;color:var(--accent2);}
+.evx-why__badge b{display:block;font-family:var(--font-display);font-size:17px;}
+.evx-why__badge span{font-size:13px;color:rgba(255,255,255,.65);}
+@media(max-width:600px){.evx-why__badge{position:static;margin-top:18px;}}
+/* 4. Stats */
+.evx-stats{background:var(--soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.evx-stats__in{max-width:820px;margin:0 auto;text-align:center;}
+.evx-chip{display:inline-block;background:rgba(46,125,70,.1);color:var(--accent);padding:5px 16px;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px;}
+.evx-stats h2{font-size:clamp(25px,3.4vw,32px);color:var(--p);margin-bottom:14px;}
+.evx-stats__lead{color:var(--muted);font-size:17px;margin-bottom:36px;}
+.evx-stats__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:20px;}
+.evx-stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:32px 20px;box-shadow:var(--shadow);}
+.evx-stat b{display:block;font-family:var(--font-display);font-size:44px;font-weight:700;color:var(--accent);line-height:1;margin-bottom:8px;}
+.evx-stat span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;}
+/* 5. Curriculum bento */
+.evx-bento{display:grid;grid-template-columns:repeat(12,1fr);gap:22px;}
+@media(max-width:900px){.evx-bento{grid-template-columns:1fr;}}
+.evx-b8{grid-column:span 8;}.evx-b4{grid-column:span 4;}
+@media(max-width:900px){.evx-b8,.evx-b4{grid-column:auto;}}
+.evx-mod__ic{width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;margin-bottom:18px;}
+.evx-mod__ic svg{width:26px;height:26px;}
+.evx-mod--split{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;}
+@media(max-width:700px){.evx-mod--split{flex-direction:column;}}
+.evx-mod__body{padding:30px;flex:1;}
+.evx-mod__body h3{font-size:20px;color:var(--p);margin-bottom:10px;}
+.evx-mod__body>p{font-size:14px;color:var(--muted);margin-bottom:16px;}
+.evx-mod__body ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
+.evx-mod__body ul li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);}
+.evx-mod__body ul li svg{width:17px;height:17px;color:var(--accent);}
+.evx-mod__img{flex:0 0 42%;overflow:hidden;background:var(--soft);}
+.evx-mod__img img{width:100%;height:100%;min-height:230px;object-fit:cover;}
+.evx-mod--dark{background:var(--pd);color:#fff;border-radius:18px;padding:30px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow);}
+.evx-mod--dark .evx-mod__ic{background:rgba(255,255,255,.1);color:var(--accent2);}
+.evx-mod--dark h3{font-size:20px;margin-bottom:10px;}
+.evx-mod--dark p{font-size:14px;color:rgba(255,255,255,.72);}
+.evx-mod--dark .foot{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);font-weight:700;}
+.evx-mod--soft{background:var(--soft);border:1px solid rgba(46,125,70,.2);border-radius:18px;padding:30px;display:flex;flex-direction:column;justify-content:space-between;}
+.evx-mod--soft .evx-mod__ic{background:rgba(46,125,70,.12);}
+.evx-mod--soft h3{font-size:20px;color:var(--p);margin-bottom:10px;}
+.evx-mod--soft p{font-size:14px;color:var(--muted);}
+.evx-badges{display:flex;gap:6px;margin-top:16px;}
+.evx-badges span{width:34px;height:34px;border-radius:50%;background:rgba(46,125,70,.15);border:2px solid #fff;display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--accent);}
+.evx-mod--feat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:22px;box-shadow:var(--shadow);}
+.evx-mod--feat h3{font-size:20px;color:var(--p);margin-bottom:6px;}
+.evx-mod--feat p{font-size:14px;color:var(--muted);margin:0;max-width:60ch;}
+.evx-tag{display:inline-block;background:var(--accent);color:#fff;padding:4px 12px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+/* 6. Capacity */
+.evx-cap{background:var(--pd);color:#fff;}
+.evx-cap__grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+@media(max-width:900px){.evx-cap__grid{grid-template-columns:1fr;gap:34px;}}
+.evx-cap__img{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:var(--shadow-lg);}
+.evx-cap__img img{width:100%;height:100%;min-height:320px;object-fit:cover;}
+.evx-cap h2{font-size:clamp(26px,3.6vw,36px);color:#fff;margin-bottom:16px;}
+.evx-cap__lead{color:rgba(255,255,255,.72);font-size:16px;margin-bottom:26px;}
+.evx-cap ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:14px;}
+.evx-cap ul li{display:flex;align-items:center;gap:12px;color:#fff;font-size:16px;}
+.evx-cap ul li svg{width:22px;height:22px;color:var(--accent2);}
+/* 7. Business */
+.evx-biz{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.evx-biz__grid{display:grid;grid-template-columns:4fr 8fr;gap:34px;align-items:stretch;}
+@media(max-width:900px){.evx-biz__grid{grid-template-columns:1fr;}}
+.evx-biz__head{display:flex;flex-direction:column;justify-content:center;}
+.evx-biz__head h2{font-size:clamp(25px,3.2vw,30px);color:var(--p);margin-bottom:16px;}
+.evx-biz__head>p{color:var(--muted);font-size:16px;margin-bottom:22px;}
+.evx-biz__roi{display:flex;align-items:center;gap:14px;padding:16px;background:#fff;border:1px solid var(--line);border-radius:12px;}
+.evx-biz__roi .ic{flex:none;width:40px;height:40px;border-radius:50%;background:var(--soft);color:var(--accent);display:grid;place-items:center;}
+.evx-biz__roi .ic svg{width:20px;height:20px;}
+.evx-biz__roi b{font-size:15px;color:var(--p);}
+.evx-biz__cards{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+@media(max-width:700px){.evx-biz__cards{grid-template-columns:1fr;}}
+.evx-bcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;transition:transform .25s,box-shadow .25s;}
+.evx-bcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.evx-bcard__ic{width:48px;height:48px;border-radius:12px;background:var(--soft);color:var(--accent);display:grid;place-items:center;margin-bottom:16px;}
+.evx-bcard__ic svg{width:24px;height:24px;}
+.evx-bcard h4{font-size:19px;color:var(--p);margin-bottom:8px;}
+.evx-bcard p{font-size:14px;color:var(--muted);margin:0;}
+.evx-bcard--wide{grid-column:span 2;background:var(--pd);color:#fff;display:flex;flex-wrap:wrap;align-items:center;gap:22px;}
+@media(max-width:700px){.evx-bcard--wide{grid-column:auto;}}
+.evx-bcard--wide .evx-bcard__ic{width:60px;height:60px;background:rgba(255,255,255,.1);color:var(--accent2);margin:0;}
+.evx-bcard--wide h4{color:#fff;margin-bottom:6px;}
+.evx-bcard--wide p{color:rgba(255,255,255,.72);flex:1;min-width:220px;}
+.evx-bcard--wide .pill{background:rgba(46,125,70,.2);border:1px solid rgba(46,125,70,.4);color:var(--accent2);padding:8px 16px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+/* 8. Faculty */
+.evx-fac__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px;}
+.evx-fac{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s;}
+.evx-fac:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+.evx-fac__media{height:280px;overflow:hidden;background:var(--soft);}
+.evx-fac__media img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:grayscale(1);transition:filter .4s;}
+.evx-fac:hover .evx-fac__media img{filter:grayscale(0);}
+.evx-fac__mono{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--navy-800));color:#fff;font-family:var(--font-display);font-size:48px;font-weight:700;}
+.evx-fac__body{padding:22px;text-align:center;border-top:1px solid var(--soft);}
+.evx-fac__body h4{font-size:19px;color:var(--p);}
+.evx-fac__role{font-size:13px;color:var(--accent);font-weight:600;margin:4px 0 8px;}
+.evx-fac__bio{font-size:13px;color:var(--muted);margin:0;line-height:1.5;}
+/* 9. VIP */
+.evx-vip{background:var(--pd);color:#fff;text-align:center;}
+.evx-vip__in{max-width:840px;margin:0 auto;}
+.evx-vip h2{font-size:clamp(26px,3.6vw,38px);color:#fff;margin:16px 0;}
+.evx-vip__lead{color:rgba(255,255,255,.72);font-size:17px;margin-bottom:40px;}
+.evx-vip__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;text-align:left;}
+.evx-vipc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:26px;}
+.evx-vipc svg{width:30px;height:30px;color:var(--accent2);margin-bottom:14px;}
+.evx-vipc h4{font-size:16px;color:#fff;margin-bottom:6px;}
+.evx-vipc p{font-size:14px;color:rgba(255,255,255,.65);margin:0;}
+.evx-badge2{display:inline-block;background:var(--accent);color:#fff;padding:6px 16px;border-radius:9999px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+/* 10. Pricing */
+.evx-price{background:var(--surface);}
+.evx-price__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;align-items:stretch;}
+.evx-pc{background:#fff;border:1px solid var(--line);border-radius:16px;padding:30px 26px;display:flex;flex-direction:column;position:relative;margin:0;box-shadow:var(--shadow);}
+.evx-pc__label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px;}
+.evx-pc h3{font-size:21px;color:var(--p);margin-bottom:6px;}
+.evx-pc__amt{font-family:var(--font-display);font-size:34px;font-weight:700;color:var(--p);margin-bottom:22px;}
+.evx-pc ul{list-style:none;padding:0;margin:0 0 24px;flex:1;display:flex;flex-direction:column;gap:13px;}
+.evx-pc ul li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--muted);}
+.evx-pc ul li svg{width:18px;height:18px;color:var(--accent);flex:none;margin-top:1px;}
+.evx-pc ul li.no{color:#b4453f;}
+.evx-pc ul li.no svg{color:#b4453f;}
+.evx-pc--feat{border:2px solid var(--accent);box-shadow:var(--shadow-lg);}
+.evx-pc__ribbon{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:5px 16px;border-radius:9999px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.evx-pc--vip{background:var(--pd);color:#fff;}
+.evx-pc--vip h3{color:#fff;}.evx-pc--vip .evx-pc__amt{color:#fff;}
+.evx-pc--vip .evx-pc__label{color:var(--accent2);}
+.evx-pc--vip .evx-pc__note{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:14px;}
+.evx-pc--vip ul li{color:rgba(255,255,255,.72);}.evx-pc--vip ul li svg{color:var(--accent2);}
+.evx-price__note{margin-top:40px;padding-top:26px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;}
+.evx-price__note b{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--p);}
+.evx-price__note span{font-size:13px;color:var(--muted);font-style:italic;}
+@media(max-width:900px){.evtx-sec{padding:52px 0;}.evx-hero__in{padding-top:72px;}}
 </style>
 
 <div class="evtx">
 
   <!-- 1. HERO -->
-  <header class="evtx-hero">
-    <div class="evtx-hero__bg">{% if hero_image %}<img src="{% static hero_image %}" alt="">{% endif %}</div>
-    <div class="evtx-c evtx-hero__inner">
-      <div class="evtx-hero__content">
-        <span class="evtx-badge">{% icon 'star' 'evtx-ic' %} LIMITED SEATS: {{ event.capacity }} ONLY</span>
-        <p class="evtx-hero__collab">Hands-On Regenerative Medicine Group</p>
-        <h1>HANDS-ON REGENERATIVE <br><span class="lime">MEDICINE TRAINING</span></h1>
-        <p class="evtx-hero__sub">Advanced Interventional Injection &amp; Longevity Medicine Workshop</p>
-        <ul class="evtx-hero__checks">
-          <li>{% icon 'check' 'evtx-ic' %} Master Ultrasound-Guided Injections</li>
-          <li>{% icon 'check' 'evtx-ic' %} Advanced Stem Cell &amp; PRP Protocols</li>
-          <li>{% icon 'check' 'evtx-ic' %} Longevity &amp; Aesthetic Applications</li>
-        </ul>
-        <div class="evtx-hero__cta">
-          <a class="evtx-btn evtx-btn--lime" href="#evtx-pricing">Reserve Your Seat Today! {% icon 'arrow' 'evtx-ic' %}</a>
-          <p class="evtx-hero__meta">{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }} &nbsp;|&nbsp; {{ event.location }}</p>
-        </div>
-        <div class="evtx-hero__faculty">
-          <div class="evtx-avatars">
-            {% if fac_syed %}<img src="{{ fac_syed }}" alt="">{% else %}<span class="mono">SH</span>{% endif %}
-            <span class="mono">AK</span>
-            {% if fac_rachel %}<img src="{{ fac_rachel }}" alt="">{% else %}<span class="mono">RG</span>{% endif %}
-            <span class="mono">KB</span>
-            <span class="mono">NC</span>
-            <span class="mono more">+More</span>
-          </div>
-          <div class="t"><small>Learn directly from</small><b>World-Class Faculty</b></div>
-        </div>
-      </div>
-
-      <!-- Key details as a glass overlay bar inside the hero -->
-      <div class="evtx-hero__details" id="overview">
-          <div class="evtx-hd">
-            <span class="evtx-hd__ic">{% icon 'calendar' 'evtx-ic' %}</span>
-            <div><h3>Date</h3><p>{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</p></div>
-          </div>
-          <div class="evtx-hd">
-            <span class="evtx-hd__ic">{% icon 'pin' 'evtx-ic' %}</span>
-            <div><h3>Location</h3><p>{{ event.location }}</p></div>
-          </div>
-          <div class="evtx-hd">
-            <span class="evtx-hd__ic">{% icon 'users' 'evtx-ic' %}</span>
-            <div><h3>Availability</h3><p>Strictly {{ event.capacity }} Seats</p></div>
-          </div>
-          <div class="evtx-hd">
-            <span class="evtx-hd__ic">{% icon 'mail' 'evtx-ic' %}</span>
-            <div><h3>Contact</h3><p class="evtx-hd__contact"><a href="mailto:fathima@brockwellhealthcare.com">fathima@brockwellhealthcare.com</a><a href="tel:7253122125">725-312-2125</a></p></div>
-          </div>
+  <section class="evx-hero">
+    <div class="evx-hero__bg">{% if hero_image %}<img src="{% static hero_image %}" alt="">{% endif %}</div>
+    <div class="evx-hero__in">
+      <span class="evx-badge"><span class="dot"></span> Limited Enrollment</span>
+      <h1>Hands-On Regenerative Medicine Training for Modern Physicians</h1>
+      <p class="evx-hero__sub">A rigorous, immersive training experience. Elevate your practice with evidence-based protocols in PRP, BMAC, and advanced ultrasound guidance.</p>
+      <div class="evx-hero__cta">
+        <a class="evx-btn evx-btn--primary" href="#pricing">Reserve Your Seat Today! {% icon 'arrow' 'evx-ic' %}</a>
+        <a class="evx-btn evx-btn--outline-light" href="#curriculum">View Syllabus</a>
       </div>
     </div>
-  </header>
-
-  <!-- 3. WHY BROCKWELL ACADEMY -->
-  <section class="evtx-sec evtx-bg-surface" id="why-us">
-    <div class="evtx-c">
-      <div class="evtx-head">
-        <h2>Why Brockwell Academy?</h2>
-        <p>Elevating the standard of regenerative medicine education through unparalleled hands-on experience and expert mentorship.</p>
+    <div class="evx-hero__strip">
+      <div class="evx-hero__strip-in">
+        <span class="lbl">Learn from industry pioneers</span>
+        <div class="evx-avatars">
+          {% if fac_syed %}<img src="{{ fac_syed }}" alt="">{% else %}<span class="mono">SH</span>{% endif %}
+          <span class="mono">AK</span>
+          {% if fac_rachel %}<img src="{{ fac_rachel }}" alt="">{% else %}<span class="mono">RG</span>{% endif %}
+          <span class="mono">KB</span>
+        </div>
+        <span class="cnt">4 World-Class Instructors</span>
       </div>
-      <div class="evtx-grid3">
-        <div class="evtx-card">{% icon 'award' 'evtx-ic' %}<h3>Advanced Training</h3><p>Move beyond basic protocols. Master complex, high-yield regenerative procedures that set your practice apart.</p></div>
-        <div class="evtx-card">{% icon 'flask' 'evtx-ic' %}<h3>Clinical Innovation</h3><p>Stay ahead of the curve with the latest evidence-based techniques in orthobiologics and aesthetic regenerative medicine.</p></div>
-        <div class="evtx-card">{% icon 'sparkles' 'evtx-ic' %}<h3>Luxury Experience</h3><p>Enjoy a premium learning environment in Las Vegas, meticulously designed for comfort, focus, and high-level networking.</p></div>
-        <div class="evtx-card">{% icon 'users' 'evtx-ic' %}<h3>Small Group Ratios</h3><p>Guaranteed close supervision and personalized feedback with our strict 1:5 instructor-to-student ratio during practicums.</p></div>
-        <div class="evtx-card">{% icon 'pulse' 'evtx-ic' %}<h3>Practice Growth</h3><p>Learn not just the clinical skills, but the proven business systems to successfully integrate these high-revenue procedures.</p></div>
-        <div class="evtx-card">{% icon 'molecule' 'evtx-ic' %}<h3>Elite Network</h3><p>Join an exclusive alumni community of forward-thinking physicians leading the regenerative medicine revolution.</p></div>
+    </div>
+  </section>
+
+  <!-- 2. KEY DETAILS -->
+  <section class="evx-keys" id="overview">
+    <div class="evtx-c">
+      <div class="evx-keys__card">
+        <div class="evx-keycol">
+          <span class="evx-keycol__ic">{% icon 'calendar' 'evx-ic' %}</span>
+          <span class="lbl">Event Date</span>
+          <h3>{{ event.start|date:"M j" }}–{{ event.end|date:"j, Y" }}</h3>
+          <p>Hands-On Clinical Intensive</p>
+        </div>
+        <div class="evx-keycol">
+          <span class="evx-keycol__ic">{% icon 'pin' 'evx-ic' %}</span>
+          <span class="lbl">Location</span>
+          <h3>{{ event.location }}</h3>
+          <p>Brockwell Training Venue</p>
+        </div>
+        <div class="evx-keycol">
+          <span class="evx-keycol__ic">{% icon 'users' 'evx-ic' %}</span>
+          <span class="lbl">Availability</span>
+          <h3>{{ event.capacity }} Providers</h3>
+          <p>Strictly Limited Seats</p>
+        </div>
+        <div class="evx-keycol">
+          <span class="evx-keycol__ic">{% icon 'award' 'evx-ic' %}</span>
+          <span class="lbl">Format</span>
+          <h3>Small-Group</h3>
+          <p>Instructor-Led Training</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. WHY BROCKWELL -->
+  <section class="evtx-sec evx-why">
+    <div class="evtx-c evx-why__grid">
+      <div>
+        <span class="evx-eyebrow">The Brockwell Advantage</span>
+        <h2>Why Train at the Brockwell Simulation Center?</h2>
+        <p class="evx-why__lead">The Brockwell center offers an unparalleled clinical environment designed specifically for advanced medical procedures, bridging the gap between theory and practical application.</p>
+        <div class="evx-feat"><span class="evx-feat__ic">{% icon 'scan' 'evx-ic' %}</span><div><h4>State-of-the-art ultrasound suites</h4><p>Access to the latest high-resolution MSK imaging technology.</p></div></div>
+        <div class="evx-feat"><span class="evx-feat__ic">{% icon 'flask' 'evx-ic' %}</span><div><h4>Fully equipped cadaver labs</h4><p>Realistic anatomical environments for injection practice.</p></div></div>
+        <div class="evx-feat"><span class="evx-feat__ic">{% icon 'molecule' 'evx-ic' %}</span><div><h4>Dedicated biologic processing stations</h4><p>Learn end-to-end preparation of orthobiologic materials.</p></div></div>
+      </div>
+      <div class="evx-why__media">
+        {% if card_image %}<img src="{% static card_image %}" alt="Clinical simulation environment">{% endif %}
+        <div class="evx-why__badge">{% icon 'award' 'evx-ic' %}<div><b>Gold Standard</b><span>Clinical Simulation</span></div></div>
       </div>
     </div>
   </section>
 
   <!-- 4. NOT A LECTURE -->
-  <section class="evtx-sec evtx-bg-white">
-    <div class="evtx-c evtx-split">
-      <div>
-        <h2>This Is <span class="pc">NOT</span> a Lecture-Based Course</h2>
-        <p class="lead">We believe in experiential learning. You will spend the majority of your time practicing techniques on real models and anatomical specimens under the direct supervision of industry pioneers.</p>
-        <ul class="evtx-checklist">
-          <li><span class="ic">{% icon 'check' 'evtx-ic' %}</span><div><h4>Precision Needle Tracking</h4><p>Master real-time ultrasound visualization for pinpoint accuracy.</p></div></li>
-          <li><span class="ic">{% icon 'check' 'evtx-ic' %}</span><div><h4>Biologics Handling</h4><p>Expertise in the proper preparation and handling of PRP and Stem Cells.</p></div></li>
-          <li><span class="ic">{% icon 'check' 'evtx-ic' %}</span><div><h4>Complication Management</h4><p>Rigorous safety protocols and rapid response training.</p></div></li>
-        </ul>
-      </div>
-      <div class="evtx-imgcard">
-        {% if card_image %}<img src="{% static card_image %}" alt="Hands-on training session">{% endif %}
-        <div class="evtx-imgcard__ov"><div class="box"><h3>Immersive Learning</h3><p>Translate theory into immediate practice with extensive hands-on sessions.</p></div></div>
+  <section class="evtx-sec evx-stats">
+    <div class="evtx-c evx-stats__in">
+      <span class="evx-chip">The Difference</span>
+      <h2>NOT a Lecture-Based Course</h2>
+      <p class="evx-stats__lead">Many courses spend days in a dark auditorium clicking through slides. We believe real confidence is built with a probe in one hand and a needle in the other.</p>
+      <div class="evx-stats__grid">
+        <div class="evx-stat"><b>60%</b><span>Hands-on Lab Time</span></div>
+        <div class="evx-stat"><b>4:1</b><span>Student to Instructor</span></div>
+        <div class="evx-stat"><b>100%</b><span>Actionable Protocols</span></div>
       </div>
     </div>
   </section>
 
-  <!-- 5. WHAT YOU WILL LEARN -->
-  <section class="evtx-sec evtx-mesh" id="curriculum">
+  <!-- 5. CURRICULUM -->
+  <section class="evtx-sec evx-why" id="curriculum">
     <div class="evtx-c">
-      <div class="evtx-head"><h2>What You Will Learn</h2><p>A comprehensive curriculum covering the spectrum of modern regenerative therapies.</p></div>
-      <div class="evtx-bento">
-        <div class="b-8-2 b-dark">
-          {% icon 'stethoscope' 'b-dark__bgic' %}
-          <div>
-            <h3>Core Modalities</h3>
+      <div class="evx-head">
+        <span class="evx-eyebrow">Curriculum Overview</span>
+        <h2>Core Competencies &amp; Curriculum</h2>
+        <p>An evidence-based structural progression ensuring complete clinical confidence from consultation to procedural execution.</p>
+      </div>
+      <div class="evx-bento">
+        <div class="evx-b8 evx-mod--split">
+          <div class="evx-mod__body">
+            <span class="evx-mod__ic">{% icon 'flask' 'evx-ic' %}</span>
+            <h3>Biologic Sciences &amp; Foundations</h3>
+            <p>Deep dive into the cellular mechanisms of PRP and BMAC. Understand tissue regeneration pathways and patient selection criteria.</p>
             <ul>
-              <li>{% icon 'arrow' 'evtx-ic' %} Platelet-Rich Plasma (PRP) Optimization</li>
-              <li>{% icon 'arrow' 'evtx-ic' %} Bone Marrow Aspirate Concentrate (BMAC)</li>
-              <li>{% icon 'arrow' 'evtx-ic' %} Adipose-Derived Stem Cells</li>
-              <li>{% icon 'arrow' 'evtx-ic' %} Exosomes and Peptide Therapy</li>
+              <li>{% icon 'check' 'evx-ic' %} PRP processing protocols</li>
+              <li>{% icon 'check' 'evx-ic' %} BMAC harvesting techniques</li>
+              <li>{% icon 'check' 'evx-ic' %} Adipose tissue considerations</li>
             </ul>
           </div>
-          <div class="b-syll"><a class="evtx-btn evtx-btn--lime" href="#evtx-pricing">View Full Syllabus {% icon 'arrow' 'evtx-ic' %}</a></div>
+          <div class="evx-mod__img"><img src="{% static 'img/about/about-2.webp' %}" alt="Laboratory setup"></div>
         </div>
-        <div class="b-4 b-white">{% icon 'bone' 'evtx-ic' %}<h3>Major Joints</h3><p>Shoulder, Knee, Hip injections under ultrasound guidance.</p></div>
-        <div class="b-4 b-white">{% icon 'muscle' 'evtx-ic' %}<h3>Spine &amp; Peripheral</h3><p>Advanced techniques for SI joint, facets, and peripheral nerves.</p></div>
-        <div class="b-6 b-gl"><h3>Aesthetics &amp; Longevity</h3><p>Integrating regenerative aesthetics (facial rejuvenation, hair restoration) and systemic longevity protocols.</p></div>
-        <div class="b-6 b-lime"><h3>Ultrasound Mastery</h3><p>Extensive practicum on identifying anatomical landmarks and precise needle tracking.</p></div>
+        <div class="evx-b4 evx-mod--dark">
+          <div>
+            <span class="evx-mod__ic">{% icon 'scan' 'evx-ic' %}</span>
+            <h3>Ultrasound Guidance</h3>
+            <p>Master MSK ultrasound techniques for precise orthobiologic delivery. Real-time visualization and needle tracking.</p>
+          </div>
+          <div class="foot">Advanced Imaging</div>
+        </div>
+        <div class="evx-b4 evx-mod--soft">
+          <div>
+            <span class="evx-mod__ic">{% icon 'shield' 'evx-ic' %}</span>
+            <h3>Safety Protocols</h3>
+            <p>Risk mitigation and sterile processing standards. Ensuring patient safety through rigorous clinical compliance.</p>
+          </div>
+          <div class="evx-badges"><span>FDA</span><span>ISO</span></div>
+        </div>
+        <div class="evx-b8 evx-mod--feat">
+          <div>
+            <span class="evx-tag">Key Feature</span>
+            <h3>Hands-on Workshops</h3>
+            <p>Translate theory into practice through supervised stations covering upper extremity, lower extremity, and spine fundamentals.</p>
+          </div>
+          <a class="evx-btn evx-btn--dark" href="#pricing">Download Full Schedule {% icon 'arrow' 'evx-ic' %}</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 6. LEARN BY DOING -->
-  <section class="evtx-sec evtx-bg-white">
-    <div class="evtx-c evtx-split">
-      <div class="evtx-live__img">
-        <img src="{% static 'img/about/about-3.webp' %}" alt="Live hands-on practicum">
-        <div class="evtx-live__badge"><b>●</b> Live Practicum</div>
-      </div>
+  <!-- 6. CAPACITY -->
+  <section class="evtx-sec evx-cap">
+    <div class="evtx-c evx-cap__grid">
+      <div class="evx-cap__img"><img src="{% static 'img/about/about-3.webp' %}" alt="Focused clinical simulation session"></div>
       <div>
-        <h2>Learn By Doing. Period.</h2>
-        <p class="lead">The difference between knowing a procedure and performing it confidently is practice. Our workshop is structured around intensive, hands-on sessions.</p>
-        <div class="evtx-hl"><h4>Strictly Limited to {{ event.capacity }} Providers</h4><p>We cap attendance to guarantee you receive the individualized attention and repetition necessary to master these skills. No standing in the back of a crowded room.</p></div>
-        <a class="evtx-btn evtx-btn--primary" href="#evtx-pricing">Secure Your Spot</a>
+        <span class="evx-eyebrow" style="color:var(--accent2)">Strict Capacity Limit</span>
+        <h2>Maximum Capacity: {{ event.capacity }} Providers</h2>
+        <p class="evx-cap__lead">To ensure every attendee receives dedicated 1-on-1 instruction during lab sessions, we strictly cap attendance. This guarantees adequate time at every station.</p>
+        <ul>
+          <li>{% icon 'check' 'evx-ic' %} Cadaveric lab injection practice</li>
+          <li>{% icon 'check' 'evx-ic' %} Live model ultrasound mapping</li>
+          <li>{% icon 'check' 'evx-ic' %} Centrifuge and kit processing stations</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- 7. BUSINESS & REVENUE -->
-  <section class="evtx-sec evtx-biz">
-    <div class="evtx-biz__gridbg"></div>
-    <div class="evtx-c evtx-biz__inner">
-      <span class="evtx-tag">Practice Management</span>
-      <h2>Build a Thriving Cash-Pay Practice</h2>
-      <p class="evtx-biz__lead">Clinical excellence must be paired with operational efficiency. Learn how to successfully market, price, and deliver high-ticket regenerative services.</p>
-      <div class="evtx-glass">
-        <div><span class="evtx-glass__ic">{% icon 'chat' 'evtx-ic' %}</span><h3>Patient Marketing</h3><p>Ethical, effective strategies to attract and educate patients seeking alternatives to surgery.</p></div>
-        <div><span class="evtx-glass__ic">{% icon 'clipboard' 'evtx-ic' %}</span><h3>Pricing Strategies</h3><p>Structuring packages and optimizing revenue streams for cash-based procedures.</p></div>
-        <div><span class="evtx-glass__ic">{% icon 'shield' 'evtx-ic' %}</span><h3>Compliance &amp; Legal</h3><p>Navigate the regulatory landscape confidently with expert guidance on biologics compliance.</p></div>
+  <!-- 7. BUSINESS -->
+  <section class="evtx-sec evx-biz">
+    <div class="evtx-c evx-biz__grid">
+      <div class="evx-biz__head">
+        <span class="evx-eyebrow">Business &amp; Revenue Integration</span>
+        <h2>Cash-Pay Practice Growth</h2>
+        <p>Clinical excellence is only half the equation. Learn how to successfully integrate regenerative medicine into your practice model with proven business frameworks.</p>
+        <div class="evx-biz__roi"><span class="ic">{% icon 'pulse' 'evx-ic' %}</span><b>ROI-Focused Curriculum</b></div>
+      </div>
+      <div class="evx-biz__cards">
+        <div class="evx-bcard">
+          <span class="evx-bcard__ic">{% icon 'clipboard' 'evx-ic' %}</span>
+          <h4>Pricing Strategies</h4>
+          <p>Structuring transparent, profitable cash-pay services. Learn how to bundle procedures and manage overhead for maximum clinical efficiency.</p>
+        </div>
+        <div class="evx-bcard">
+          <span class="evx-bcard__ic">{% icon 'chat' 'evx-ic' %}</span>
+          <h4>Patient Education</h4>
+          <p>Communicating value and managing expectations effectively. Master the consultation process to increase patient conversion and satisfaction.</p>
+        </div>
+        <div class="evx-bcard evx-bcard--wide">
+          <span class="evx-bcard__ic">{% icon 'shield' 'evx-ic' %}</span>
+          <div>
+            <h4>Regulatory Compliance</h4>
+            <p>Navigating FDA guidelines and marketing regulations. Ensure your practice remains compliant while effectively promoting your regenerative services.</p>
+          </div>
+          <span class="pill">FDA Standards</span>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 8. FACULTY -->
-  <section class="evtx-sec evtx-bg-surface" id="faculty">
+  <section class="evtx-sec evx-why" id="faculty">
     <div class="evtx-c">
-      <div class="evtx-head"><h2>Meet The Faculty</h2><p>Learn from the pioneers who are actively shaping the future of regenerative medicine.</p></div>
-      <div class="evtx-fac__grid">
-        <article class="evtx-fac">
-          <div class="evtx-fac__media">{% if fac_syed %}<img src="{{ fac_syed }}" alt="Dr. Syed Hasnain">{% else %}<div class="evtx-fac__mono">SH</div>{% endif %}</div>
-          <div class="evtx-fac__body"><h3>Dr. Syed Hasnain</h3><p class="evtx-fac__role">Lead Faculty</p>
-            <ul><li><b>•</b> Expert in advanced interventional pain management.</li><li><b>•</b> Pioneer in regenerative orthopedics.</li></ul></div>
+      <div class="evx-head">
+        <span class="evx-eyebrow">Instructors</span>
+        <h2>Learn From The Best</h2>
+        <p>Our faculty comprises dual-board-certified pioneers in regenerative orthopedics who actively manage high-volume clinics.</p>
+      </div>
+      <div class="evx-fac__grid">
+        <article class="evx-fac">
+          <div class="evx-fac__media">{% if fac_syed %}<img src="{{ fac_syed }}" alt="Dr. Syed Hasnain">{% else %}<div class="evx-fac__mono">SH</div>{% endif %}</div>
+          <div class="evx-fac__body"><h4>Dr. Syed Hasnain</h4><p class="evx-fac__role">Lead Faculty &amp; Program Director</p><p class="evx-fac__bio">Pioneer in fluoroscopic BMAC harvesting with over 10,000 guided procedures.</p></div>
         </article>
-        <article class="evtx-fac">
-          <div class="evtx-fac__media"><div class="evtx-fac__mono">AK</div></div>
-          <div class="evtx-fac__body"><h3>Aaron Kuehl</h3><p class="evtx-fac__role">Ultrasound Expert</p>
-            <ul><li><b>•</b> Pioneer in MSK ultrasound techniques.</li><li><b>•</b> Innovator in biologic delivery systems.</li></ul></div>
+        <article class="evx-fac">
+          <div class="evx-fac__media"><div class="evx-fac__mono">AK</div></div>
+          <div class="evx-fac__body"><h4>Aaron Kuehl</h4><p class="evx-fac__role">Sports Medicine Specialist</p><p class="evx-fac__bio">Specializes in elite athlete recovery protocols and tendon regeneration.</p></div>
         </article>
-        <article class="evtx-fac">
-          <div class="evtx-fac__media">{% if fac_rachel %}<img src="{{ fac_rachel }}" alt="Rachel Ann Garcia">{% else %}<div class="evtx-fac__mono">RG</div>{% endif %}</div>
-          <div class="evtx-fac__body"><h3>Rachel Ann Garcia</h3><p class="evtx-fac__role">Aesthetics Lead</p>
-            <ul><li><b>•</b> Specializing in facial regenerative aesthetics.</li><li><b>•</b> Expert in systemic skin longevity protocols.</li></ul></div>
+        <article class="evx-fac">
+          <div class="evx-fac__media">{% if fac_rachel %}<img src="{{ fac_rachel }}" alt="Rachel Ann Garcia">{% else %}<div class="evx-fac__mono">RG</div>{% endif %}</div>
+          <div class="evx-fac__body"><h4>Rachel Ann Garcia</h4><p class="evx-fac__role">Physiatrist &amp; Sonographer</p><p class="evx-fac__bio">Nationally recognized instructor in high-resolution MSK ultrasound.</p></div>
         </article>
-        <article class="evtx-fac">
-          <div class="evtx-fac__media"><div class="evtx-fac__mono">KB</div></div>
-          <div class="evtx-fac__body"><h3>Karolina Balkenbush</h3><p class="evtx-fac__role">Practice Integration</p>
-            <ul><li><b>•</b> Expert in transitioning practices to cash-pay.</li><li><b>•</b> Master of clinical workflow optimization.</li></ul></div>
+        <article class="evx-fac">
+          <div class="evx-fac__media"><div class="evx-fac__mono">KB</div></div>
+          <div class="evx-fac__body"><h4>Karolina Balkenbush</h4><p class="evx-fac__role">Interventional Pain Management</p><p class="evx-fac__bio">Expert in spinal orthobiologics and advanced fluoroscopic navigation.</p></div>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- 9. VIP MENTORSHIP -->
-  <section class="evtx-vip">
-    <div class="evtx-c evtx-vip__inner">
-      <div class="evtx-vip__ic">{% icon 'award' 'evtx-ic' %}</div>
-      <div class="evtx-vip__body">
-        <h2>Elevate Your Experience: VIP Mentorship</h2>
-        <p>Upgrade to VIP for an unparalleled level of access and personalized guidance.</p>
-        <div class="evtx-vip__list">
-          <div>{% icon 'check' 'evtx-ic' %} Priority Hands-on Participation</div>
-          <div>{% icon 'check' 'evtx-ic' %} Exclusive Faculty Dinner</div>
-          <div>{% icon 'check' 'evtx-ic' %} 1-on-1 Business Strategy Session</div>
-          <div>{% icon 'check' 'evtx-ic' %} Post-Course Mentorship Follow-up</div>
-        </div>
+  <!-- 9. VIP -->
+  <section class="evtx-sec evx-vip">
+    <div class="evtx-c evx-vip__in">
+      <span class="evx-badge2">Exclusive Upgrade</span>
+      <h2>VIP Mentorship Program</h2>
+      <p class="evx-vip__lead">Extend your learning beyond the weekend with dedicated 1-on-1 support to ensure successful implementation in your practice.</p>
+      <div class="evx-vip__grid">
+        <div class="evx-vipc">{% icon 'users' 'evx-ic' %}<h4>Private Faculty Dinner</h4><p>Intimate networking and case discussions.</p></div>
+        <div class="evx-vipc">{% icon 'chat' 'evx-ic' %}<h4>3 Months Support</h4><p>Post-course case review and protocol refinement.</p></div>
+        <div class="evx-vipc">{% icon 'pulse' 'evx-ic' %}<h4>Practice Audit</h4><p>1-on-1 implementation strategy session.</p></div>
       </div>
     </div>
   </section>
 
   <!-- 10. PRICING -->
-  <section class="evtx-sec evtx-mesh" id="evtx-pricing">
+  <section class="evtx-sec evx-price" id="pricing">
     <div class="evtx-c">
-      <div class="evtx-head">
-        <h2>Pricing &amp; Registration</h2>
-        <p>Secure your spot in this exclusive, limited-capacity workshop.</p>
-        <div class="evtx-price__banner">{% icon 'users' 'evtx-ic' %}<p>Group Discount Available: Contact us for multi-provider registration rates.</p></div>
+      <div class="evx-head">
+        <span class="evx-eyebrow">Registration &amp; Tuitions</span>
+        <h2>Choose Your Training Path</h2>
+        <p>Select the registration tier that best fits your clinical goals and experience level.</p>
       </div>
-      <div class="evtx-price__grid">
+      <div class="evx-price__grid">
         {% with pk=packages_by_slug.observer %}
-        <form class="evtx-price" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='observer' %}">{% csrf_token %}
-          <h3>Observer</h3><div class="evtx-price__amt">{{ pk.price_label }}</div>
+        <form class="evx-pc" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='observer' %}">{% csrf_token %}
+          <span class="evx-pc__label">Lecture &amp; Observation Only</span>
+          <h3>Observer</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
-            <li>{% icon 'check' 'evtx-ic' %} Didactic lectures access</li>
-            <li>{% icon 'check' 'evtx-ic' %} Watch live demos</li>
-            <li class="no">{% icon 'close' 'evtx-ic' %} No hands-on training</li>
+            <li>{% icon 'check' 'evx-ic' %} Didactic sessions access</li>
+            <li>{% icon 'check' 'evx-ic' %} Live demonstrations</li>
+            <li>{% icon 'check' 'evx-ic' %} Observation areas</li>
+            <li>{% icon 'check' 'evx-ic' %} Course materials</li>
+            <li class="no">{% icon 'close' 'evx-ic' %} Hands-on participation not included</li>
           </ul>
-          <button class="evtx-btn evtx-btn--outline evtx-price__btn" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Select Tier</button>
+          <button class="evx-btn evx-btn--outline evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.early %}
-        <form class="evtx-price" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='early' %}">{% csrf_token %}
-          <span class="evtx-price__badge">Ends Soon</span>
-          <h3>Early Bird</h3><div class="evtx-price__amt">{{ pk.price_label }}</div>
+        <form class="evx-pc evx-pc--feat" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='early' %}">{% csrf_token %}
+          <span class="evx-pc__ribbon">First 10 Registrants Only</span>
+          <h3>Early Bird</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
-            <li>{% icon 'check' 'evtx-ic' %} Full workshop access</li>
-            <li>{% icon 'check' 'evtx-ic' %} Hands-on training</li>
-            <li>{% icon 'check' 'evtx-ic' %} Course materials</li>
+            <li>{% icon 'check' 'evx-ic' %} Full lecture access</li>
+            <li>{% icon 'check' 'evx-ic' %} Training sessions</li>
+            <li>{% icon 'check' 'evx-ic' %} Course materials</li>
+            <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
+            <li>{% icon 'check' 'evx-ic' %} Networking opportunities</li>
           </ul>
-          <button class="evtx-btn evtx-btn--outline evtx-price__btn" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Select Tier</button>
+          <button class="evx-btn evx-btn--primary evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.standard %}
-        <form class="evtx-price" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='standard' %}">{% csrf_token %}
-          <h3>Standard</h3><div class="evtx-price__amt">{{ pk.price_label }}</div>
+        <form class="evx-pc" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='standard' %}">{% csrf_token %}
+          <h3>Standard</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
-            <li>{% icon 'check' 'evtx-ic' %} Full workshop access</li>
-            <li>{% icon 'check' 'evtx-ic' %} Hands-on training</li>
-            <li>{% icon 'check' 'evtx-ic' %} Course materials</li>
+            <li>{% icon 'check' 'evx-ic' %} Full conference access</li>
+            <li>{% icon 'check' 'evx-ic' %} Hands-on training</li>
+            <li>{% icon 'check' 'evx-ic' %} Educational materials</li>
+            <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
+            <li>{% icon 'check' 'evx-ic' %} Networking access</li>
           </ul>
-          <button class="evtx-btn evtx-btn--outline evtx-price__btn" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Select Tier</button>
+          <button class="evx-btn evx-btn--outline evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.vip %}
-        <form class="evtx-price evtx-price--vip" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='vip' %}">{% csrf_token %}
-          <span class="evtx-price__badge">Recommended</span>
-          <h3>VIP Access</h3><div class="evtx-price__amt">{{ pk.price_label }}</div>
+        <form class="evx-pc evx-pc--vip" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='vip' %}">{% csrf_token %}
+          <span class="evx-pc__label">Premium Experience</span>
+          <h3>VIP Mentorship</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
+          <p class="evx-pc__note">Everything in Standard, plus…</p>
           <ul>
-            <li>{% icon 'check' 'evtx-ic' %} Everything in Standard</li>
-            <li>{% icon 'check' 'evtx-ic' %} 1-on-1 Faculty Mentorship session</li>
-            <li>{% icon 'check' 'evtx-ic' %} Private Networking Dinner</li>
-            <li>{% icon 'check' 'evtx-ic' %} Business Integration Audit</li>
+            <li>{% icon 'star' 'evx-ic' %} Priority seating</li>
+            <li>{% icon 'star' 'evx-ic' %} Small-group mentorship</li>
+            <li>{% icon 'star' 'evx-ic' %} Direct Q&amp;A with faculty</li>
+            <li>{% icon 'star' 'evx-ic' %} VIP resource materials</li>
+            <li>{% icon 'star' 'evx-ic' %} Post-event guidance</li>
           </ul>
-          <button class="evtx-btn evtx-btn--lime evtx-price__btn" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Upgrade to VIP</button>
+          <button class="evx-btn evx-btn--primary evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Apply for VIP</button>
         </form>
         {% endwith %}
+      </div>
+      <div class="evx-price__note">
+        <b>Special Offer — Group Practice Discounts Available</b>
+        <span>To register a team or ask about group rates, call 725-312-2125 or email fathima@brockwellhealthcare.com.</span>
       </div>
     </div>
   </section>
