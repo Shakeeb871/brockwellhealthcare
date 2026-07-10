@@ -87,13 +87,15 @@ def event_detail(request, slug):
     symbol = region.get("currency_symbol", "")
     for p in packages:
         p.price_label = f"{symbol}{p.amount:,.0f}"
+    packages_by_slug = {p.slug: p for p in packages}
 
     return render(
         request,
         "events/detail.html",
         {"meta": meta, "jsonld": jsonld, "event": event, "form": form,
-         "packages": packages,
-         "hero_image": _event_hero(event.slug, region["code"])},
+         "packages": packages, "packages_by_slug": packages_by_slug,
+         "hero_image": _event_hero(event.slug, region["code"]),
+         "card_image": region_asset_rel(region["code"], f"events/{event.slug}-card.webp")},
     )
 
 
