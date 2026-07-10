@@ -1,38 +1,47 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras static %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> /
-      <a href="{% rurl 'events:list' %}">Events</a> /
+{# ---------------- Hero ---------------- #}
+<section class="evt-hero"{% if hero_image %} style="background-image:url('{% static hero_image %}')"{% endif %}>
+  <div class="evt-hero__overlay"></div>
+  <div class="container evt-hero__inner">
+    <nav class="evt-hero__crumbs" aria-label="Breadcrumb">
+      <a href="{% rurl 'core:home' %}">Home</a> <span aria-hidden="true">/</span>
+      <a href="{% rurl 'events:list' %}">Events</a> <span aria-hidden="true">/</span>
       <span>{{ event.title }}</span>
     </nav>
-    <h1>{{ event.title }}</h1>
-    <div class="meta-row">
-      <span>{% icon 'calendar' 'ico-inline' %}<strong>{{ event.start|date:"l, d M Y" }}</strong> at {{ event.start|date:"H:i" }}</span>
-      <span>{% icon 'pin' 'ico-inline' %}<strong>{{ event.location }}</strong></span>
-      <span>{% icon 'ticket' 'ico-inline' %}<strong>{% if event.is_free %}Free{% else %}{{ region.currency_symbol }} {{ event.price }}{% endif %}</strong></span>
+    <span class="evt-hero__eyebrow">Hands-On Training Workshop</span>
+    <h1 class="evt-hero__title">{{ event.title }}</h1>
+    <p class="evt-hero__lead">{{ event.summary }}</p>
+    <ul class="evt-hero__facts">
+      <li>{% icon 'calendar' 'ico' %} {{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</li>
+      <li>{% icon 'pin' 'ico' %} {{ event.location }}</li>
+      {% if event.capacity %}<li>{% icon 'ticket' 'ico' %} {{ event.capacity }} seats only</li>{% endif %}
+    </ul>
+    <div class="evt-hero__cta">
+      <a class="btn btn--light" href="#register">Reserve Your Seat {% icon 'arrow' 'ico' %}</a>
     </div>
   </div>
-</div>
+</section>
 
-<section class="section">
-  <div class="container split" style="align-items:flex-start">
-    <article class="prose">
-      <p class="lead muted">{{ event.summary }}</p>
-      {{ event.description|safe }}
+{# ---------------- Body: content + sidebar ---------------- #}
+<section class="section evt-body">
+  <div class="container evt-body__grid">
+    <article class="prose evt-content">
+      {{ event.description|enhance|region_media:region_code }}
     </article>
 
-    <aside>
-      <div class="card">
+    <aside class="evt-side">
+      <div class="card evt-reg" id="register">
         {% if event.is_sold_out %}
           <h3>Sold out</h3>
-          <p class="muted">This event has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
+          <p class="muted">This workshop has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
         {% else %}
-          <h3>Reserve your place</h3>
-          {% if event.seats_left %}<p class="muted" style="font-size:.9rem">{{ event.seats_left }} seats remaining</p>{% endif %}
+          <span class="evt-reg__eyebrow">Registration</span>
+          <h3>Reserve your seat</h3>
+          {% if event.seats_left %}<p class="evt-reg__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
+          <p class="muted evt-reg__note">Places are limited to {{ event.capacity }}. Share your details and our team will confirm your registration tier and payment.</p>
           <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
             {% csrf_token %}
             {{ form.website }}
@@ -48,12 +57,14 @@
               <label for="{{ form.phone.id_for_label }}">Phone</label>
               {{ form.phone }}{{ form.phone.errors }}
             </div>
-            <button class="btn btn--primary btn--lg" type="submit">
-              {% if event.is_free %}Register free{% else %}Pay {{ region.currency_symbol }} {{ event.price }}{% endif %}
-            </button>
-            {% if not event.is_free %}<p class="muted" style="font-size:.82rem;margin:0">Secure payment powered by Stripe.</p>{% endif %}
+            <button class="btn btn--primary btn--lg" type="submit">Request my seat {% icon 'arrow' 'ico' %}</button>
           </form>
         {% endif %}
+        <div class="evt-reg__contact">
+          <span>Prefer to speak to us?</span>
+          <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
+          <a href="mailto:fathima@brockwellhealthcare.com">{% icon 'mail' 'ico' %} fathima@brockwellhealthcare.com</a>
+        </div>
       </div>
     </aside>
   </div>

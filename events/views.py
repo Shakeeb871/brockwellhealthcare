@@ -4,11 +4,16 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
 from core import seo
-from core.regions import region_absolute, region_path
+from core.regions import region_absolute, region_asset_rel, region_path
 from payments import stripe_service
 
 from .forms import RegistrationForm
 from .models import Event
+
+
+def _event_hero(slug, region_code):
+    """Region-aware event hero image (img/[<region>/]events/<slug>-hero.webp)."""
+    return region_asset_rel(region_code, f"events/{slug}-hero.webp")
 
 
 def event_list(request):
@@ -57,7 +62,11 @@ def event_detail(request, slug):
         path=f"/events/{event.slug}/",
         og_type="article",
     )
-    if event.image:
+    # Social-share card: region-aware pre-rendered JPEG, then an uploaded image.
+    og = region_asset_rel(region["code"], f"og/event-{event.slug}.jpg")
+    if og:
+        meta["image"] = seo.absolute(settings.STATIC_URL + og)
+    elif event.image:
         meta["image"] = seo.absolute(event.image.url)
         try:
             meta["image_w"], meta["image_h"] = event.image.width, event.image.height
@@ -77,7 +86,8 @@ def event_detail(request, slug):
     return render(
         request,
         "events/detail.html",
-        {"meta": meta, "jsonld": jsonld, "event": event, "form": form},
+        {"meta": meta, "jsonld": jsonld, "event": event, "form": form,
+         "hero_image": _event_hero(event.slug, region["code"])},
     )
 
 

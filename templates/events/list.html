@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load region_tags icons %}
+{% load region_tags icons content_extras %}
 
 {% block content %}
 <div class="page-head">
@@ -19,13 +19,14 @@
       {% for e in upcoming %}
       <article class="card">
         <div class="card__media">
-          {% if e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
-          <span class="tag tag--onmedia">{{ e.start|date:"d M Y · H:i" }}</span>
+          {% event_thumb e.slug as e_thumb %}
+          {% if e_thumb %}<img src="{{ e_thumb }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% elif e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
+          <span class="tag tag--onmedia">{{ e.start|date:"d M Y" }}</span>
         </div>
         <h3>{{ e.title }}</h3>
         <p>{{ e.summary }}</p>
         <p class="muted" style="font-size:.9rem">{% icon 'pin' 'ico-inline' %}{{ e.location }}</p>
-        <p class="card__price">{% if e.is_free %}Free{% else %}{{ region.currency_symbol }} {{ e.price }}{% endif %}</p>
+        <p class="card__price">{% if e.price %}{{ region.currency_symbol }} {{ e.price }}{% else %}View pricing{% endif %}</p>
         <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}

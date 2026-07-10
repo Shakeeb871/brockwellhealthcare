@@ -169,6 +169,20 @@ def region_img(context, tail):
 
 
 @register.simple_tag(takes_context=True)
+def event_thumb(context, slug):
+    """Region-aware event card/list image: ``events/<slug>-card.webp`` then the
+    hero, region override winning over the shared file. "" when neither exists."""
+    if not slug:
+        return ""
+    region_code = context.get("region_code") or settings.DEFAULT_REGION
+    for tail in (f"events/{slug}-card.webp", f"events/{slug}-hero.webp"):
+        url = region_asset(region_code, tail)
+        if url:
+            return url
+    return ""
+
+
+@register.simple_tag(takes_context=True)
 def service_thumb(context, slug):
     """Region-aware thumbnail for a sub-service card. Prefers a dedicated card
     image, then the service hero; region override wins over the shared file.
