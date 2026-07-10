@@ -28,6 +28,29 @@
   </div>
 </section>
 
+{% if evt.structured %}
+{# ---------------- Event bar: key facts + live countdown ------------------- #}
+<section class="evt-bar">
+  <div class="container evt-bar__inner">
+    <ul class="evt-bar__facts" role="list">
+      <li><span class="evt-bar__ico">{% icon 'calendar' 'ico' %}</span><span class="evt-bar__t"><b>Dates</b>{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</span></li>
+      <li><span class="evt-bar__ico">{% icon 'clock' 'ico' %}</span><span class="evt-bar__t"><b>Time</b>{{ event.start|date:"g:i A" }} – {{ event.end|date:"g:i A" }}</span></li>
+      <li><span class="evt-bar__ico">{% icon 'pin' 'ico' %}</span><span class="evt-bar__t"><b>Venue</b>{{ event.location }}</span></li>
+      {% if event.capacity %}<li><span class="evt-bar__ico">{% icon 'ticket' 'ico' %}</span><span class="evt-bar__t"><b>Seats</b>Only {{ event.capacity }}</span></li>{% endif %}
+    </ul>
+    <div class="evt-count" data-countdown="{{ event.start|date:'c' }}" aria-label="Time remaining until the workshop begins">
+      <span class="evt-count__label">Starts in</span>
+      <div class="evt-count__units">
+        <span class="evt-count__u"><b data-cd="d">--</b><small>Days</small></span>
+        <span class="evt-count__u"><b data-cd="h">--</b><small>Hrs</small></span>
+        <span class="evt-count__u"><b data-cd="m">--</b><small>Min</small></span>
+        <span class="evt-count__u"><b data-cd="s">--</b><small>Sec</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if not evt.structured %}
 {# ---- Fallback for events written as plain prose (keeps other event pages intact) ---- #}
 <section class="section evt-prose">
@@ -106,6 +129,16 @@
 </section>
 {% endif %}
 
+{# ---------------- Stats strip --------------------------------------------- #}
+<section class="evt-stats">
+  <div class="container evt-stats__inner">
+    <div class="evt-stat"><b>2</b><span>Days of training</span></div>
+    <div class="evt-stat"><b>{{ evt.faculty|length }}</b><span>Expert faculty</span></div>
+    <div class="evt-stat"><b>{{ event.capacity }}</b><span>Seats only</span></div>
+    <div class="evt-stat"><b>100%</b><span>Hands-on</span></div>
+  </div>
+</section>
+
 {# ---------------- Meet the faculty — speaker photo cards ------------------ #}
 {% if evt.faculty %}
 <section class="section section--soft evt-faculty">
@@ -146,7 +179,11 @@
         {% if pk.featured %}<span class="evt-price__ribbon">Most complete</span>{% endif %}
         <h3 class="evt-price__name">{{ pk.name }}</h3>
         {% if pk.price %}<p class="evt-price__amount">{{ pk.price }}</p>{% endif %}
-        <p class="evt-price__body">{{ pk.features|safe }}</p>
+        {% if pk.points %}
+        <ul class="evt-price__list" role="list">
+          {% for pt in pk.points %}<li>{% icon 'check' 'ico' %}<span>{{ pt }}</span></li>{% endfor %}
+        </ul>
+        {% elif pk.features %}<p class="evt-price__body">{{ pk.features|safe }}</p>{% endif %}
         <a class="btn {% if pk.featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" href="#register">Reserve this package {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
@@ -198,4 +235,30 @@
     </div>
   </div>
 </section>
+
+{# Live countdown — progressive enhancement; static dates already shown above. #}
+<script>
+(function () {
+  var el = document.querySelector('.evt-count[data-countdown]');
+  if (!el) return;
+  var target = new Date(el.getAttribute('data-countdown')).getTime();
+  if (isNaN(target)) { el.style.display = 'none'; return; }
+  var out = {
+    d: el.querySelector('[data-cd="d"]'), h: el.querySelector('[data-cd="h"]'),
+    m: el.querySelector('[data-cd="m"]'), s: el.querySelector('[data-cd="s"]')
+  };
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var diff = target - Date.now();
+    if (diff <= 0) { el.classList.add('is-live'); out.d.textContent = out.h.textContent = out.m.textContent = out.s.textContent = '00'; return; }
+    var s = Math.floor(diff / 1000);
+    out.d.textContent = pad(Math.floor(s / 86400));
+    out.h.textContent = pad(Math.floor((s % 86400) / 3600));
+    out.m.textContent = pad(Math.floor((s % 3600) / 60));
+    out.s.textContent = pad(s % 60);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 {% endblock %}

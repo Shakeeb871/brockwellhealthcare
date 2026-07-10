@@ -2326,6 +2326,29 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 .evt-hero__cta { display: flex; flex-wrap: wrap; gap: .8rem; }
 
+/* --- Event bar: facts + live countdown --- */
+.evt-bar { background: var(--navy-800); color: #fff; }
+.evt-bar__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem 2rem; padding: 1.4rem 0; }
+.evt-bar__facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.2rem 2.2rem; }
+.evt-bar__facts li { display: flex; align-items: center; gap: .7rem; }
+.evt-bar__ico { width: 40px; height: 40px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255,255,255,.1); color: var(--teal-400); }
+.evt-bar__ico .ico { width: 20px; height: 20px; }
+.evt-bar__t { display: flex; flex-direction: column; line-height: 1.25; font-size: .95rem; }
+.evt-bar__t b { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--teal-400); font-weight: 700; }
+.evt-count { display: flex; align-items: center; gap: 1rem; }
+.evt-count__label { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.7); font-weight: 600; }
+.evt-count__units { display: flex; gap: .5rem; }
+.evt-count__u { min-width: 52px; text-align: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 10px; padding: .5rem .3rem; }
+.evt-count__u b { display: block; font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1; color: #fff; font-variant-numeric: tabular-nums; }
+.evt-count__u small { font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.65); }
+.evt-count.is-live .evt-count__label::after { content: " — happening now"; }
+
+/* --- Stats strip --- */
+.evt-stats { background: linear-gradient(120deg, var(--teal-600), var(--navy-800)); color: #fff; padding: 2.4rem 0; }
+.evt-stats__inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; text-align: center; }
+.evt-stat b { display: block; font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; line-height: 1; }
+.evt-stat span { display: block; margin-top: .4rem; font-size: .9rem; letter-spacing: .03em; color: rgba(255,255,255,.85); }
+
 /* --- Overview + square image in a homepage-style grid --- */
 .evt-ov__grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
 .evt-ov__text .eyebrow { margin-bottom: .6rem; }
@@ -2375,6 +2398,10 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .evt-price__name { font-size: 1.1rem; margin: 0 0 .4rem; }
 .evt-price__amount { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--navy-800); margin: 0 0 1rem; }
 .evt-price__body { color: var(--slate-600); line-height: 1.6; margin: 0 0 1.5rem; flex: 1; }
+.evt-price__list { list-style: none; margin: 0 0 1.6rem; padding: 0; display: flex; flex-direction: column; gap: .6rem; flex: 1; }
+.evt-price__list li { display: flex; align-items: flex-start; gap: .6rem; font-size: .92rem; line-height: 1.45; color: var(--ink); }
+.evt-price__list .ico { width: 18px; height: 18px; flex: none; margin-top: .1rem; color: var(--teal-600); }
+.evt-price--featured .evt-price__list .ico { color: var(--teal-500); }
 .evt-price__cta { width: 100%; justify-content: center; }
 .evt-price__note { margin: 1.8rem auto 0; max-width: 68ch; text-align: center; color: var(--slate-600); font-size: .95rem; line-height: 1.6; }
 
@@ -2396,4 +2423,12 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .evt-ov__media { order: -1; }
   .evt-ov__badge { left: 12px; }
   .evt-hero { padding-top: 7rem; }
+  .evt-bar__inner { flex-direction: column; align-items: flex-start; }
+  .evt-count { width: 100%; justify-content: space-between; }
+  .evt-stats__inner { grid-template-columns: repeat(2, 1fr); gap: 1.8rem 1rem; }
+}
+@media (max-width: 520px) {
+  .evt-count { flex-direction: column; align-items: flex-start; gap: .5rem; }
+  .evt-count__units { width: 100%; }
+  .evt-count__u { flex: 1; }
 }

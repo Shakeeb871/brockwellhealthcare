@@ -233,6 +233,16 @@ def _evt_first_sentence(p_html):
     return (m.group(1) if m else plain).strip()
 
 
+def _evt_faculty_photo(region_code, name):
+    """Region-aware speaker photo at events/faculty/<name-slug>.<ext>, or ""."""
+    slug = slugify(name)
+    for ext in ("webp", "jpg", "jpeg", "png"):
+        url = region_asset(region_code, f"events/faculty/{slug}.{ext}")
+        if url:
+            return url
+    return ""
+
+
 @register.simple_tag(takes_context=True)
 def event_landing(context, html):
     """Parse a flagship event ``description`` into structured landing-page data.
@@ -286,33 +296,34 @@ def event_landing(context, html):
                     "creds": creds,
                     "tagline": _evt_first_sentence(p),
                     "initials": _evt_initials(name),
-                    "photo": region_asset(
-                        region_code, f"events/faculty/{slugify(name)}.webp"),
+                    "photo": _evt_faculty_photo(region_code, name),
                 })
 
         elif "pricing" in heading or "registration" in heading:
-            tiers = _EVT_H3P.findall(body)
-            for h3, p in tiers:
-                tier_line = html_lib.unescape(_TAGS.sub("", h3).strip())
-                parts = _EVT_DASH.split(tier_line, maxsplit=1)
+            # Each tier is an <h3>Name — $price</h3> followed by a <ul> of
+            # feature points (or a <p> as a fallback). A lead <p> precedes the
+            # first tier and a note <p> follows the last list.
+            parts = re.split(r"<h3>(.*?)</h3>", body, flags=re.S | re.I)
+            lead_p = _EVT_P.search(parts[0])
+            if lead_p:
+                data["pricing_lead"] = lead_p.group(1).strip()
+            for i in range(1, len(parts) - 1, 2):
+                tier_line = html_lib.unescape(_TAGS.sub("", parts[i]).strip())
+                block = parts[i + 1]
+                names = _EVT_DASH.split(tier_line, maxsplit=1)
+                points = [html_lib.unescape(_TAGS.sub("", li)).strip()
+                          for li in _EVT_LI.findall(block) if li.strip()]
+                fp = _EVT_P.search(block)
                 data["pricing"].append({
-                    "name": parts[0].strip(),
-                    "price": parts[1].strip() if len(parts) > 1 else "",
-                    "features": p.strip(),
+                    "name": names[0].strip(),
+                    "price": names[1].strip() if len(names) > 1 else "",
+                    "points": points,
+                    "features": fp.group(1).strip() if fp and not points else "",
                     "featured": "vip" in tier_line.lower(),
                 })
-            # Lead paragraph sits before the first tier; the note after the last.
-            first_h3 = body.lower().find("<h3")
-            if first_h3 > 0:
-                lead = _EVT_P.search(body[:first_h3])
-                if lead:
-                    data["pricing_lead"] = lead.group(1).strip()
-            last_close = body.lower().rfind("</h3>")
-            if last_close != -1:
-                after = body[last_close:]
-                notes = _EVT_P.findall(after)
-                if len(notes) > 1:  # first <p> after last <h3> is that tier's body
-                    data["pricing_note"] = notes[-1].strip()
+            note = re.search(r"</ul>\s*(<p>.*?</p>)", parts[-1], re.S | re.I)
+            if note:
+                data["pricing_note"] = _EVT_P.search(note.group(1)).group(1).strip()
 
     data["structured"] = bool(
         data["overview"] or data["learn"] or data["why"]
