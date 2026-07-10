@@ -69,11 +69,52 @@ class Event(TimeStamped):
         return [p.strip() for p in self.description.split("\n\n") if p.strip()]
 
 
+class EventPackage(TimeStamped):
+    """A purchasable registration tier for an event (e.g. Early / Standard /
+    VIP / Observer). The amount is the authoritative, server-side price used
+    when creating the Stripe Checkout session — the browser never sends it."""
+
+    event = models.ForeignKey(
+        Event, related_name="packages", on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=120)
+    slug = models.SlugField(max_length=140)
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2,
+        help_text="Price in the event region's currency.",
+    )
+    features = models.TextField(
+        blank=True, help_text="One inclusion per line — shown as a checklist.",
+    )
+    badge = models.CharField(
+        max_length=40, blank=True,
+        help_text="Optional ribbon label, e.g. 'Most complete'.",
+    )
+    is_featured = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    sort = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["sort", "amount"]
+        unique_together = ("event", "slug")
+
+    def __str__(self):
+        return f"{self.name} — {self.event.title}"
+
+    @property
+    def feature_list(self):
+        return [ln.strip() for ln in self.features.splitlines() if ln.strip()]
+
+
 class EventRegistration(TimeStamped):
     """A booking for an event, optionally tied to a Stripe payment."""
 
     event = models.ForeignKey(
         Event, related_name="registrations", on_delete=models.CASCADE
+    )
+    package = models.ForeignKey(
+        "EventPackage", related_name="registrations", on_delete=models.SET_NULL,
+        null=True, blank=True,
     )
     name = models.CharField(max_length=120)
     email = models.EmailField()

@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.event_list, name="list"),
     path("<slug:slug>/", views.event_detail, name="detail"),
     path("<slug:slug>/register/", views.event_register, name="register"),
+    path("<slug:slug>/reserve/<slug:package_slug>/", views.package_checkout, name="package-checkout"),
 ]

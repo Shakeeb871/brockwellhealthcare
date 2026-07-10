@@ -165,7 +165,7 @@
 {% endif %}
 
 {# ---------------- Registration & pricing — package cards ------------------ #}
-{% if evt.pricing %}
+{% if packages or evt.pricing %}
 <section class="section evt-pricing" id="packages">
   <div class="container">
     <header class="section__head">
@@ -173,6 +173,28 @@
       <h2>Choose your package</h2>
       {% if evt.pricing_lead %}<p>{{ evt.pricing_lead|safe }}</p>{% endif %}
     </header>
+
+    {% if packages %}
+    {# Live packages — each button starts a secure Stripe Checkout. #}
+    <div class="evt-price__grid">
+      {% for pk in packages %}
+      <form class="evt-price{% if pk.is_featured %} evt-price--featured{% endif %}" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug=pk.slug %}">
+        {% csrf_token %}
+        {% if pk.badge %}<span class="evt-price__ribbon">{{ pk.badge }}</span>{% endif %}
+        <h3 class="evt-price__name">{{ pk.name }}</h3>
+        <p class="evt-price__amount">{{ pk.price_label }}</p>
+        {% if pk.feature_list %}
+        <ul class="evt-price__list" role="list">
+          {% for pt in pk.feature_list %}<li>{% icon 'check' 'ico' %}<span>{{ pt }}</span></li>{% endfor %}
+        </ul>
+        {% endif %}
+        <button class="btn {% if pk.is_featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Reserve this package {% icon 'arrow' 'ico' %}</button>
+      </form>
+      {% endfor %}
+    </div>
+    <p class="evt-price__secure">{% icon 'shield' 'ico' %} Secure payment by Stripe. You'll be redirected to Stripe's checkout to complete your booking.</p>
+    {% else %}
+    {# Display-only pricing parsed from the description (no checkout wired). #}
     <div class="evt-price__grid">
       {% for pk in evt.pricing %}
       <article class="evt-price{% if pk.featured %} evt-price--featured{% endif %}">
@@ -184,34 +206,55 @@
           {% for pt in pk.points %}<li>{% icon 'check' 'ico' %}<span>{{ pt }}</span></li>{% endfor %}
         </ul>
         {% elif pk.features %}<p class="evt-price__body">{{ pk.features|safe }}</p>{% endif %}
-        <a class="btn {% if pk.featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" href="#register">Reserve this package {% icon 'arrow' 'ico' %}</a>
+        <a class="btn {% if pk.featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" href="{% rurl 'core:contact' %}">Reserve this package {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>
+    {% endif %}
+
     {% if evt.pricing_note %}<p class="evt-price__note">{{ evt.pricing_note|safe }}</p>{% endif %}
   </div>
 </section>
 {% endif %}
 {% endif %}{# /structured #}
 
-{# ---------------- Reserve / register CTA band (full width) ---------------- #}
+{# ---------------- Reserve / contact CTA band (full width) ----------------- #}
+{% if packages %}
+{# Booking happens through the package cards above — no form here, just a
+   prompt back to the packages and a way to reach the team. #}
+<section class="section evt-cta evt-cta--banner" id="register">
+  <div class="container evt-cta__banner">
+    <span class="eyebrow">Reserve Your Seat</span>
+    <h2>Secure your place — limited to {{ event.capacity }} seats</h2>
+    {% if event.seats_left %}<p class="evt-cta__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
+    <p>Choose the package that fits your goals and complete your secure booking online.</p>
+    {% if not event.is_sold_out %}<a class="btn btn--primary btn--lg" href="#packages">Choose your package {% icon 'arrow' 'ico' %}</a>{% endif %}
+    <div class="evt-cta__contact evt-cta__contact--center">
+      <span>Prefer to speak to us?</span>
+      <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
+      <a href="mailto:fathima@brockwellhealthcare.com">{% icon 'mail' 'ico' %} fathima@brockwellhealthcare.com</a>
+    </div>
+  </div>
+</section>
+{% else %}
+{# Events without packages keep the simple registration form. #}
 <section class="section evt-cta" id="register">
   <div class="container evt-cta__inner">
     <div class="evt-cta__intro">
       <span class="eyebrow">Reserve Your Seat</span>
-      <h2>Secure your place — limited to {{ event.capacity }} seats</h2>
+      <h2>Secure your place{% if event.capacity %} — limited to {{ event.capacity }} seats{% endif %}</h2>
       {% if event.seats_left %}<p class="evt-cta__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
-      <p>Share your details and our team will confirm your registration tier and payment. Prefer to speak to us?</p>
+      <p>Share your details and our team will confirm your registration and payment. Prefer to speak to us?</p>
       <div class="evt-cta__contact">
-        <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
-        <a href="mailto:fathima@brockwellhealthcare.com">{% icon 'mail' 'ico' %} fathima@brockwellhealthcare.com</a>
+        <a href="tel:{{ region.phone }}">{% icon 'phone' 'ico' %} {{ region.phone }}</a>
+        <a href="mailto:{{ region.email }}">{% icon 'mail' 'ico' %} {{ region.email }}</a>
       </div>
     </div>
 
     <div class="card evt-cta__form">
       {% if event.is_sold_out %}
         <h3>Sold out</h3>
-        <p class="muted">This workshop has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
+        <p class="muted">This event has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
       {% else %}
         <h3>Request your seat</h3>
         <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
@@ -235,6 +278,7 @@
     </div>
   </div>
 </section>
+{% endif %}
 
 {# Live countdown — progressive enhancement; static dates already shown above. #}
 <script>

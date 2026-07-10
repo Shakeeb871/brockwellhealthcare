@@ -1,7 +1,7 @@
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
-from .models import Event, EventRegistration
+from .models import Event, EventPackage, EventRegistration
 
 
 class RegistrationInline(admin.TabularInline):
@@ -9,6 +9,13 @@ class RegistrationInline(admin.TabularInline):
     extra = 0
     readonly_fields = ("name", "email", "phone", "amount", "currency", "paid", "created_at")
     can_delete = False
+
+
+class PackageInline(admin.StackedInline):
+    model = EventPackage
+    extra = 0
+    prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "amount", "features", "badge", "is_featured", "is_active", "sort")
 
 
 @admin.register(Event)
@@ -19,7 +26,7 @@ class EventAdmin(admin.ModelAdmin):
     list_editable = ("is_published",)
     prepopulated_fields = {"slug": ("title",)}
     date_hierarchy = "start"
-    inlines = [RegistrationInline]
+    inlines = [PackageInline, RegistrationInline]
     fieldsets = (
         (None, {"fields": ("region", "title", "slug", "image", "summary", "is_published")}),
         ("Schedule & Venue", {"fields": ("start", "end", "location", "capacity")}),

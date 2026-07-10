@@ -8,7 +8,7 @@ from core.regions import region_absolute, region_asset_rel, region_path
 from payments import stripe_service
 
 from .forms import RegistrationForm
-from .models import Event
+from .models import Event, EventPackage
 
 
 def _event_hero(slug, region_code):
@@ -83,10 +83,16 @@ def event_detail(request, slug):
             ]
         ),
     ]
+    packages = list(event.packages.filter(is_active=True))
+    symbol = region.get("currency_symbol", "")
+    for p in packages:
+        p.price_label = f"{symbol}{p.amount:,.0f}"
+
     return render(
         request,
         "events/detail.html",
         {"meta": meta, "jsonld": jsonld, "event": event, "form": form,
+         "packages": packages,
          "hero_image": _event_hero(event.slug, region["code"])},
     )
 
@@ -148,3 +154,50 @@ def event_register(request, slug):
             "We couldn't start the payment just now. Please try again or contact us.",
         )
         return redirect(region_path(region["code"], "events:detail", slug=event.slug))
+
+
+@require_http_methods(["POST"])
+def package_checkout(request, slug, package_slug):
+    """Start a Stripe Checkout for a specific package tier.
+
+    The price is read from the database (``package.amount``), never from the
+    request, so the amount cannot be tampered with. Stripe collects the buyer's
+    card and email on its hosted page; the webhook records the paid booking.
+    """
+    region = request.region
+    event = get_object_or_404(Event, region=region["code"], slug=slug, is_published=True)
+    package = get_object_or_404(
+        EventPackage, event=event, slug=package_slug, is_active=True
+    )
+    back = redirect(region_path(region["code"], "events:detail", slug=event.slug))
+
+    if event.is_sold_out:
+        messages.error(request, "Sorry, this event is sold out.")
+        return back
+
+    # Stripe not set up yet — don't hard-error; capture intent and reassure.
+    if not stripe_service.is_configured():
+        messages.info(
+            request,
+            "Online payment is being set up. Please call 725-312-2125 or email "
+            "fathima@brockwellhealthcare.com to reserve your place.",
+        )
+        return back
+
+    success_url = region_absolute(region["code"], "payments:success") + "?session_id={CHECKOUT_SESSION_ID}"
+    cancel_url = region_absolute(region["code"], "payments:cancel")
+    try:
+        session = stripe_service.create_package_checkout_session(
+            event=event,
+            package=package,
+            region=region,
+            success_url=success_url,
+            cancel_url=cancel_url,
+        )
+        return redirect(session.url)
+    except Exception:
+        messages.error(
+            request,
+            "We couldn't start the payment just now. Please try again or contact us.",
+        )
+        return back

@@ -8,8 +8,10 @@ from django.views.decorators.http import require_POST
 
 from core import seo
 
+from decimal import Decimal, InvalidOperation
+
 from . import stripe_service
-from events.models import EventRegistration
+from events.models import EventPackage, EventRegistration
 
 logger = logging.getLogger(__name__)
 
@@ -60,11 +62,58 @@ def stripe_webhook(request):
 
     if event["type"] == "checkout.session.completed":
         session = event["data"]["object"]
-        reg_id = session.get("metadata", {}).get("registration_id")
-        updated = EventRegistration.objects.filter(
-            id=reg_id
-        ).update(paid=True, stripe_session_id=session.get("id", ""))
-        if not updated:
-            logger.warning("Webhook: registration %s not found", reg_id)
+        _handle_completed_session(session)
 
     return HttpResponse(status=200)
+
+
+def _handle_completed_session(session):
+    """Mark a booking paid. Two shapes:
+
+    * Registration-first flow (name/email captured on our form) → the session
+      carries ``registration_id``; flip that record to paid.
+    * Package flow (buyer pays straight from a package card) → the session
+      carries ``package_id``; create the paid registration from the buyer's
+      Stripe-collected details.
+    """
+    meta = session.get("metadata", {}) or {}
+    session_id = session.get("id", "")
+
+    reg_id = meta.get("registration_id")
+    if reg_id:
+        updated = EventRegistration.objects.filter(id=reg_id).update(
+            paid=True, stripe_session_id=session_id
+        )
+        if not updated:
+            logger.warning("Webhook: registration %s not found", reg_id)
+        return
+
+    package_id = meta.get("package_id")
+    if not package_id:
+        return
+    # Idempotency: Stripe can deliver the same event more than once.
+    if EventRegistration.objects.filter(stripe_session_id=session_id).exists():
+        return
+
+    package = EventPackage.objects.filter(id=package_id).select_related("event").first()
+    if not package:
+        logger.warning("Webhook: package %s not found", package_id)
+        return
+
+    details = session.get("customer_details", {}) or {}
+    try:
+        amount = Decimal(session.get("amount_total", 0)) / 100
+    except (InvalidOperation, TypeError):
+        amount = package.amount
+
+    EventRegistration.objects.create(
+        event=package.event,
+        package=package,
+        name=details.get("name") or "Stripe customer",
+        email=details.get("email") or "",
+        phone=(details.get("phone") or ""),
+        amount=amount,
+        currency=(session.get("currency") or "").upper(),
+        stripe_session_id=session_id,
+        paid=True,
+    )
