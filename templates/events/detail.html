@@ -151,12 +151,14 @@
     <div class="evt-fac__grid">
       {% for f in evt.faculty %}
       <article class="evt-fac">
-        <div class="evt-fac__avatar"{% if f.photo %} data-has-photo="1"{% endif %}>
-          {% if f.photo %}<img src="{{ f.photo }}" alt="{{ f.name }}" loading="lazy" decoding="async">{% else %}<span aria-hidden="true">{{ f.initials }}</span>{% endif %}
+        <div class="evt-fac__media"{% if not f.photo %} data-mono="1"{% endif %}>
+          {% if f.photo %}<img src="{{ f.photo }}" alt="{{ f.name }}" loading="lazy" decoding="async">{% else %}<span class="evt-fac__mono" aria-hidden="true">{{ f.initials }}</span>{% endif %}
         </div>
-        <h3 class="evt-fac__name">{{ f.name }}</h3>
-        {% if f.creds %}<p class="evt-fac__creds">{{ f.creds }}</p>{% endif %}
-        {% if f.tagline %}<p class="evt-fac__tag">{{ f.tagline }}</p>{% endif %}
+        <div class="evt-fac__body">
+          <h3 class="evt-fac__name">{{ f.name }}</h3>
+          {% if f.creds %}<p class="evt-fac__creds">{{ f.creds }}</p>{% endif %}
+          {% if f.tagline %}<p class="evt-fac__tag">{{ f.tagline }}</p>{% endif %}
+        </div>
       </article>
       {% endfor %}
     </div>
