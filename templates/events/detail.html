@@ -2,7 +2,9 @@
 {% load region_tags icons content_extras static %}
 
 {% block content %}
-{# ---------------- Hero ---------------- #}
+{% event_landing event.description as evt %}
+
+{# ---------------- Hero (full-width image behind the text) ---------------- #}
 <section class="evt-hero"{% if hero_image %} style="background-image:url('{% static hero_image %}')"{% endif %}>
   <div class="evt-hero__overlay"></div>
   <div class="container evt-hero__inner">
@@ -20,53 +22,180 @@
       {% if event.capacity %}<li>{% icon 'ticket' 'ico' %} {{ event.capacity }} seats only</li>{% endif %}
     </ul>
     <div class="evt-hero__cta">
-      <a class="btn btn--light" href="#register">Reserve Your Seat {% icon 'arrow' 'ico' %}</a>
+      <a class="btn btn--light" href="#packages">View Packages {% icon 'arrow' 'ico' %}</a>
+      <a class="btn btn--outline-light" href="#register">Reserve a Seat {% icon 'arrow' 'ico' %}</a>
     </div>
   </div>
 </section>
 
-{# ---------------- Body: content + sidebar ---------------- #}
-<section class="section evt-body">
-  <div class="container evt-body__grid">
-    <article class="prose evt-content">
-      {{ event.description|enhance|region_media:region_code }}
-    </article>
+{% if not evt.structured %}
+{# ---- Fallback for events written as plain prose (keeps other event pages intact) ---- #}
+<section class="section evt-prose">
+  <div class="container" style="max-width:820px">
+    <article class="prose">{{ event.description|enhance|region_media:region_code }}</article>
+  </div>
+</section>
+{% else %}
 
-    <aside class="evt-side">
-      <div class="card evt-reg" id="register">
-        {% if event.is_sold_out %}
-          <h3>Sold out</h3>
-          <p class="muted">This workshop has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
-        {% else %}
-          <span class="evt-reg__eyebrow">Registration</span>
-          <h3>Reserve your seat</h3>
-          {% if event.seats_left %}<p class="evt-reg__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
-          <p class="muted evt-reg__note">Places are limited to {{ event.capacity }}. Share your details and our team will confirm your registration tier and payment.</p>
-          <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
-            {% csrf_token %}
-            {{ form.website }}
-            <div class="field">
-              <label for="{{ form.name.id_for_label }}">Full name</label>
-              {{ form.name }}{{ form.name.errors }}
-            </div>
-            <div class="field">
-              <label for="{{ form.email.id_for_label }}">Email</label>
-              {{ form.email }}{{ form.email.errors }}
-            </div>
-            <div class="field">
-              <label for="{{ form.phone.id_for_label }}">Phone</label>
-              {{ form.phone }}{{ form.phone.errors }}
-            </div>
-            <button class="btn btn--primary btn--lg" type="submit">Request my seat {% icon 'arrow' 'ico' %}</button>
-          </form>
-        {% endif %}
-        <div class="evt-reg__contact">
-          <span>Prefer to speak to us?</span>
-          <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
-          <a href="mailto:fathima@brockwellhealthcare.com">{% icon 'mail' 'ico' %} fathima@brockwellhealthcare.com</a>
+{# ---------------- Overview + square image in a homepage-style grid -------- #}
+{% if evt.overview %}
+<section class="section evt-overview">
+  <div class="container evt-ov__grid">
+    <div class="evt-ov__text">
+      <span class="eyebrow">The Workshop</span>
+      <h2>An intensive, hands-on training experience</h2>
+      {% for p in evt.overview %}<p{% if forloop.first %} class="evt-ov__lead"{% endif %}>{{ p|safe }}</p>{% endfor %}
+      <ul class="evt-chips" role="list">
+        <li>{% icon 'calendar' 'ico' %} {{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</li>
+        <li>{% icon 'pin' 'ico' %} {{ event.location }}</li>
+        {% if event.capacity %}<li>{% icon 'ticket' 'ico' %} {{ event.capacity }} seats</li>{% endif %}
+        <li>{% icon 'stethoscope' 'ico' %} Instructor-led</li>
+      </ul>
+    </div>
+    {% if evt.overview_image %}
+    <div class="evt-ov__media">
+      <figure class="evt-ov__frame">
+        <img src="{{ evt.overview_image }}" alt="Hands-on interventional injection training at the {{ BRAND_NAME }} workshop" loading="lazy" decoding="async">
+      </figure>
+      <span class="evt-ov__badge">{% icon 'award' 'ico' %} Certificate of attendance</span>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{# ---------------- What you will learn — feature grid ---------------------- #}
+{% if evt.learn %}
+<section class="section section--soft evt-learn">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Curriculum</span>
+      <h2>What you will learn</h2>
+      <p>Practical, clinic-ready skills you can apply the moment you return to practice.</p>
+    </header>
+    <div class="evt-features">
+      {% for l in evt.learn %}
+      <article class="evt-feature">
+        <span class="evt-feature__ico" aria-hidden="true">{% icon l.icon 'ico' %}</span>
+        <p>{{ l.text|safe }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------------- Why attend — reasons ------------------------------------ #}
+{% if evt.why %}
+<section class="section evt-why">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Why Attend</span>
+      <h2>Built for real clinical impact</h2>
+    </header>
+    <div class="evt-why__grid">
+      {% for w in evt.why %}
+      <article class="evt-wcard">
+        <span class="evt-wcard__ico" aria-hidden="true">{% icon w.icon 'ico' %}</span>
+        <h3>{{ w.title }}</h3>
+        <p>{{ w.body|safe }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------------- Meet the faculty — speaker photo cards ------------------ #}
+{% if evt.faculty %}
+<section class="section section--soft evt-faculty">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Speakers &amp; Trainers</span>
+      <h2>Meet the faculty</h2>
+      <p>Learn directly from clinicians shaping modern regenerative and interventional medicine.</p>
+    </header>
+    <div class="evt-fac__grid">
+      {% for f in evt.faculty %}
+      <article class="evt-fac">
+        <div class="evt-fac__avatar"{% if f.photo %} data-has-photo="1"{% endif %}>
+          {% if f.photo %}<img src="{{ f.photo }}" alt="{{ f.name }}" loading="lazy" decoding="async">{% else %}<span aria-hidden="true">{{ f.initials }}</span>{% endif %}
         </div>
+        <h3 class="evt-fac__name">{{ f.name }}</h3>
+        {% if f.creds %}<p class="evt-fac__creds">{{ f.creds }}</p>{% endif %}
+        {% if f.tagline %}<p class="evt-fac__tag">{{ f.tagline }}</p>{% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------------- Registration & pricing — package cards ------------------ #}
+{% if evt.pricing %}
+<section class="section evt-pricing" id="packages">
+  <div class="container">
+    <header class="section__head">
+      <span class="eyebrow">Registration &amp; Pricing</span>
+      <h2>Choose your package</h2>
+      {% if evt.pricing_lead %}<p>{{ evt.pricing_lead|safe }}</p>{% endif %}
+    </header>
+    <div class="evt-price__grid">
+      {% for pk in evt.pricing %}
+      <article class="evt-price{% if pk.featured %} evt-price--featured{% endif %}">
+        {% if pk.featured %}<span class="evt-price__ribbon">Most complete</span>{% endif %}
+        <h3 class="evt-price__name">{{ pk.name }}</h3>
+        {% if pk.price %}<p class="evt-price__amount">{{ pk.price }}</p>{% endif %}
+        <p class="evt-price__body">{{ pk.features|safe }}</p>
+        <a class="btn {% if pk.featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" href="#register">Reserve this package {% icon 'arrow' 'ico' %}</a>
+      </article>
+      {% endfor %}
+    </div>
+    {% if evt.pricing_note %}<p class="evt-price__note">{{ evt.pricing_note|safe }}</p>{% endif %}
+  </div>
+</section>
+{% endif %}
+{% endif %}{# /structured #}
+
+{# ---------------- Reserve / register CTA band (full width) ---------------- #}
+<section class="section evt-cta" id="register">
+  <div class="container evt-cta__inner">
+    <div class="evt-cta__intro">
+      <span class="eyebrow">Reserve Your Seat</span>
+      <h2>Secure your place — limited to {{ event.capacity }} seats</h2>
+      {% if event.seats_left %}<p class="evt-cta__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
+      <p>Share your details and our team will confirm your registration tier and payment. Prefer to speak to us?</p>
+      <div class="evt-cta__contact">
+        <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
+        <a href="mailto:fathima@brockwellhealthcare.com">{% icon 'mail' 'ico' %} fathima@brockwellhealthcare.com</a>
       </div>
-    </aside>
+    </div>
+
+    <div class="card evt-cta__form">
+      {% if event.is_sold_out %}
+        <h3>Sold out</h3>
+        <p class="muted">This workshop has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
+      {% else %}
+        <h3>Request your seat</h3>
+        <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
+          {% csrf_token %}
+          {{ form.website }}
+          <div class="field">
+            <label for="{{ form.name.id_for_label }}">Full name</label>
+            {{ form.name }}{{ form.name.errors }}
+          </div>
+          <div class="field">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}{{ form.email.errors }}
+          </div>
+          <div class="field">
+            <label for="{{ form.phone.id_for_label }}">Phone</label>
+            {{ form.phone }}{{ form.phone.errors }}
+          </div>
+          <button class="btn btn--primary btn--lg" type="submit">Request my seat {% icon 'arrow' 'ico' %}</button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </section>
 {% endblock %}

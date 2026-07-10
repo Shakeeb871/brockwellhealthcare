@@ -197,6 +197,130 @@ def service_thumb(context, slug):
     return ""
 
 
+# --- Event landing-page parser --------------------------------------------
+#
+# The flagship event pages are laid out as a full-width, homepage-style landing
+# page rather than a prose blob. Editors still write ordinary section HTML in the
+# ``description`` field (Overview / What you will learn / Why attend / Meet the
+# faculty / Registration and pricing); this parser turns those known sections
+# into structured data the template renders as designed components (feature
+# grid, speaker photo cards, pricing package cards). Content stays the single
+# source of truth in the DB — only the presentation lives in the template.
+
+_EVT_H3P = re.compile(r"<h3>(.*?)</h3>\s*<p>(.*?)</p>", re.S | re.I)
+_EVT_P = re.compile(r"<p>(.*?)</p>", re.S | re.I)
+_EVT_LI = re.compile(r"<li>(.*?)</li>", re.S | re.I)
+_EVT_IMG_SRC = re.compile(r'<img[^>]+src="([^"]+)"', re.I)
+# Name — credentials / tier — price: an em/en dash (or spaced hyphen) separator.
+# Requires surrounding spaces so hyphenated surnames (Haider-Shah) are preserved.
+_EVT_DASH = re.compile(r"\s+[—–-]\s+")
+_EVT_TITLES = {"dr", "dr.", "prof", "prof.", "mr", "mr.", "ms", "ms.", "mrs", "mrs.", "nurse"}
+
+_LEARN_ICONS = ["syringe", "sparkles", "scan", "refresh", "clipboard", "flask"]
+_WHY_ICONS = ["award", "hand", "ticket", "users", "star", "shield"]
+
+
+def _evt_initials(name):
+    parts = [p for p in re.split(r"\s+", name.strip()) if p]
+    parts = [p for p in parts if p.lower() not in _EVT_TITLES]
+    letters = "".join(p[0] for p in parts[:2] if p[:1].isalpha())
+    return letters.upper() or "★"
+
+
+def _evt_first_sentence(p_html):
+    plain = html_lib.unescape(_TAGS.sub("", p_html)).strip()
+    m = re.match(r"(.*?[.!?])(?:\s|$)", plain)
+    return (m.group(1) if m else plain).strip()
+
+
+@register.simple_tag(takes_context=True)
+def event_landing(context, html):
+    """Parse a flagship event ``description`` into structured landing-page data.
+
+    Returns ``{overview, overview_image, learn, why, faculty, pricing_lead,
+    pricing, pricing_note}``. Regions get their own image overrides; speaker
+    photos are looked up at ``events/faculty/<name-slug>.webp`` (a monogram
+    avatar is shown when no photo exists)."""
+    region_code = context.get("region_code") or settings.DEFAULT_REGION
+    data = {
+        "overview": [], "overview_image": "", "learn": [],
+        "why": [], "faculty": [], "pricing_lead": "",
+        "pricing": [], "pricing_note": "", "structured": False,
+    }
+    if not html:
+        return data
+
+    for m in _H2_SECTION.finditer(html):
+        heading = html_lib.unescape(_TAGS.sub("", m.group(1)).strip()).lower()
+        body = m.group(2)
+
+        if "overview" in heading:
+            img = _EVT_IMG_SRC.search(body)
+            if img:
+                data["overview_image"] = region_media(img.group(1), region_code)
+            data["overview"] = [p.strip() for p in _EVT_P.findall(body) if p.strip()]
+
+        elif "learn" in heading:
+            items = [li.strip() for li in _EVT_LI.findall(body) if li.strip()]
+            data["learn"] = [
+                {"text": t, "icon": _LEARN_ICONS[i % len(_LEARN_ICONS)]}
+                for i, t in enumerate(items)
+            ]
+
+        elif "why" in heading:
+            for i, (h3, p) in enumerate(_EVT_H3P.findall(body)):
+                data["why"].append({
+                    "title": html_lib.unescape(_TAGS.sub("", h3).strip()),
+                    "body": p.strip(),
+                    "icon": _WHY_ICONS[i % len(_WHY_ICONS)],
+                })
+
+        elif "faculty" in heading or "speaker" in heading:
+            for h3, p in _EVT_H3P.findall(body):
+                name_line = html_lib.unescape(_TAGS.sub("", h3).strip())
+                parts = _EVT_DASH.split(name_line, maxsplit=1)
+                name = parts[0].strip()
+                creds = parts[1].strip() if len(parts) > 1 else ""
+                data["faculty"].append({
+                    "name": name,
+                    "creds": creds,
+                    "tagline": _evt_first_sentence(p),
+                    "initials": _evt_initials(name),
+                    "photo": region_asset(
+                        region_code, f"events/faculty/{slugify(name)}.webp"),
+                })
+
+        elif "pricing" in heading or "registration" in heading:
+            tiers = _EVT_H3P.findall(body)
+            for h3, p in tiers:
+                tier_line = html_lib.unescape(_TAGS.sub("", h3).strip())
+                parts = _EVT_DASH.split(tier_line, maxsplit=1)
+                data["pricing"].append({
+                    "name": parts[0].strip(),
+                    "price": parts[1].strip() if len(parts) > 1 else "",
+                    "features": p.strip(),
+                    "featured": "vip" in tier_line.lower(),
+                })
+            # Lead paragraph sits before the first tier; the note after the last.
+            first_h3 = body.lower().find("<h3")
+            if first_h3 > 0:
+                lead = _EVT_P.search(body[:first_h3])
+                if lead:
+                    data["pricing_lead"] = lead.group(1).strip()
+            last_close = body.lower().rfind("</h3>")
+            if last_close != -1:
+                after = body[last_close:]
+                notes = _EVT_P.findall(after)
+                if len(notes) > 1:  # first <p> after last <h3> is that tier's body
+                    data["pricing_note"] = notes[-1].strip()
+
+    data["structured"] = bool(
+        data["overview"] or data["learn"] or data["why"]
+        or data["faculty"] or data["pricing"]
+    )
+    return data
+
+
 @register.simple_tag
 def content_sections(html, cat_slug="", region_code=""):
     """Split rich category content into a designed, homepage-style layout.
