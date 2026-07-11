@@ -2,21 +2,12 @@
 {% load region_tags icons %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> /
-      {% if active_category %}<a href="{% rurl 'blog:list' %}">Insights</a> / <span>{{ active_category.name }}</span>
-      {% else %}<span>Insights</span>{% endif %}
-    </nav>
-    <span class="eyebrow">News &amp; Insights</span>
-    <h1>{% if active_category %}{{ active_category.name }}{% else %}Insights &amp; Articles{% endif %}</h1>
-    <p class="muted" style="max-width:64ch">
-      {% if active_category and active_category.description %}{{ active_category.description }}
-      {% else %}Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists in {{ region.name }}.{% endif %}
-    </p>
-  </div>
-</div>
+{% rurl 'blog:list' as blog_list_url %}
+{% if active_category %}
+{% include "partials/page_hero.html" with hero_eyebrow="News & Insights" hero_title=active_category.name hero_lead=active_category.description|default:"Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists." crumb_parent_label="Insights" crumb_parent_url=blog_list_url crumb_label=active_category.name %}
+{% else %}
+{% include "partials/page_hero.html" with hero_eyebrow="News & Insights" hero_title="Insights & Articles" hero_lead="Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists." crumb_label="Insights" %}
+{% endif %}
 
 <section class="section">
   <div class="container blog-layout">
