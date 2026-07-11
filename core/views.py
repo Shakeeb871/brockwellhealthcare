@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.staticfiles import finders
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
 
@@ -444,16 +444,24 @@ def contact(request):
     region = request.region
     form = ContactForm(request.POST or None)
 
+    ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+
     if request.method == "POST" and form.is_valid():
         if not form.is_spam():
             lead = form.save(commit=False)
             lead.region = region["code"]
             lead.save()
-        messages.success(
-            request,
-            "Thank you — your message has been received. Our team will contact you shortly.",
-        )
+        thanks = "Thank you — your message has been received. Our team will contact you shortly."
+        if ajax:
+            return JsonResponse({"ok": True, "level": "success", "message": thanks})
+        messages.success(request, thanks)
         return redirect(region_path(region["code"], "core:contact"))
+
+    if request.method == "POST" and ajax:
+        # Invalid submission over AJAX — a toast prompt (no reload).
+        return JsonResponse(
+            {"ok": False, "level": "error", "message": "Please check the form and try again."}
+        )
 
     meta = seo.build_meta(
         request,

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
@@ -99,19 +100,41 @@ def event_detail(request, slug):
     )
 
 
+def _wants_json(request):
+    """The visitor submitted via fetch (AJAX) and wants a JSON toast, not a reload."""
+    return request.headers.get("x-requested-with") == "XMLHttpRequest"
+
+
+_LEVEL_MSG = {"error": messages.error, "success": messages.success, "info": messages.info}
+
+
+def _feedback(request, back, level, message):
+    """AJAX → JSON toast (no reload); normal request → flash message + redirect back."""
+    if _wants_json(request):
+        return JsonResponse({"ok": level == "success", "level": level, "message": message})
+    _LEVEL_MSG[level](request, message)
+    return back
+
+
+def _go_stripe(request, back, url):
+    """AJAX → JSON with the Stripe URL (JS navigates); normal → server redirect."""
+    if _wants_json(request):
+        return JsonResponse({"ok": True, "redirect": url})
+    return redirect(url)
+
+
 @require_http_methods(["POST"])
 def event_register(request, slug):
     region = request.region
     event = get_object_or_404(Event, region=region["code"], slug=slug, is_published=True)
     form = RegistrationForm(request.POST)
+    back = redirect(region_path(region["code"], "events:detail", slug=event.slug) + "#register")
 
     if not form.is_valid() or form.is_spam():
-        messages.error(request, "Please check the form and try again.")
-        return redirect(region_path(region["code"], "events:detail", slug=event.slug))
+        return _feedback(request, back, "error", "Please check the form and try again.")
 
     if event.is_sold_out:
-        messages.error(request, "Sorry, this event is sold out.")
-        return redirect(region_path(region["code"], "events:detail", slug=event.slug))
+        return _feedback(request, back, "error", "Sorry, this event is sold out.")
 
     registration = form.save(commit=False)
     registration.event = event
@@ -122,19 +145,21 @@ def event_register(request, slug):
     if event.is_free:
         registration.paid = True
         registration.save()
-        messages.success(request, "You're registered! We've emailed you the details.")
+        msg = "You're registered! Our team will be in touch with the details."
+        if _wants_json(request):
+            return JsonResponse({"ok": True, "level": "success", "message": msg})
+        messages.success(request, msg)
         return redirect(region_path(region["code"], "payments:success"))
 
     # Paid event — needs Stripe. If Stripe isn't configured yet, save the
     # lead and tell the visitor payments are being set up (no hard error).
     registration.save()
     if not stripe_service.is_configured():
-        messages.info(
-            request,
+        return _feedback(
+            request, back, "info",
             "Your place is reserved. Online payment is being set up — our team "
             "will contact you to complete your booking.",
         )
-        return redirect(region_path(region["code"], "events:detail", slug=event.slug))
 
     success_url = region_absolute(region["code"], "payments:success") + "?session_id={CHECKOUT_SESSION_ID}"
     cancel_url = region_absolute(region["code"], "payments:cancel")
@@ -149,13 +174,12 @@ def event_register(request, slug):
         )
         registration.stripe_session_id = session.id
         registration.save(update_fields=["stripe_session_id"])
-        return redirect(session.url)
+        return _go_stripe(request, back, session.url)
     except Exception:
-        messages.error(
-            request,
+        return _feedback(
+            request, back, "error",
             "We couldn't start the payment just now. Please try again or contact us.",
         )
-        return redirect(region_path(region["code"], "events:detail", slug=event.slug))
 
 
 @require_http_methods(["POST"])
@@ -171,22 +195,19 @@ def package_checkout(request, slug, package_slug):
     package = get_object_or_404(
         EventPackage, event=event, slug=package_slug, is_active=True
     )
-    # Return to the pricing section (not the top of the page) so the notice
-    # shows next to where the visitor clicked.
+    # Normal (non-AJAX) fallback returns to the pricing section, not the top.
     back = redirect(region_path(region["code"], "events:detail", slug=event.slug) + "#pricing")
 
     if event.is_sold_out:
-        messages.error(request, "Sorry, this event is sold out.")
-        return back
+        return _feedback(request, back, "error", "Sorry, this event is sold out.")
 
-    # Stripe not set up yet — don't hard-error; capture intent and reassure.
+    # Stripe not set up yet — don't hard-error; reassure the visitor.
     if not stripe_service.is_configured():
-        messages.info(
-            request,
+        return _feedback(
+            request, back, "info",
             "Online payment is being set up. Please call 725-312-2125 or email "
             "fathima@brockwellhealthcare.com to reserve your place.",
         )
-        return back
 
     success_url = region_absolute(region["code"], "payments:success") + "?session_id={CHECKOUT_SESSION_ID}"
     cancel_url = region_absolute(region["code"], "payments:cancel")
@@ -198,10 +219,9 @@ def package_checkout(request, slug, package_slug):
             success_url=success_url,
             cancel_url=cancel_url,
         )
-        return redirect(session.url)
+        return _go_stripe(request, back, session.url)
     except Exception:
-        messages.error(
-            request,
+        return _feedback(
+            request, back, "error",
             "We couldn't start the payment just now. Please try again or contact us.",
         )
-        return back

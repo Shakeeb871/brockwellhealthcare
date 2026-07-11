@@ -64,13 +64,11 @@
 
   {% include "partials/header.html" %}
 
-  {% if messages %}
-  <div class="flash-wrap" role="status" aria-live="polite">
+  <div class="flash-wrap" role="status" aria-live="polite" data-flash-wrap>
     {% for message in messages %}
-    <div class="flash flash--{{ message.tags }}">{{ message }}</div>
+    <div class="flash flash--{{ message.tags }}" data-flash>{{ message }}</div>
     {% endfor %}
   </div>
-  {% endif %}
 
   <main id="main">
     {% block content %}{% endblock %}
@@ -405,6 +403,57 @@
       buildBars();
       go(0);
     })();
+  </script>
+  {# Global toast + AJAX forms: notices appear without a page refresh. #}
+  <script>
+  (function () {
+    function wrap() {
+      var w = document.querySelector('[data-flash-wrap]');
+      if (!w) { w = document.createElement('div'); w.className = 'flash-wrap';
+        w.setAttribute('role', 'status'); w.setAttribute('aria-live', 'polite');
+        w.setAttribute('data-flash-wrap', ''); document.body.appendChild(w); }
+      return w;
+    }
+    function dismiss(el) {
+      el.style.transition = 'opacity .3s ease, transform .3s ease';
+      el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 320);
+    }
+    function toast(message, level) {
+      if (!message) return;
+      var d = document.createElement('div');
+      d.className = 'flash flash--' + (level || 'info');
+      d.setAttribute('data-flash', ''); d.textContent = message;
+      wrap().appendChild(d);
+      setTimeout(function () { dismiss(d); }, 6500);
+    }
+    window.brockwellToast = toast;
+    // Auto-dismiss any server-rendered notices too.
+    document.querySelectorAll('[data-flash-wrap] .flash').forEach(function (el) {
+      setTimeout(function () { dismiss(el); }, 6500);
+    });
+    // Submit forms marked data-ajax via fetch — show the notice, no reload.
+    document.addEventListener('submit', function (e) {
+      var form = e.target;
+      if (!(form instanceof HTMLFormElement) || !form.hasAttribute('data-ajax')) return;
+      e.preventDefault();
+      var btn = form.querySelector('[type=submit]');
+      if (btn) btn.disabled = true;
+      fetch(form.action || location.href, {
+        method: 'POST', body: new FormData(form),
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }, credentials: 'same-origin'
+      })
+        .then(function (r) { return r.json().catch(function () {
+          return { ok: false, level: 'error', message: 'Something went wrong. Please try again.' }; }); })
+        .then(function (data) {
+          if (data && data.redirect) { window.location.href = data.redirect; return; }
+          toast(data.message, data.level || (data.ok ? 'success' : 'error'));
+          if (data.ok && form.getAttribute('data-reset') !== '0') form.reset();
+          if (btn) btn.disabled = false;
+        })
+        .catch(function () { toast('Network error. Please try again.', 'error'); if (btn) btn.disabled = false; });
+    });
+  })();
   </script>
   {% block body_extra %}{% endblock %}
 </body>

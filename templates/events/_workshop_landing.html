@@ -466,7 +466,7 @@ Pricing posts to the live Stripe checkout.
       </div>
       <div class="evx-price__grid">
         {% with pk=packages_by_slug.observer %}
-        <form class="evx-pc" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='observer' %}">{% csrf_token %}
+        <form class="evx-pc" method="post" data-ajax action="{% rurl 'events:package-checkout' slug=event.slug package_slug='observer' %}">{% csrf_token %}
           <span class="evx-pc__label">Lecture &amp; Observation Only</span>
           <h3>Observer</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
@@ -480,7 +480,7 @@ Pricing posts to the live Stripe checkout.
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.early %}
-        <form class="evx-pc evx-pc--feat" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='early' %}">{% csrf_token %}
+        <form class="evx-pc evx-pc--feat" method="post" data-ajax action="{% rurl 'events:package-checkout' slug=event.slug package_slug='early' %}">{% csrf_token %}
           <span class="evx-pc__ribbon">First 10 Registrants Only</span>
           <h3>Early Registration</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
@@ -494,7 +494,7 @@ Pricing posts to the live Stripe checkout.
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.standard %}
-        <form class="evx-pc" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='standard' %}">{% csrf_token %}
+        <form class="evx-pc" method="post" data-ajax action="{% rurl 'events:package-checkout' slug=event.slug package_slug='standard' %}">{% csrf_token %}
           <h3>Standard Registration</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <ul>
             <li>{% icon 'check' 'evx-ic' %} Full conference access</li>
@@ -507,7 +507,7 @@ Pricing posts to the live Stripe checkout.
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.vip %}
-        <form class="evx-pc evx-pc--vip" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug='vip' %}">{% csrf_token %}
+        <form class="evx-pc evx-pc--vip" method="post" data-ajax action="{% rurl 'events:package-checkout' slug=event.slug package_slug='vip' %}">{% csrf_token %}
           <span class="evx-pc__label">Premium Experience</span>
           <h3>VIP Mentorship</h3><div class="evx-pc__amt">{{ pk.price_label }}</div>
           <p class="evx-pc__mini">Everything in Standard, plus…</p>

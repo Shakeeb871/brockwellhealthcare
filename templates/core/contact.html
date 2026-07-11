@@ -43,7 +43,7 @@
           </div>
         </div>
 
-        <form class="form ct-form__body" method="post" novalidate>
+        <form class="form ct-form__body" method="post" data-ajax novalidate>
           {% csrf_token %}
           {{ form.website }}
           <div class="field">

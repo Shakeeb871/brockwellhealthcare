@@ -262,7 +262,7 @@
         <p class="muted">This event has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
       {% else %}
         <h3>Request your seat</h3>
-        <form class="form" method="post" action="{% rurl 'events:register' slug=event.slug %}" novalidate>
+        <form class="form" method="post" data-ajax action="{% rurl 'events:register' slug=event.slug %}" novalidate>
           {% csrf_token %}
           {{ form.website }}
           <div class="field">
