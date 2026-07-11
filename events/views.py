@@ -171,7 +171,9 @@ def package_checkout(request, slug, package_slug):
     package = get_object_or_404(
         EventPackage, event=event, slug=package_slug, is_active=True
     )
-    back = redirect(region_path(region["code"], "events:detail", slug=event.slug))
+    # Return to the pricing section (not the top of the page) so the notice
+    # shows next to where the visitor clicked.
+    back = redirect(region_path(region["code"], "events:detail", slug=event.slug) + "#pricing")
 
     if event.is_sold_out:
         messages.error(request, "Sorry, this event is sold out.")
