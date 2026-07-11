@@ -257,7 +257,7 @@ Pricing posts to the live Stripe checkout.
         <p class="evx-closer">This is the future of hands-on medical education.</p>
       </div>
       <div class="evx-why__media">
-        {% if card_image %}<img src="{% static card_image %}" alt="Hands-on clinical training">{% endif %}
+        {% if why_image %}<img src="{% static why_image %}" alt="Advanced interventional injection &amp; longevity medicine training">{% elif card_image %}<img src="{% static card_image %}" alt="Hands-on clinical training">{% endif %}
         <div class="evx-why__badge">{% icon 'award' 'evx-ic' %}<div><b>Gold Standard</b><span>Clinical Training</span></div></div>
       </div>
     </div>

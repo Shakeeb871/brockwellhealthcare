@@ -96,7 +96,8 @@ def event_detail(request, slug):
         {"meta": meta, "jsonld": jsonld, "event": event, "form": form,
          "packages": packages, "packages_by_slug": packages_by_slug,
          "hero_image": _event_hero(event.slug, region["code"]),
-         "card_image": region_asset_rel(region["code"], f"events/{event.slug}-card.webp")},
+         "card_image": region_asset_rel(region["code"], f"events/{event.slug}-card.webp"),
+         "why_image": region_asset_rel(region["code"], f"events/{event.slug}-why.webp")},
     )
 
 
