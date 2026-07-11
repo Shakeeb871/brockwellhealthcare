@@ -8,7 +8,7 @@
         <span class="newsletter__label">Our Newsletter</span>
         <h2 class="newsletter__title">Join our newsletter to never miss out on health updates</h2>
       </div>
-      <form class="newsletter__form" action="{% rurl 'core:contact' %}" method="post">
+      <form class="newsletter__form" action="{% rurl 'core:contact' %}" method="post" data-ajax>
         {% csrf_token %}
         <input type="text" name="website" class="bform__hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="name" value="Newsletter subscriber">

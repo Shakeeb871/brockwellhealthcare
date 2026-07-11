@@ -183,7 +183,7 @@
     {# Live packages — each button starts a secure Stripe Checkout. #}
     <div class="evt-price__grid">
       {% for pk in packages %}
-      <form class="evt-price{% if pk.is_featured %} evt-price--featured{% endif %}" method="post" action="{% rurl 'events:package-checkout' slug=event.slug package_slug=pk.slug %}">
+      <form class="evt-price{% if pk.is_featured %} evt-price--featured{% endif %}" method="post" data-ajax action="{% rurl 'events:package-checkout' slug=event.slug package_slug=pk.slug %}">
         {% csrf_token %}
         {% if pk.badge %}<span class="evt-price__ribbon">{{ pk.badge }}</span>{% endif %}
         <h3 class="evt-price__name">{{ pk.name }}</h3>

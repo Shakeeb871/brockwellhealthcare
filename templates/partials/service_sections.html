@@ -126,7 +126,7 @@ Context: `sections` (published PageSection list), `service`, `form`,
             <p>Request an appointment for {{ service.name }}.</p>
           </div>
         </div>
-        <form class="form booking__form" method="post" action="{{ service.get_absolute_url }}" novalidate>
+        <form class="form booking__form" method="post" data-ajax action="{{ service.get_absolute_url }}" novalidate>
           {% csrf_token %}
           {{ form.website }}
           <div class="field"><label for="{{ form.name.id_for_label }}">Full name</label>{{ form.name }}{{ form.name.errors }}</div>

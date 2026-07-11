@@ -35,7 +35,7 @@ changes); a default message is included so it works with or without JS.
         </div>
       </div>
 
-      <form class="bform" action="{% rurl 'core:contact' %}" method="post">
+      <form class="bform" action="{% rurl 'core:contact' %}" method="post" data-ajax>
         {% csrf_token %}
         {# Honeypot (bots fill it) + default message so the existing endpoint accepts it. #}
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="bform__hp" aria-hidden="true">

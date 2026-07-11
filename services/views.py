@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.staticfiles import finders
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from core import seo
@@ -118,6 +119,7 @@ def service_detail(request, category, slug, parent=None):
         )
 
     # Sidebar booking form — saves an enquiry tagged with this service.
+    ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
     form = ContactForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         if not form.is_spam():
@@ -126,11 +128,16 @@ def service_detail(request, category, slug, parent=None):
             if not lead.subject:
                 lead.subject = f"Booking enquiry: {service.name}"
             lead.save()
-        messages.success(
-            request,
-            "Thank you — your booking request has been received. Our team will contact you shortly.",
-        )
+        thanks = "Thank you — your booking request has been received. Our team will contact you shortly."
+        if ajax:
+            return JsonResponse({"ok": True, "level": "success", "message": thanks})
+        messages.success(request, thanks)
         return redirect(service.get_absolute_url())
+
+    if request.method == "POST" and ajax:
+        return JsonResponse(
+            {"ok": False, "level": "error", "message": "Please check the form and try again."}
+        )
 
     if parent_service:
         path = f"/services/{cat.slug}/{parent_service.slug}/{service.slug}/"
