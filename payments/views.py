@@ -10,6 +10,7 @@ from core import seo
 
 from decimal import Decimal, InvalidOperation
 
+from core import emails
 from . import stripe_service
 from events.models import EventPackage, EventRegistration
 
@@ -86,6 +87,10 @@ def _handle_completed_session(session):
         )
         if not updated:
             logger.warning("Webhook: registration %s not found", reg_id)
+            return
+        reg = EventRegistration.objects.select_related("event", "package").filter(id=reg_id).first()
+        if reg:
+            emails.paid_booking(reg)
         return
 
     package_id = meta.get("package_id")
@@ -106,7 +111,7 @@ def _handle_completed_session(session):
     except (InvalidOperation, TypeError):
         amount = package.amount
 
-    EventRegistration.objects.create(
+    reg = EventRegistration.objects.create(
         event=package.event,
         package=package,
         name=details.get("name") or "Stripe customer",
@@ -118,3 +123,4 @@ def _handle_completed_session(session):
         paid=True,
         source=EventRegistration.SOURCE_ONLINE,
     )
+    emails.paid_booking(reg)

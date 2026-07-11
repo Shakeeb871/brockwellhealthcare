@@ -1,0 +1,12 @@
+{% autoescape off %}{{ heading }}
+
+{{ intro }}
+{% if rows %}
+{% for row in rows %}{{ row.0 }}: {{ row.1 }}
+{% endfor %}{% endif %}{% if cta_label and cta_url %}
+{{ cta_label }}: {{ cta_url }}
+{% endif %}
+--
+{{ brand }}{% if region %}
+{{ region.phone }} · {{ region.email }}{% endif %}
+{% endautoescape %}

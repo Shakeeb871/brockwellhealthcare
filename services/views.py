@@ -4,7 +4,7 @@ from django.contrib.staticfiles import finders
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from core import seo
+from core import emails, seo
 from core.forms import ContactForm
 from core.regions import region_asset_rel, region_path
 
@@ -128,6 +128,7 @@ def service_detail(request, category, slug, parent=None):
             if not lead.subject:
                 lead.subject = f"Booking enquiry: {service.name}"
             lead.save()
+            emails.contact_lead(lead)
         thanks = "Thank you — your booking request has been received. Our team will contact you shortly."
         if ajax:
             return JsonResponse({"ok": True, "level": "success", "message": thanks})

@@ -13,7 +13,7 @@ from events.models import Event
 from services.models import Service, ServiceCategory
 from team.models import Doctor
 
-from . import seo
+from . import emails, seo
 from .forms import ContactForm
 from .models import FAQ, Page
 from .regions import region_asset_rel, region_path
@@ -451,6 +451,7 @@ def contact(request):
             lead = form.save(commit=False)
             lead.region = region["code"]
             lead.save()
+            emails.contact_lead(lead)
         thanks = "Thank you — your message has been received. Our team will contact you shortly."
         if ajax:
             return JsonResponse({"ok": True, "level": "success", "message": thanks})

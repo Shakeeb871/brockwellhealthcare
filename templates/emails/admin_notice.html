@@ -1,0 +1,13 @@
+{% extends "emails/base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 6px;color:#12351f;font-size:20px;">{{ title }}</h2>
+<p style="margin:0 0 18px;color:#4d545c;font-size:14px;">A new submission came in from the website.</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+  {% for row in rows %}
+  <tr>
+    <td style="padding:8px 12px 8px 0;color:#4d545c;font-size:13px;width:150px;vertical-align:top;border-bottom:1px solid #eef1ec;">{{ row.0 }}</td>
+    <td style="padding:8px 0;color:#1a1c20;font-size:14px;border-bottom:1px solid #eef1ec;">{{ row.1|linebreaksbr }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

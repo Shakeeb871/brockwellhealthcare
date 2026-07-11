@@ -1,0 +1,20 @@
+{% extends "emails/base_email.html" %}
+{% block content %}
+<h2 style="margin:0 0 12px;color:#12351f;font-size:22px;">{{ heading }}</h2>
+<p style="margin:0 0 18px;color:#1a1c20;font-size:15px;line-height:1.6;">{{ intro }}</p>
+{% if rows %}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;">
+  {% for row in rows %}
+  <tr>
+    <td style="padding:8px 12px 8px 0;color:#4d545c;font-size:13px;width:150px;vertical-align:top;border-bottom:1px solid #eef1ec;">{{ row.0 }}</td>
+    <td style="padding:8px 0;color:#1a1c20;font-size:14px;border-bottom:1px solid #eef1ec;">{{ row.1|linebreaksbr }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% if cta_label and cta_url %}
+<p style="margin:24px 0 0;">
+  <a href="{{ cta_url }}" style="background:#2e7d46;color:#ffffff;text-decoration:none;padding:12px 26px;border-radius:6px;font-size:14px;font-weight:600;display:inline-block;">{{ cta_label }}</a>
+</p>
+{% endif %}
+{% endblock %}

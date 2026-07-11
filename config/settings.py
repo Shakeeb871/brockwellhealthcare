@@ -325,9 +325,26 @@ STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
 # Where booking/payment notifications are sent (the clinic's admin inbox).
-# Used by the upcoming confirmation-email step.
 EVENT_NOTIFY_EMAIL = os.getenv("EVENT_NOTIFY_EMAIL", "info@brockwellhealthcare.com")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Brockwell Healthcare <info@brockwellhealthcare.com>")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
+
+# Email delivery. Set EMAIL_HOST (+ user/password) via environment to send for
+# real over SMTP; without it we fall back to the console backend so nothing
+# crashes and messages are logged during development.
+EMAIL_HOST = os.getenv("EMAIL_HOST", "")
+if EMAIL_HOST:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+    EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+    EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "1") == "1"
+    EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "0") == "1"
+    EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "20"))
+else:
+    EMAIL_BACKEND = os.getenv(
+        "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+    )
 
 
 # --------------------------------------------------------------------------- #

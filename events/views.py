@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 
-from core import seo
+from core import emails, seo
 from core.regions import region_absolute, region_asset_rel, region_path
 from payments import stripe_service
 
@@ -145,6 +145,7 @@ def event_register(request, slug):
     if event.is_free:
         registration.paid = True
         registration.save()
+        emails.event_registration(registration)
         msg = "You're registered! Our team will be in touch with the details."
         if _wants_json(request):
             return JsonResponse({"ok": True, "level": "success", "message": msg})
@@ -155,6 +156,7 @@ def event_register(request, slug):
     # lead and tell the visitor payments are being set up (no hard error).
     registration.save()
     if not stripe_service.is_configured():
+        emails.event_registration(registration)
         return _feedback(
             request, back, "info",
             "Your place is reserved. Online payment is being set up — our team "
