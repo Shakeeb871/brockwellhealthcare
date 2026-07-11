@@ -82,7 +82,7 @@ def _handle_completed_session(session):
     reg_id = meta.get("registration_id")
     if reg_id:
         updated = EventRegistration.objects.filter(id=reg_id).update(
-            paid=True, stripe_session_id=session_id
+            paid=True, stripe_session_id=session_id, source=EventRegistration.SOURCE_ONLINE
         )
         if not updated:
             logger.warning("Webhook: registration %s not found", reg_id)
@@ -116,4 +116,5 @@ def _handle_completed_session(session):
         currency=(session.get("currency") or "").upper(),
         stripe_session_id=session_id,
         paid=True,
+        source=EventRegistration.SOURCE_ONLINE,
     )

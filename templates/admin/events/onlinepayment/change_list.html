@@ -1,0 +1,56 @@
+{% extends "admin/change_list.html" %}
+{% comment %}Online Payments dashboard: revenue + tier-sales summary cards above the list.{% endcomment %}
+
+{% block result_list %}
+{% if payment_summary %}
+<div class="op-dash">
+  <div class="op-card op-card--revenue">
+    <span class="op-card__label">Total Revenue</span>
+    <span class="op-card__value">{{ payment_summary.currency }} {{ payment_summary.total_revenue|floatformat:0 }}</span>
+  </div>
+  <div class="op-card op-card--paid">
+    <span class="op-card__label">Paid Bookings</span>
+    <span class="op-card__value">{{ payment_summary.paid_count }}</span>
+  </div>
+  <div class="op-card">
+    <span class="op-card__label">Pending</span>
+    <span class="op-card__value">{{ payment_summary.pending_count }}</span>
+  </div>
+  <div class="op-card op-card--tiers">
+    <span class="op-card__label">Sales by Package</span>
+    <table class="op-tiers">
+      {% for t in payment_summary.by_tier %}
+      <tr>
+        <td class="op-tiers__name">{{ t.package__name|default:"—" }}</td>
+        <td class="op-tiers__n">{{ t.n }} sold</td>
+        <td class="op-tiers__amt">{{ payment_summary.currency }} {{ t.total|floatformat:0 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3" class="op-tiers__empty">No paid bookings yet.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+<style>
+  .op-dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:0 0 20px;}
+  .op-card{background:#fff;border:1px solid #e4ebe2;border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;}
+  .op-card__label{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#4d545c;font-weight:600;}
+  .op-card__value{font-size:26px;font-weight:700;color:#12351f;line-height:1;}
+  .op-card--revenue{background:#0c2616;border-color:#0c2616;}
+  .op-card--revenue .op-card__label{color:rgba(255,255,255,.7);}
+  .op-card--revenue .op-card__value{color:#fff;}
+  .op-card--paid{background:#2e7d46;border-color:#2e7d46;}
+  .op-card--paid .op-card__label{color:rgba(255,255,255,.8);}
+  .op-card--paid .op-card__value{color:#fff;}
+  .op-card--tiers{grid-column:1 / -1;}
+  .op-tiers{width:100%;border-collapse:collapse;margin-top:4px;}
+  .op-tiers td{padding:7px 6px;border-bottom:1px solid #eef1ec;font-size:13px;color:#1a1c20;}
+  .op-tiers tr:last-child td{border-bottom:none;}
+  .op-tiers__name{font-weight:600;}
+  .op-tiers__n{color:#4d545c;}
+  .op-tiers__amt{text-align:right;font-weight:700;color:#2e7d46;}
+  .op-tiers__empty{color:#8b929c;font-style:italic;}
+</style>
+{% endif %}
+{{ block.super }}
+{% endblock %}

@@ -1,13 +1,15 @@
 from django.contrib import admin
+from django.db.models import Count, Sum
 from tinymce.widgets import TinyMCE
 
-from .models import Event, EventPackage, EventRegistration
+from .models import Event, EventPackage, EventRegistration, OnlinePayment
 
 
 class RegistrationInline(admin.TabularInline):
     model = EventRegistration
     extra = 0
-    readonly_fields = ("name", "email", "phone", "amount", "currency", "paid", "created_at")
+    fields = ("name", "email", "phone", "package", "amount", "currency", "paid", "source", "created_at")
+    readonly_fields = fields
     can_delete = False
 
 
@@ -42,7 +44,61 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(EventRegistration)
 class EventRegistrationAdmin(admin.ModelAdmin):
-    list_display = ("name", "event", "amount", "currency", "paid", "created_at")
+    """Enquiry-form leads — people who submitted a form (not online payments)."""
+
+    list_display = ("name", "event", "email", "phone", "paid", "created_at")
     list_filter = ("paid", "event__region", "created_at")
     search_fields = ("name", "email", "phone")
-    readonly_fields = ("created_at", "updated_at", "stripe_session_id")
+    readonly_fields = ("created_at", "updated_at", "stripe_session_id", "source")
+    date_hierarchy = "created_at"
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(source=EventRegistration.SOURCE_FORM)
+
+
+@admin.register(OnlinePayment)
+class OnlinePaymentAdmin(admin.ModelAdmin):
+    """Online Payments dashboard — bookings paid through Stripe, with a revenue
+    and tier-sales summary on top."""
+
+    change_list_template = "admin/events/onlinepayment/change_list.html"
+    list_display = ("created_at", "name", "email", "phone", "event", "tier", "amount_display", "paid")
+    list_filter = ("paid", "event__region", "package", "created_at")
+    search_fields = ("name", "email", "phone", "stripe_session_id")
+    readonly_fields = (
+        "event", "package", "name", "email", "phone", "amount", "currency",
+        "paid", "source", "stripe_session_id", "created_at", "updated_at",
+    )
+    date_hierarchy = "created_at"
+
+    def has_add_permission(self, request):
+        return False  # created by the payment webhook, not by hand
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).filter(source=EventRegistration.SOURCE_ONLINE)
+
+    @admin.display(description="Tier")
+    def tier(self, obj):
+        return obj.package.name if obj.package else "—"
+
+    @admin.display(description="Amount")
+    def amount_display(self, obj):
+        return f"{obj.currency} {obj.amount:,.0f}"
+
+    def changelist_view(self, request, extra_context=None):
+        qs = self.get_queryset(request)
+        paid = qs.filter(paid=True)
+        by_tier = list(
+            paid.values("package__name")
+            .annotate(n=Count("id"), total=Sum("amount"))
+            .order_by("-total")
+        )
+        summary = {
+            "total_revenue": paid.aggregate(s=Sum("amount"))["s"] or 0,
+            "paid_count": paid.count(),
+            "pending_count": qs.filter(paid=False).count(),
+            "currency": paid.values_list("currency", flat=True).first() or "",
+            "by_tier": by_tier,
+        }
+        extra_context = {**(extra_context or {}), "payment_summary": summary}
+        return super().changelist_view(request, extra_context)

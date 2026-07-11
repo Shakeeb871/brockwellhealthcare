@@ -324,6 +324,11 @@ STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
 
+# Where booking/payment notifications are sent (the clinic's admin inbox).
+# Used by the upcoming confirmation-email step.
+EVENT_NOTIFY_EMAIL = os.getenv("EVENT_NOTIFY_EMAIL", "info@brockwellhealthcare.com")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Brockwell Healthcare <info@brockwellhealthcare.com>")
+
 
 # --------------------------------------------------------------------------- #
 # Logging — surface errors clearly, never leak them to visitors.

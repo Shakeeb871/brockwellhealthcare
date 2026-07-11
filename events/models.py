@@ -124,9 +124,31 @@ class EventRegistration(TimeStamped):
     stripe_session_id = models.CharField(max_length=255, blank=True, db_index=True)
     paid = models.BooleanField(default=False)
 
+    SOURCE_FORM = "form"
+    SOURCE_ONLINE = "online"
+    SOURCE_CHOICES = [
+        (SOURCE_FORM, "Enquiry form"),
+        (SOURCE_ONLINE, "Online payment"),
+    ]
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default=SOURCE_FORM, db_index=True,
+        help_text="How the booking came in — a form enquiry or a completed online payment.",
+    )
+
     class Meta:
         ordering = ["-created_at"]
 
     def __str__(self):
         status = "paid" if self.paid else "pending"
         return f"{self.name} → {self.event.title} ({status})"
+
+
+class OnlinePayment(EventRegistration):
+    """Proxy over EventRegistration for the Online Payments dashboard — the
+    same rows, but the admin filters to bookings that came through a completed
+    Stripe payment (source='online'), kept separate from enquiry-form leads."""
+
+    class Meta:
+        proxy = True
+        verbose_name = "Online payment"
+        verbose_name_plural = "Online Payments"
