@@ -54,7 +54,8 @@
       {% for e in upcoming_events %}
       <article class="card">
         <div class="card__media">
-          {% if e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
+          {% event_thumb e.slug as e_thumb %}
+          {% if e_thumb %}<img src="{{ e_thumb }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% elif e.image %}<img src="{{ e.image.url }}" alt="{{ e.title }}" loading="lazy" decoding="async">{% endif %}
           <span class="tag tag--onmedia">{{ e.start|date:"d M Y" }}</span>
         </div>
         <h3>{{ e.title }}</h3>
