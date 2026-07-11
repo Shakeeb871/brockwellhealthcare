@@ -120,7 +120,7 @@ def service_detail(request, category, slug, parent=None):
 
     # Sidebar booking form — saves an enquiry tagged with this service.
     ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
-    form = ContactForm(request.POST or None)
+    form = ContactForm(request.POST or None, region=region)
     if request.method == "POST" and form.is_valid():
         if not form.is_spam():
             lead = form.save(commit=False)

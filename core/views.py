@@ -442,7 +442,7 @@ def about(request):
 @require_http_methods(["GET", "POST"])
 def contact(request):
     region = request.region
-    form = ContactForm(request.POST or None)
+    form = ContactForm(request.POST or None, region=region)
 
     ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
 
