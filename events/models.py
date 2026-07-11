@@ -53,18 +53,6 @@ class Event(TimeStamped):
         return self.price <= 0
 
     @property
-    def seats_left(self):
-        if self.capacity == 0:
-            return None
-        taken = self.registrations.filter(paid=True).count()
-        return max(self.capacity - taken, 0)
-
-    @property
-    def is_sold_out(self):
-        left = self.seats_left
-        return left is not None and left <= 0
-
-    @property
     def paragraphs(self):
         return [p.strip() for p in self.description.split("\n\n") if p.strip()]
 

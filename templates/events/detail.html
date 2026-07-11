@@ -193,7 +193,7 @@
           {% for pt in pk.feature_list %}<li>{% icon 'check' 'ico' %}<span>{{ pt }}</span></li>{% endfor %}
         </ul>
         {% endif %}
-        <button class="btn {% if pk.is_featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Reserve this package {% icon 'arrow' 'ico' %}</button>
+        <button class="btn {% if pk.is_featured %}btn--primary{% else %}btn--ghost{% endif %} evt-price__cta" type="submit">Reserve this package {% icon 'arrow' 'ico' %}</button>
       </form>
       {% endfor %}
     </div>
@@ -230,10 +230,9 @@
 <section class="section evt-cta evt-cta--banner" id="register">
   <div class="container evt-cta__banner">
     <span class="eyebrow">Reserve Your Seat</span>
-    <h2>Secure your place — limited to {{ event.capacity }} seats</h2>
-    {% if event.seats_left %}<p class="evt-cta__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
+    <h2>Secure your place</h2>
     <p>Choose the package that fits your goals and complete your secure booking online.</p>
-    {% if not event.is_sold_out %}<a class="btn btn--primary btn--lg" href="#packages">Choose your package {% icon 'arrow' 'ico' %}</a>{% endif %}
+    <a class="btn btn--primary btn--lg" href="#packages">Choose your package {% icon 'arrow' 'ico' %}</a>
     <div class="evt-cta__contact evt-cta__contact--center">
       <span>Prefer to speak to us?</span>
       <a href="tel:7253122125">{% icon 'phone' 'ico' %} 725-312-2125</a>
@@ -247,8 +246,7 @@
   <div class="container evt-cta__inner">
     <div class="evt-cta__intro">
       <span class="eyebrow">Reserve Your Seat</span>
-      <h2>Secure your place{% if event.capacity %} — limited to {{ event.capacity }} seats{% endif %}</h2>
-      {% if event.seats_left %}<p class="evt-cta__seats">{% icon 'ticket' 'ico' %} {{ event.seats_left }} of {{ event.capacity }} seats remaining</p>{% endif %}
+      <h2>Secure your place</h2>
       <p>Share your details and our team will confirm your registration and payment. Prefer to speak to us?</p>
       <div class="evt-cta__contact">
         <a href="tel:{{ region.phone }}">{% icon 'phone' 'ico' %} {{ region.phone }}</a>
@@ -257,10 +255,6 @@
     </div>
 
     <div class="card evt-cta__form">
-      {% if event.is_sold_out %}
-        <h3>Sold out</h3>
-        <p class="muted">This event has reached capacity. <a href="{% rurl 'core:contact' %}">Contact us</a> to join the waiting list.</p>
-      {% else %}
         <h3>Request your seat</h3>
         <form class="form" method="post" data-ajax action="{% rurl 'events:register' slug=event.slug %}" novalidate>
           {% csrf_token %}
@@ -279,7 +273,6 @@
           </div>
           <button class="btn btn--primary btn--lg" type="submit">Request my seat {% icon 'arrow' 'ico' %}</button>
         </form>
-      {% endif %}
     </div>
   </div>
 </section>

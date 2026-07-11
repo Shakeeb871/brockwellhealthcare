@@ -476,7 +476,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} General course materials</li>
             <li class="no">{% icon 'close' 'evx-ic' %} Hands-on participation not included</li>
           </ul>
-          <button class="btn btn--ghost btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--ghost btn--block" type="submit">Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.early %}
@@ -490,7 +490,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
             <li>{% icon 'check' 'evx-ic' %} Networking opportunities</li>
           </ul>
-          <button class="btn btn--primary btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--primary btn--block" type="submit">Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.standard %}
@@ -503,7 +503,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
             <li>{% icon 'check' 'evx-ic' %} Networking access</li>
           </ul>
-          <button class="btn btn--ghost btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--ghost btn--block" type="submit">Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.vip %}
@@ -518,7 +518,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'star' 'evx-ic' %} Exclusive VIP resource materials</li>
             <li>{% icon 'star' 'evx-ic' %} Post-event guidance &amp; support</li>
           </ul>
-          <button class="btn btn--primary btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Apply for VIP</button>
+          <button class="btn btn--primary btn--block" type="submit">Apply for VIP</button>
         </form>
         {% endwith %}
       </div>

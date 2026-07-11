@@ -265,9 +265,7 @@ def event_schema(event, region):
         "@type": "Offer",
         "price": str(event.price),
         "priceCurrency": region["currency"],
-        "availability": "https://schema.org/InStock"
-        if not event.is_sold_out
-        else "https://schema.org/SoldOut",
+        "availability": "https://schema.org/InStock",
         "url": region_absolute(region["code"], "events:detail", slug=event.slug),
     }
     return data

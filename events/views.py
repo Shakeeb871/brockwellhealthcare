@@ -133,9 +133,6 @@ def event_register(request, slug):
     if not form.is_valid() or form.is_spam():
         return _feedback(request, back, "error", "Please check the form and try again.")
 
-    if event.is_sold_out:
-        return _feedback(request, back, "error", "Sorry, this event is sold out.")
-
     registration = form.save(commit=False)
     registration.event = event
     registration.amount = event.price
@@ -199,9 +196,6 @@ def package_checkout(request, slug, package_slug):
     )
     # Normal (non-AJAX) fallback returns to the pricing section, not the top.
     back = redirect(region_path(region["code"], "events:detail", slug=event.slug) + "#pricing")
-
-    if event.is_sold_out:
-        return _feedback(request, back, "error", "Sorry, this event is sold out.")
 
     # Stripe not set up yet — don't hard-error; reassure the visitor.
     if not stripe_service.is_configured():
