@@ -80,6 +80,11 @@ def _handle_completed_session(session):
     meta = session.get("metadata", {}) or {}
     session_id = session.get("id", "")
 
+    # Only confirm bookings that are actually paid. Some payment methods complete
+    # the session first and settle later ("unpaid"); don't record those as paid.
+    if session.get("payment_status") == "unpaid":
+        return
+
     reg_id = meta.get("registration_id")
     if reg_id:
         updated = EventRegistration.objects.filter(id=reg_id).update(
@@ -106,10 +111,13 @@ def _handle_completed_session(session):
         return
 
     details = session.get("customer_details", {}) or {}
+    # Prefer the amount Stripe actually charged; fall back to the package price
+    # if the total is missing or malformed (never record a zero booking).
+    total = session.get("amount_total")
     try:
-        amount = Decimal(session.get("amount_total", 0)) / 100
+        amount = (Decimal(str(total)) / 100) if total else Decimal(package.amount)
     except (InvalidOperation, TypeError):
-        amount = package.amount
+        amount = Decimal(package.amount)
 
     reg = EventRegistration.objects.create(
         event=package.event,
