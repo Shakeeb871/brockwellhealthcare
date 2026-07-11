@@ -106,8 +106,8 @@ Pricing posts to the live Stripe checkout.
 .evx-cap{background:var(--pd);color:#fff;}
 .evx-cap__grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;}
 @media(max-width:900px){.evx-cap__grid{grid-template-columns:1fr;gap:34px;}}
-.evx-cap__img{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:var(--shadow-lg);}
-.evx-cap__img img{width:100%;height:100%;min-height:320px;object-fit:cover;}
+.evx-cap__img{border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:var(--shadow-lg);aspect-ratio:3/2;max-height:400px;}
+.evx-cap__img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
 .evx-cap h2{font-size:clamp(24px,3.2vw,32px);color:#fff;margin-bottom:16px;}
 .evx-cap__lead{color:rgba(255,255,255,.72);font-size:16px;margin-bottom:22px;}
 .evx-cap ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:13px;}
