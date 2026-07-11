@@ -9,6 +9,7 @@ import logging
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 from django.utils.html import strip_tags
 
 logger = logging.getLogger(__name__)
@@ -18,13 +19,33 @@ def _region(region_code):
     return settings.REGIONS.get(region_code) or settings.REGIONS.get(settings.DEFAULT_REGION)
 
 
+def _abs_static(path):
+    """Absolute https URL for a static asset (email clients need full URLs)."""
+    try:
+        url = static(path)
+    except Exception:
+        url = settings.STATIC_URL + path
+    if url.startswith("http"):
+        return url
+    if not url.startswith("/"):
+        url = "/" + url
+    return f"https://{settings.SITE_DOMAIN}{url}"
+
+
 def _send(subject, to, template, context, reply_to=None):
     """Render ``emails/<template>.html`` (+ optional ``.txt``) and send it.
     Returns True/False; never raises."""
     to_list = [a for a in ([to] if isinstance(to, str) else list(to or [])) if a]
     if not to_list:
         return False
-    ctx = {"brand": settings.BRAND_NAME, "site_domain": settings.SITE_DOMAIN, **context}
+    ctx = {
+        "brand": settings.BRAND_NAME,
+        "site_domain": settings.SITE_DOMAIN,
+        "site_url": f"https://{settings.SITE_DOMAIN}",
+        "logo_url": _abs_static("img/brockwell-healthcare-logo.png"),
+        "hero_url": _abs_static("img/email/email-hero.jpg"),
+        **context,
+    }
     try:
         html = render_to_string(f"emails/{template}.html", ctx)
         try:
@@ -139,8 +160,12 @@ def contact_lead(lead):
         acknowledge(
             region_code=lead.region, to=lead.email,
             subject=f"Thank you for contacting {settings.BRAND_NAME}",
-            heading="Thank you for your message",
-            intro=(f"Hi {lead.name}, thank you for reaching out. We've received your "
-                   "message and our team will contact you shortly."),
+            heading="Thank You for Contacting Us",
+            intro=(f"Dear {lead.name}, thank you for reaching out to {settings.BRAND_NAME}. "
+                   "We have received your enquiry and a member of our team will get back to "
+                   "you within 24 hours. We appreciate your interest in our regenerative "
+                   "medicine and longevity care."),
             rows=[("Your message", lead.message)] if lead.message else None,
+            cta_label="Visit Our Website",
+            cta_url=f"https://{settings.SITE_DOMAIN}",
         )

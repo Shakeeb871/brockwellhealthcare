@@ -1,23 +1,45 @@
 {% load static %}<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f6f7f9;font-family:Arial,Helvetica,sans-serif;color:#1a1c20;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f6f7f9;padding:24px 12px;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light only">
+</head>
+<body style="margin:0;padding:0;background:#eef1ee;font-family:'Segoe UI',Arial,Helvetica,sans-serif;color:#1a1c20;-webkit-font-smoothing:antialiased;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1ee;padding:26px 12px;">
     <tr><td align="center">
-      <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:600px;max-width:100%;background:#ffffff;border:1px solid #e4ebe2;border-radius:10px;overflow:hidden;">
-        <tr><td style="background:#12351f;padding:20px 28px;">
-          <span style="color:#ffffff;font-size:20px;font-weight:700;letter-spacing:.2px;">{{ brand }}</span>
+      <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="width:600px;max-width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 10px 34px rgba(12,38,22,.10);">
+
+        <!-- Logo header -->
+        <tr><td align="center" style="padding:24px 28px 16px;background:#ffffff;">
+          <a href="{{ site_url }}" style="text-decoration:none;">
+            <img src="{{ logo_url }}" alt="{{ brand }}" width="184" style="display:block;border:0;height:auto;max-width:184px;">
+          </a>
         </td></tr>
-        <tr><td style="padding:28px;">
+
+        <!-- Business image -->
+        <tr><td style="padding:0;font-size:0;line-height:0;">
+          <img src="{{ hero_url }}" alt="{{ brand }} — Regenerative Medicine &amp; Longevity" width="600" style="display:block;border:0;width:100%;height:auto;">
+        </td></tr>
+        <tr><td style="height:4px;background:#2e7d46;line-height:4px;font-size:0;">&nbsp;</td></tr>
+
+        <!-- Content -->
+        <tr><td style="padding:32px 34px;">
           {% block content %}{% endblock %}
         </td></tr>
-        <tr><td style="padding:18px 28px;background:#f6f7f9;border-top:1px solid #e4ebe2;color:#4d545c;font-size:12px;line-height:1.7;">
+
+        <!-- Footer -->
+        <tr><td style="padding:22px 34px;background:#12351f;color:#cdd8cf;font-size:12px;line-height:1.85;">
+          <strong style="color:#ffffff;font-size:14px;">{{ brand }}</strong><br>
           {% if region %}{% if region.address %}{{ region.address }}<br>{% endif %}
-          <a href="tel:{{ region.phone }}" style="color:#2e7d46;text-decoration:none;">{{ region.phone }}</a>
+          <a href="tel:{{ region.phone }}" style="color:#9cc06f;text-decoration:none;">{{ region.phone }}</a>
           &nbsp;·&nbsp;
-          <a href="mailto:{{ region.email }}" style="color:#2e7d46;text-decoration:none;">{{ region.email }}</a><br>{% endif %}
-          <span style="color:#8b929c;">© {% now "Y" %} {{ brand }}. This is an automated message.</span>
+          <a href="mailto:{{ region.email }}" style="color:#9cc06f;text-decoration:none;">{{ region.email }}</a>
+          &nbsp;·&nbsp;
+          <a href="{{ site_url }}" style="color:#9cc06f;text-decoration:none;">{{ site_domain }}</a><br>{% endif %}
+          <span style="color:#8aa08f;">© {% now "Y" %} {{ brand }}. This is an automated message.</span>
         </td></tr>
+
       </table>
     </td></tr>
   </table>
