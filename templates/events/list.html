@@ -2,15 +2,7 @@
 {% load region_tags icons content_extras %}
 
 {% block content %}
-<div class="page-head">
-  <div class="container">
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
-      <a href="{% rurl 'core:home' %}">Home</a> / <span>Events</span>
-    </nav>
-    <h1>Events &amp; Seminars</h1>
-    <p class="muted" style="max-width:62ch">Join our educational seminars and clinics in {{ region.name }}. Learn from specialists and reserve your place online.</p>
-  </div>
-</div>
+{% include "partials/page_hero.html" with hero_eyebrow="Seminars & Workshops" hero_title="Events & Seminars" hero_lead="Join our educational seminars and clinics. Learn from specialists and reserve your place online." crumb_label="Events" %}
 
 <section class="section">
   <div class="container">
@@ -26,7 +18,7 @@
         <h3>{{ e.title }}</h3>
         <p>{{ e.summary }}</p>
         <p class="muted" style="font-size:.9rem">{% icon 'pin' 'ico-inline' %}{{ e.location }}</p>
-        <p class="card__price">{% if e.price %}{{ region.currency_symbol }} {{ e.price }}{% else %}View pricing{% endif %}</p>
+        {% if e.price %}<p class="card__price">{{ region.currency_symbol }} {{ e.price }}</p>{% endif %}
         <a class="card__link" href="{{ e.get_absolute_url }}">Details &amp; booking {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
