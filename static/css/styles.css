@@ -255,7 +255,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* ---------------------------------------------------------------- Flash */
 .flash-wrap { position: fixed; bottom: 22px; right: 22px; z-index: 1200; display: grid; gap: .6rem; max-width: 360px; }
 @media (max-width: 560px) { .flash-wrap { left: 16px; right: 16px; max-width: none; } }
-.flash { padding: .9rem 1.1rem; border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow-lg); border-left: 4px solid var(--teal-500); font-size: .95rem; }
+.flash { display: flex; align-items: flex-start; gap: .7rem; padding: .9rem 1.1rem; border-radius: var(--radius-sm); background: #fff; box-shadow: var(--shadow-lg); border-left: 4px solid var(--teal-500); font-size: .95rem; }
+.flash__close { margin-left: auto; flex: none; background: none; border: 0; padding: 0 2px; cursor: pointer; color: var(--slate-400); font-size: 1.25rem; line-height: 1; }
+.flash__close:hover { color: var(--ink); }
 .flash--error { border-left-color: #ef4444; }
 .flash--success { border-left-color: var(--teal-500); }
 

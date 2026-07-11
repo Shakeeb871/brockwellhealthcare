@@ -419,17 +419,28 @@
       el.style.opacity = '0'; el.style.transform = 'translateY(8px)';
       setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 320);
     }
+    function decorate(el) {
+      if (el.querySelector('.flash__close')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'flash__close';
+      btn.setAttribute('aria-label', 'Dismiss'); btn.innerHTML = '&times;';
+      btn.addEventListener('click', function () { dismiss(el); });
+      el.appendChild(btn);
+    }
     function toast(message, level) {
       if (!message) return;
       var d = document.createElement('div');
       d.className = 'flash flash--' + (level || 'info');
-      d.setAttribute('data-flash', ''); d.textContent = message;
+      d.setAttribute('data-flash', '');
+      d.appendChild(document.createTextNode(message));
+      decorate(d);
       wrap().appendChild(d);
       setTimeout(function () { dismiss(d); }, 6500);
     }
     window.brockwellToast = toast;
-    // Auto-dismiss any server-rendered notices too.
+    // Give server-rendered notices a close button + auto-dismiss too.
     document.querySelectorAll('[data-flash-wrap] .flash').forEach(function (el) {
+      decorate(el);
       setTimeout(function () { dismiss(el); }, 6500);
     });
     // Submit forms marked data-ajax via fetch — show the notice, no reload.
