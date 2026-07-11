@@ -1,8 +1,9 @@
 {% load region_tags content_extras icons static %}
 {% comment %}
 Workshop landing ("Clinical Precision" template) in the site theme, populated
-with the real Brockwell event content. Site colours/typography/pill buttons,
-inline SVG icons, local images, no Tailwind. Header/footer from base.html.
+with the real Brockwell event content. Site colours/typography and the site's
+own .btn buttons, inline SVG icons, local images, no Tailwind. Header/footer
+from base.html.
 Pricing posts to the live Stripe checkout.
 {% endcomment %}
 {% region_img 'events/faculty/dr-syed-hasnain-haider-shah.webp' as fac_syed %}
@@ -19,14 +20,9 @@ Pricing posts to the live Stripe checkout.
 .evx-head{text-align:center;max-width:720px;margin:0 auto 44px;}
 .evx-head h2{font-size:clamp(25px,3.2vw,32px);color:var(--p);margin-bottom:12px;}
 .evx-head p{color:var(--muted);font-size:16px;}
-/* Buttons */
-.evx-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-sans);font-weight:600;font-size:14px;padding:13px 28px;border-radius:9999px;border:2px solid transparent;cursor:pointer;transition:.2s;text-decoration:none;text-align:center;}
-.evx-btn svg{width:17px;height:17px;}
-.evx-btn--primary{background:var(--accent);color:#fff;}.evx-btn--primary:hover{background:var(--p);}
-.evx-btn--outline{background:transparent;border-color:var(--accent);color:var(--accent);}.evx-btn--outline:hover{background:var(--soft);}
-.evx-btn--outline-light{background:transparent;border-color:rgba(255,255,255,.55);color:#fff;}.evx-btn--outline-light:hover{background:rgba(255,255,255,.12);}
-.evx-btn--dark{background:var(--pd);color:#fff;}.evx-btn--dark:hover{background:var(--accent);}
-.evx-btn--full{width:100%;}
+/* Buttons — use the site's own .btn styling (square, 1px border) */
+.evtx .btn svg{width:16px;height:16px;}
+.evtx .btn--block{width:100%;justify-content:center;}
 /* Reusable checklists / mini-cards */
 .evx-list{list-style:none;padding:0;margin:0;display:grid;gap:12px;}
 .evx-list--2{grid-template-columns:1fr 1fr;}
@@ -192,8 +188,8 @@ Pricing posts to the live Stripe checkout.
       <p class="evx-hero__tag">Live Patient Training • Ultrasound-Guided Procedures • PRP • Stem Cells • Peptides</p>
       <p class="evx-hero__meta">{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }} — {{ event.location }}</p>
       <div class="evx-hero__cta">
-        <a class="evx-btn evx-btn--primary" href="#pricing">Reserve Your Seat Today! {% icon 'arrow' 'evx-ic' %}</a>
-        <a class="evx-btn evx-btn--outline-light" href="#curriculum">View Syllabus</a>
+        <a class="btn btn--primary" href="#pricing">Reserve Your Seat Today! {% icon 'arrow' 'evx-ic' %}</a>
+        <a class="btn btn--outline-light" href="#curriculum">View Syllabus</a>
       </div>
       <p class="evx-hero__host">Hosted by Brockwell Academy in collaboration with Orion Medical Group</p>
     </div>
@@ -480,7 +476,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} General course materials</li>
             <li class="no">{% icon 'close' 'evx-ic' %} Hands-on participation not included</li>
           </ul>
-          <button class="evx-btn evx-btn--outline evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--ghost btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.early %}
@@ -494,7 +490,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
             <li>{% icon 'check' 'evx-ic' %} Networking opportunities</li>
           </ul>
-          <button class="evx-btn evx-btn--primary evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--primary btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.standard %}
@@ -507,7 +503,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'check' 'evx-ic' %} Certificate of attendance</li>
             <li>{% icon 'check' 'evx-ic' %} Networking access</li>
           </ul>
-          <button class="evx-btn evx-btn--outline evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
+          <button class="btn btn--ghost btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Register Now</button>
         </form>
         {% endwith %}
         {% with pk=packages_by_slug.vip %}
@@ -522,7 +518,7 @@ Pricing posts to the live Stripe checkout.
             <li>{% icon 'star' 'evx-ic' %} Exclusive VIP resource materials</li>
             <li>{% icon 'star' 'evx-ic' %} Post-event guidance &amp; support</li>
           </ul>
-          <button class="evx-btn evx-btn--primary evx-btn--full" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Apply for VIP</button>
+          <button class="btn btn--primary btn--block" type="submit"{% if event.is_sold_out %} disabled{% endif %}>Apply for VIP</button>
         </form>
         {% endwith %}
       </div>
