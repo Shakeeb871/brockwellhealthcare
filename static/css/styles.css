@@ -972,7 +972,10 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .docchip { flex: 0 0 auto; min-height: 50px; }
   .docpanel { grid-template-columns: 1fr; gap: 1.4rem; height: auto; }
   .docpanel__body { overflow: visible; height: auto; padding-right: 0; }
-  .docpanel__media img, .docpanel__media .avatar--xl { height: 340px; }
+  /* Single-column: give the photo a portrait box that scales with width and is
+     width-capped so it never becomes a wide short strip that crops the face. */
+  .docpanel__media { aspect-ratio: 4 / 5; width: 100%; max-width: 420px; margin-inline: auto; }
+  .docpanel__media img, .docpanel__media .avatar--xl { height: 100%; object-position: top center; }
 }
 
 /* =========================================================================
