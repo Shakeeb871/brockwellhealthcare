@@ -322,7 +322,7 @@ Pricing posts to the live Stripe checkout.
   <section class="evtx-sec evx-cap">
     <div class="evtx-c">
       <div class="evx-cap__grid">
-        <div class="evx-cap__img"><img src="{% static 'img/about/about-3.webp' %}" alt="Faculty-supervised hands-on session"></div>
+        <div class="evx-cap__img"><img src="{% if learn_image %}{% static learn_image %}{% else %}{% static 'img/about/about-3.webp' %}{% endif %}" alt="Faculty-supervised hands-on session"></div>
         <div>
           <span class="evx-eyebrow" style="color:var(--accent2)">Live Hands-On Experience</span>
           <h2>Learn By Doing</h2>
