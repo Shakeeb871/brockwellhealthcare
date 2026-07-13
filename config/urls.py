@@ -45,6 +45,7 @@ urlpatterns = [
     # by RegionMiddleware before resolution).
     path("services/", include("services.urls")),
     path("events/", include("events.urls")),
+    path("locations/", include("locations.urls")),
     path("team/", include("team.urls")),
     path("blog/", include("blog.urls")),
     path("checkout/", include("payments.urls")),

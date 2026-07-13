@@ -1,0 +1,35 @@
+{% load icons region_tags %}
+{% if clinic_locations %}
+<section class="section section--soft" aria-labelledby="home-loc-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">{% icon 'pin' 'ico' %} Our Locations</span>
+      <h2 id="home-loc-title">Visit a Brockwell Clinic Near You</h2>
+      <p>Regenerative medicine and longevity care across our growing network of clinics.</p>
+    </div>
+    <div class="loc-grid">
+      {% for loc in clinic_locations %}
+      <article class="loc-card">
+        <a class="loc-card__media" href="{{ loc.get_absolute_url }}" aria-label="{{ loc.name }}">
+          {% if loc.hero %}
+            <img src="{{ loc.hero.url }}" alt="{{ loc.name }}" loading="lazy" decoding="async">
+          {% else %}
+            <span class="loc-card__ph">{% icon 'pin' %}</span>
+          {% endif %}
+          {% if loc.is_primary %}<span class="loc-card__badge">Main Clinic</span>{% endif %}
+        </a>
+        <div class="loc-card__body">
+          <h3 class="loc-card__name"><a href="{{ loc.get_absolute_url }}">{{ loc.city }}{% if loc.state_code %}, {{ loc.state_code }}{% endif %}</a></h3>
+          <p class="loc-card__addr">{% icon 'pin' 'ico' %} {{ loc.full_address }}</p>
+          {% if loc.phone %}<p class="loc-card__row">{% icon 'phone' 'ico' %} <a href="tel:{{ loc.phone }}">{{ loc.phone }}</a></p>{% endif %}
+          <a class="card__link" href="{{ loc.get_absolute_url }}">View clinic {% icon 'arrow' 'ico' %}</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <div class="text-center" style="margin-top:1.6rem;">
+      <a class="btn btn--ghost" href="{% rurl 'locations:list' %}">View all locations {% icon 'arrow' 'ico' %}</a>
+    </div>
+  </div>
+</section>
+{% endif %}

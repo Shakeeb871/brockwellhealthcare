@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load icons region_tags %}
+
+{% block content %}
+<section class="loc-hero{% if not location.hero %} loc-hero--plain{% endif %}">
+  {% if location.hero %}<div class="loc-hero__bg"><img src="{{ location.hero.url }}" alt="{{ location.name }}"></div>{% endif %}
+  <div class="container loc-hero__in">
+    <span class="eyebrow">{% icon 'pin' 'ico' %} {{ location.region_label }} Clinic</span>
+    <h1>{{ location.name }}</h1>
+    <p class="loc-hero__addr">{{ location.full_address }}</p>
+    {% if location.intro %}<p class="loc-hero__lead">{{ location.intro }}</p>{% endif %}
+    <div class="loc-hero__cta">
+      {% if location.map_url %}<a class="btn btn--primary" href="{{ location.map_url }}" target="_blank" rel="noopener">{% icon 'pin' 'ico' %} Get directions</a>{% endif %}
+      {% if location.phone %}<a class="btn btn--ghost" href="tel:{{ location.phone }}">{% icon 'phone' 'ico' %} {{ location.phone }}</a>{% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container loc-detail">
+    {# ---- Info cards: address / contact / hours ---- #}
+    <div class="loc-info">
+      <div class="loc-info__card">
+        <span class="loc-info__ic">{% icon 'pin' %}</span>
+        <h3>Address</h3>
+        <p>{{ location.full_address }}</p>
+        {% if location.map_url %}<a class="card__link" href="{{ location.map_url }}" target="_blank" rel="noopener">Open in Maps {% icon 'arrow' 'ico' %}</a>{% endif %}
+      </div>
+      <div class="loc-info__card">
+        <span class="loc-info__ic">{% icon 'phone' %}</span>
+        <h3>Contact</h3>
+        {% if location.phone %}<p>{% icon 'phone' 'ico' %} <a href="tel:{{ location.phone }}">{{ location.phone }}</a></p>{% endif %}
+        {% if location.email %}<p>{% icon 'mail' 'ico' %} <a href="mailto:{{ location.email }}">{{ location.email }}</a></p>{% endif %}
+        {% if not location.phone and not location.email %}<p class="muted">Contact details coming soon.</p>{% endif %}
+      </div>
+      <div class="loc-info__card">
+        <span class="loc-info__ic">{% icon 'clock' %}</span>
+        <h3>Opening Hours</h3>
+        {% if location.hours_list %}
+        <ul class="loc-hours" role="list">
+          {% for line in location.hours_list %}<li>{{ line }}</li>{% endfor %}
+        </ul>
+        {% else %}<p class="muted">Please call for opening hours.</p>{% endif %}
+      </div>
+    </div>
+
+    {# ---- About this clinic ---- #}
+    {% if location.about_paragraphs %}
+    <div class="loc-about">
+      <div class="section__head">
+        <span class="eyebrow">About This Clinic</span>
+        <h2>Regenerative Medicine &amp; Longevity in {{ location.city }}</h2>
+      </div>
+      <div class="prose">
+        {% for p in location.about_paragraphs %}<p>{{ p }}</p>{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ---- Doctors at this location ---- #}
+    {% if doctors %}
+    <div class="loc-docs">
+      <div class="section__head">
+        <span class="eyebrow">Our Specialists</span>
+        <h2>Meet the {{ location.city }} Team</h2>
+      </div>
+      <div class="team-grid">
+        {% for d in doctors %}
+        <article class="team-card">
+          <a href="{{ d.get_absolute_url }}" class="team-card__media" aria-label="{{ d.name }}">
+            {% if d.photo %}<img src="{{ d.photo }}" alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
+          </a>
+          <div class="team-card__body">
+            <h3 class="team-card__name"><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h3>
+            {% if d.title %}<p class="team-card__title">{{ d.title }}</p>{% endif %}
+            <a class="card__link" href="{{ d.get_absolute_url }}">View Profile {% icon 'arrow' 'ico' %}</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {# ---- CTA ---- #}
+    <div class="loc-cta">
+      <h2>Book a consultation at our {{ location.city }} clinic</h2>
+      <p>Our team is ready to help you with regenerative medicine, longevity and wellness care.</p>
+      <div class="loc-cta__btns">
+        <a class="btn btn--primary" href="{% rurl 'core:contact' %}">Contact us {% icon 'arrow' 'ico' %}</a>
+        {% if location.phone %}<a class="btn btn--ghost" href="tel:{{ location.phone }}">{% icon 'phone' 'ico' %} Call {{ location.phone }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

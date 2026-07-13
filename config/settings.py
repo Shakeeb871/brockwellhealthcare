@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "payments",
     "team",
     "blog",
+    "locations",
     "clinic",
 ]
 

@@ -10,6 +10,7 @@ from django.db.models import Q
 
 from blog.models import BlogPost
 from events.models import Event
+from locations.models import Location
 from services.models import Service, ServiceCategory
 from team.models import Doctor
 
@@ -270,6 +271,9 @@ def home(request):
     events = Event.objects.filter(region=code, is_published=True).order_by("start")
     upcoming = [e for e in events if e.is_upcoming][:3]
     doctors = Doctor.objects.filter(region=code, is_published=True)[:20]
+    clinic_locations = list(
+        Location.objects.filter(region=code, is_active=True).prefetch_related("doctors")[:6]
+    )
     faqs = list(FAQ.objects.filter(region=code, is_published=True))
     latest_posts = BlogPost.objects.filter(region=code, is_published=True).select_related("category")[:3]
 
@@ -312,6 +316,7 @@ def home(request):
             "categories": categories,
             "upcoming_events": upcoming,
             "doctors": doctors,
+            "clinic_locations": clinic_locations,
             "faqs": faqs,
             "about_features": ABOUT_FEATURES,
             "about_stats": ABOUT_STATS,

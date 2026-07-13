@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load icons %}
+
+{% block content %}
+{% include "partials/page_hero.html" with hero_eyebrow="Our Clinics" hero_title="Our Locations" hero_lead="Find a "|add:BRAND_NAME|add:" regenerative medicine and longevity clinic near you." crumb_label="Locations" %}
+
+<section class="section">
+  <div class="container">
+    {% if grouped %}
+      {% for group in grouped %}
+      <div class="loc-group" {% if group.state %}id="{{ group.state|slugify }}"{% endif %}>
+        {% if group.state and grouped|length > 1 %}
+        <div class="section__head loc-group__head">
+          <span class="eyebrow">{% icon 'pin' 'ico' %} {{ group.state }}</span>
+          <h2>{{ group.state }}</h2>
+        </div>
+        {% endif %}
+        <div class="loc-grid">
+          {% for loc in group.locations %}
+          <article class="loc-card">
+            <a class="loc-card__media" href="{{ loc.get_absolute_url }}" aria-label="{{ loc.name }}">
+              {% if loc.hero %}
+                <img src="{{ loc.hero.url }}" alt="{{ loc.name }}" loading="lazy" decoding="async">
+              {% else %}
+                <span class="loc-card__ph">{% icon 'pin' %}</span>
+              {% endif %}
+              {% if loc.is_primary %}<span class="loc-card__badge">Main Clinic</span>{% endif %}
+            </a>
+            <div class="loc-card__body">
+              <h3 class="loc-card__name"><a href="{{ loc.get_absolute_url }}">{{ loc.city }}{% if loc.state_code %}, {{ loc.state_code }}{% endif %}</a></h3>
+              <p class="loc-card__addr">{% icon 'pin' 'ico' %} {{ loc.full_address }}</p>
+              {% if loc.phone %}<p class="loc-card__row">{% icon 'phone' 'ico' %} <a href="tel:{{ loc.phone }}">{{ loc.phone }}</a></p>{% endif %}
+              {% if loc.hours_list %}<p class="loc-card__row">{% icon 'clock' 'ico' %} {{ loc.hours_list.0 }}</p>{% endif %}
+              <a class="card__link" href="{{ loc.get_absolute_url }}">View clinic {% icon 'arrow' 'ico' %}</a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <p class="text-center muted">Our clinic locations will be listed here soon.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

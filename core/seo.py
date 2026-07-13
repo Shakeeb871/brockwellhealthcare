@@ -309,6 +309,45 @@ def article_schema(post, region):
     }
 
 
+def location_schema(location, region):
+    """LocalBusiness/MedicalClinic node for a single clinic — powers local
+    search and Google Maps rich results."""
+    from django.templatetags.static import static
+
+    data = {
+        "@context": "https://schema.org",
+        "@type": ["MedicalClinic", "LocalBusiness"],
+        "name": location.name,
+        "url": absolute(location.get_absolute_url()),
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": location.street_address,
+            "addressLocality": location.city,
+            "addressRegion": location.state_code or location.state,
+            "postalCode": location.postal_code,
+            "addressCountry": region["short"],
+        },
+        "image": absolute(location.hero.url) if location.hero else absolute(
+            static("img/brockwell-healthcare.webp")
+        ),
+    }
+    if location.phone:
+        data["telephone"] = location.phone
+    if location.email:
+        data["email"] = location.email
+    if location.latitude is not None and location.longitude is not None:
+        data["geo"] = {
+            "@type": "GeoCoordinates",
+            "latitude": str(location.latitude),
+            "longitude": str(location.longitude),
+        }
+    if location.map_url:
+        data["hasMap"] = location.map_url
+    if location.hours_list:
+        data["openingHours"] = location.hours_list
+    return data
+
+
 def faq_schema(faqs):
     if not faqs:
         return None
