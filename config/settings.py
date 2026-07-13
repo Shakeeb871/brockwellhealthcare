@@ -298,7 +298,7 @@ REGIONS = {
         "code": "us",
         "name": "United States",
         "short": "USA",
-        "city": "Philadelphia",
+        "city": "Las Vegas",
         # US pages stay location-light: no city in body copy, country mentioned
         # sparingly (only the home/hero H1 via ``h1_loc``).
         "in_loc": "",
@@ -314,7 +314,11 @@ REGIONS = {
         "phone": os.getenv("US_PHONE", "+1 (262) 302-1216"),
         "dial": "+1",
         "email": os.getenv("US_EMAIL", "info@brockwellhealthcare.com"),
-        "address": os.getenv("US_ADDRESS", "Philadelphia, PA, United States"),
+        "address": os.getenv("US_ADDRESS", "8879 W Flamingo Rd, Ste 201, Las Vegas, NV 89147"),
+        "street": "8879 W Flamingo Rd, Ste 201",
+        "locality": "Las Vegas",
+        "state": "NV",
+        "postal": "89147",
     },
 }
 

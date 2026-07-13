@@ -79,6 +79,24 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
 # --------------------------------------------------------------------------- #
 # JSON-LD schema builders
 # --------------------------------------------------------------------------- #
+def _postal_address(region):
+    """Build a PostalAddress. Uses split street/locality/region/postal fields
+    when a region provides them (better local SEO), otherwise falls back to the
+    single free-text address string."""
+    addr = {"@type": "PostalAddress", "addressCountry": region["short"]}
+    if region.get("street"):
+        addr["streetAddress"] = region["street"]
+        if region.get("locality"):
+            addr["addressLocality"] = region["locality"]
+        if region.get("state"):
+            addr["addressRegion"] = region["state"]
+        if region.get("postal"):
+            addr["postalCode"] = region["postal"]
+    else:
+        addr["streetAddress"] = region["address"]
+    return addr
+
+
 def organization_schema(region):
     """MedicalBusiness/Organization — the foundational entity for GEO."""
     return {
@@ -101,11 +119,7 @@ def organization_schema(region):
             "Chronic Pain Management",
         ],
         "areaServed": region["name"],
-        "address": {
-            "@type": "PostalAddress",
-            "addressCountry": region["short"],
-            "streetAddress": region["address"],
-        },
+        "address": _postal_address(region),
         "priceRange": "$$$",
     }
 
