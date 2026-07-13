@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "payments",
     "team",
     "blog",
+    "clinic",
 ]
 
 # Rich-text editor (TinyMCE) used in the admin for long-form content fields.
