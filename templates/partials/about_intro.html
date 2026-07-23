@@ -71,9 +71,9 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
       </div>
     </div>
 
-    {# ---------- 3. Partner / brand-logo strip ---------- #}
-    {# Shows the logo image; if the file is missing it falls back to an icon + name. #}
-    <ul class="about__partners" aria-label="Our partners">
+    {# ---------- 3. Commitments strip (or partner logos when supplied) ---------- #}
+    {# Shows a logo image when provided; otherwise an icon + label. #}
+    <ul class="about__partners" aria-label="Our commitments to patients">
       {% for p in about_partners %}
       <li class="about__partner">
         {% if p.logo %}

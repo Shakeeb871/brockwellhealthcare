@@ -34,22 +34,9 @@ is aria-hidden. Google logo + blue tick use Google's official brand colours.
         <p class="grev__text">{{ r.text }}</p>
       </article>
       {% endfor %}
-
-      {# Seamless-loop duplicate (hidden from assistive tech). #}
-      {% for r in patient_reviews %}
-      <article class="grev" aria-hidden="true">
-        <header class="grev__head">
-          <span class="grev__avatar">{{ r.initial }}</span>
-          <div class="grev__id">
-            <span class="grev__name">{{ r.name }}<span class="grev__tick">{% icon 'check' %}</span></span>
-            <span class="grev__time">{{ r.time }}</span>
-          </div>
-          <span class="grev__glogo">{% social 'google' %}</span>
-        </header>
-        <span class="grev__stars">{% for _ in "xxxxx" %}{% icon 'star' 'gstar' %}{% endfor %}</span>
-        <p class="grev__text">{{ r.text }}</p>
-      </article>
-      {% endfor %}
+      {# The seamless-loop duplicate is cloned by JS (see base.html), so the
+         source HTML lists each review only once and reduced-motion users never
+         see them twice. #}
     </div>
   </div>
 </section>

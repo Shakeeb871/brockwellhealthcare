@@ -37,13 +37,16 @@ ABOUT_STATS = [
 # Partner/brand logos shown in the About section. Put the 6 logo files in
 # static/img/ named brand-1.png … brand-6.png (any image type works — just
 # match the path). If a file is missing, a fallback icon + name is shown.
+# Trust/commitment strip. These are truthful positioning statements (not brand
+# logos or accreditation claims). If real partner/affiliation logos are supplied,
+# give each item a ``logo`` static path and its brand ``name``.
 ABOUT_PARTNERS = [
-    {"name": "Partner 1", "logo": "img/1.svg", "icon": "plus"},
-    {"name": "Partner 2", "logo": "img/2.svg", "icon": "stethoscope"},
-    {"name": "Partner 3", "logo": "img/3.svg", "icon": "heart"},
-    {"name": "Partner 4", "logo": "img/4.svg", "icon": "shield"},
-    {"name": "Partner 5", "logo": "img/5.svg", "icon": "leaf"},
-    {"name": "Partner 6", "logo": "img/6.svg", "icon": "microscope"},
+    {"name": "Physician-Led Care", "logo": "", "icon": "stethoscope"},
+    {"name": "Evidence-Based Medicine", "logo": "", "icon": "microscope"},
+    {"name": "Personalised Treatment Plans", "logo": "", "icon": "heart"},
+    {"name": "Advanced Diagnostics", "logo": "", "icon": "pulse"},
+    {"name": "Confidential & Secure", "logo": "", "icon": "shield"},
+    {"name": "Patient-First Approach", "logo": "", "icon": "leaf"},
 ]
 
 # Dummy stats for the circular "Our Impact" counters. Placeholder values only —

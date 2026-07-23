@@ -403,6 +403,23 @@
       buildBars();
       go(0);
     })();
+
+    /* Reviews marquee: the source HTML lists each review ONCE. For the seamless
+       CSS loop we clone the set here (the copy is aria-hidden). When the user
+       prefers reduced motion we skip cloning, so reviews are never shown twice. */
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('[data-rmarquee] .rmarquee__track').forEach(function (track) {
+        if (reduce || track.dataset.cloned) return;
+        var originals = Array.prototype.slice.call(track.children);
+        originals.forEach(function (node) {
+          var clone = node.cloneNode(true);
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        });
+        track.dataset.cloned = '1';
+      });
+    })();
   </script>
   {# Global toast + AJAX forms: notices appear without a page refresh. #}
   <script>
