@@ -188,12 +188,15 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .catbar { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .catbar__inner {
   max-width: 1400px; margin-inline: auto; padding-inline: 26px;
-  display: flex; align-items: stretch; justify-content: space-between;
-  flex-wrap: nowrap;   /* single row; overflow stays visible so dropdowns show */
+  display: flex; align-items: stretch; justify-content: center;
+  flex-wrap: wrap;   /* items size to content and wrap to a new row instead of
+                        squeezing/overlapping; overflow stays visible for dropdowns */
 }
-.catbar__item { position: relative; flex: 1 1 0; min-width: 0; display: flex; }
+/* Natural width per item — labels stay on one line and never overlap the next.
+   On narrow screens the row simply wraps. */
+.catbar__item { position: relative; flex: 0 0 auto; display: flex; }
 .catbar__item + .catbar__item { border-left: 1px solid var(--line); }
-.catbar__link { flex: 1; display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: .3rem; padding: .85rem .6rem; color: var(--navy-800); font-weight: 500; font-size: .86rem; line-height: 1.25; white-space: normal; overflow-wrap: break-word; hyphens: none; transition: color .2s ease; }
+.catbar__link { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: .35rem; padding: .85rem 1.15rem; color: var(--navy-800); font-weight: 500; font-size: .86rem; line-height: 1.2; white-space: nowrap; transition: color .2s ease; }
 /* keep edge dropdowns inside the viewport */
 .catbar__item:first-child .dd { left: 0; transform: translateX(0) translateY(10px); }
 .catbar__item:first-child.has-dd:hover .dd { transform: translateX(0) translateY(0); }
@@ -825,7 +828,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .steps { grid-template-columns: repeat(2,1fr); }
   .split { grid-template-columns: 1fr; gap: 2rem; }
   .site-footer__grid { grid-template-columns: 1fr 1fr; }
-  .catbar__link { padding: .8rem .8rem; font-size: .88rem; }
+  .catbar__link { padding: .7rem .85rem; font-size: .82rem; }
 }
 
 @media (max-width: 720px) {
