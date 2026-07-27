@@ -33,8 +33,9 @@
       {% for e in past %}
       <article class="card" style="opacity:.7">
         <span class="tag">{{ e.start|date:"d M Y" }}</span>
-        <h3 style="margin-top:.8rem">{{ e.title }}</h3>
+        <h3 style="margin-top:.8rem"><a href="{{ e.get_absolute_url }}">{{ e.title }}</a></h3>
         <p>{{ e.summary }}</p>
+        <a class="card__link" href="{{ e.get_absolute_url }}">View details {% icon 'arrow' 'ico' %}</a>
       </article>
       {% endfor %}
     </div>
