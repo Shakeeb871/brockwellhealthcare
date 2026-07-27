@@ -37,6 +37,19 @@ def _is_exempt(path: str) -> bool:
     return any(path.startswith(prefix) for prefix in EXEMPT_PREFIXES)
 
 
+def _rejoin(segments) -> str:
+    """Rebuild a path from segments, keeping Django's trailing slash.
+
+    File-like endpoints (``llms.txt``, ``*.xml``) must NOT gain a trailing
+    slash or they stop resolving — so only directory-style paths get one.
+    """
+    path = "/" + "/".join(segments)
+    last = segments[-1] if segments else ""
+    if "." not in last and not path.endswith("/"):
+        path += "/"
+    return path
+
+
 class RegionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -57,19 +70,13 @@ class RegionMiddleware:
         if first in settings.REGIONS and first != default and is_enabled(first):
             request.region_code = first
             request.region = get_region(first)
-            stripped = "/" + "/".join(segments[1:])
-            if not stripped.endswith("/"):
-                stripped += "/"
-            request.path_info = stripped
+            request.path_info = _rejoin(segments[1:])
             return self.get_response(request)
 
         # The default region is served at the root, so its own prefix (/us/...)
         # is redundant -> 301 to the clean, prefix-less URL.
         if first == default:
-            rest = "/" + "/".join(segments[1:])
-            if not rest.endswith("/"):
-                rest += "/"
-            return redirect(rest, permanent=True)
+            return redirect(_rejoin(segments[1:]), permanent=True)
 
         # A reserved/disabled region prefix -> the default root.
         if first in settings.REGIONS and not is_enabled(first):

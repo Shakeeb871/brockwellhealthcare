@@ -217,3 +217,18 @@ def non_empty_sitemaps():
         except Exception:
             live[name] = cls
     return live
+
+
+def sitemaps_for_region(code):
+    """The populated section sitemaps belonging to one country.
+
+    Backs the per-country index at ``/sitemap-<code>.xml``, which can be
+    submitted to Search Console on its own so each market is tracked
+    separately.
+    """
+    prefix = f"{code}-"
+    return {
+        name: cls
+        for name, cls in non_empty_sitemaps().items()
+        if name.startswith(prefix)
+    }

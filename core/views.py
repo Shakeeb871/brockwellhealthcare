@@ -17,7 +17,7 @@ from team.models import Doctor
 from . import emails, seo
 from .forms import ContactForm
 from .models import FAQ, Page
-from .regions import region_asset_rel, region_path
+from .regions import region_asset_rel, region_path, region_prefix
 
 
 # Dummy content for the home "About / Medical Center Introduction" section.
@@ -497,63 +497,134 @@ def contact(request):
 # --------------------------------------------------------------------------- #
 # Technical SEO endpoints
 # --------------------------------------------------------------------------- #
+# Crawlers we explicitly welcome. `User-agent: *` already allows everyone;
+# naming them makes the permission unambiguous for bots that look for their own
+# token before falling back to the wildcard, and documents AI/answer-engine
+# access (AEO/GEO) rather than leaving it to interpretation.
+SEARCH_CRAWLERS = [
+    "Googlebot", "Googlebot-Image", "Googlebot-News", "Storebot-Google",
+    "Bingbot", "Slurp", "DuckDuckBot", "YandexBot", "Baiduspider",
+    "Applebot", "Naver", "SeznamBot", "Qwantify",
+]
+AI_CRAWLERS = [
+    "GPTBot", "OAI-SearchBot", "ChatGPT-User",          # OpenAI
+    "ClaudeBot", "Claude-User", "Claude-SearchBot",     # Anthropic
+    "Google-Extended",                                  # Gemini / AI Overviews
+    "PerplexityBot", "Perplexity-User",                 # Perplexity
+    "Applebot-Extended",                                # Apple Intelligence
+    "meta-externalagent",                               # Meta AI
+    "Bytespider",                                       # TikTok / Doubao
+    "CCBot",                                            # Common Crawl
+    "cohere-ai", "Diffbot", "omgili", "Timpibot",
+    "MistralAI-User", "DeepSeekBot", "YouBot",
+]
+
+
 def robots_txt(request):
-    if settings.SITE_NOINDEX:
-        # De-indexed mode: keep crawling ALLOWED so bots can read the site-wide
-        # `noindex` directive (meta + X-Robots-Tag) and drop pages from their
-        # index. Blocking here instead would leave already-indexed URLs stuck.
-        # The sitemap is withheld so we don't actively invite indexing.
-        lines = [
-            "# Site is temporarily de-indexed (noindex in effect).",
-            "User-agent: *",
-            "Allow: /",
-            "Disallow: /admin/",
-        ]
-        return _text_response("\n".join(lines))
+    """robots.txt for the whole host.
+
+    robots.txt is a per-host file (the standard has no per-path variant), so a
+    single file serves every region — but it lists each country's sitemap
+    index, so every market is discoverable on its own.
+
+    Crawling is always ALLOWED: de-indexing is expressed with `noindex`
+    (meta + X-Robots-Tag), which only works if crawlers can fetch the page.
+    Disallowing here would strand already-indexed URLs.
+    """
+    from .regions import indexable_regions
+
+    live_regions = indexable_regions()
+    domain = settings.SITE_DOMAIN
 
     lines = [
+        f"# {settings.BRAND_NAME} — all crawlers welcome.",
         "User-agent: *",
         "Allow: /",
         "Disallow: /admin/",
         "",
-        # Explicitly welcome answer-engine / LLM crawlers (AEO/GEO).
-        "User-agent: GPTBot",
-        "Allow: /",
-        "User-agent: OAI-SearchBot",
-        "Allow: /",
-        "User-agent: PerplexityBot",
-        "Allow: /",
-        "User-agent: Google-Extended",
-        "Allow: /",
-        "User-agent: ClaudeBot",
-        "Allow: /",
-        "",
-        f"Sitemap: https://{settings.SITE_DOMAIN}/sitemap.xml",
+        "# Search engines",
     ]
+    for bot in SEARCH_CRAWLERS:
+        lines += [f"User-agent: {bot}", "Allow: /", ""]
+
+    lines += ["# AI / answer engines (AEO & GEO) — content may be used"]
+    for bot in AI_CRAWLERS:
+        lines += [f"User-agent: {bot}", "Allow: /", ""]
+
+    if live_regions:
+        lines.append("# Sitemaps — master index plus one per country")
+        lines.append(f"Sitemap: https://{domain}/sitemap.xml")
+        for region in live_regions:
+            lines.append(f"Sitemap: https://{domain}/sitemap-{region['code']}.xml")
+    else:
+        lines.append("# Site is de-indexed; no sitemap is advertised.")
+
     return _text_response("\n".join(lines))
 
 
 def llms_txt(request):
-    """An llms.txt manifest — a clean, structured summary for LLMs (GEO)."""
+    """Per-country llms.txt manifest — a structured summary for LLMs (GEO).
+
+    Served per region (``/llms.txt`` for the default market, ``/uae/llms.txt``
+    for the UAE), so each country presents its own services, clinics and
+    contact details to answer engines rather than one blended document.
+    """
     region = request.region
+    code = region["code"]
+    domain = settings.SITE_DOMAIN
+    base = f"https://{domain}{region_prefix(code)}"
+
+    def section(title, rows):
+        return f"\n## {title}\n" + "\n".join(rows) + "\n" if rows else ""
+
+    categories = ServiceCategory.objects.filter(region=code, is_published=True)[:12]
+    cat_rows = [
+        f"- [{c.name}](https://{domain}{c.get_absolute_url()})"
+        + (f": {c.summary}" if getattr(c, "summary", "") else "")
+        for c in categories
+    ]
+
+    clinics = Location.objects.filter(region=code, is_active=True)[:12]
+    clinic_rows = [
+        f"- [{loc.name}](https://{domain}{loc.get_absolute_url()}): {loc.full_address}"
+        + (f" · {loc.phone}" if loc.phone else "")
+        for loc in clinics
+    ]
+
     body = f"""# {settings.BRAND_NAME}
 
 > {settings.BRAND_TAGLINE} serving {region['name']}.
 
-{settings.BRAND_NAME} is a regenerative medicine provider offering stem cell
-therapies, consultations and educational events.
+{settings.BRAND_NAME} is a physician-led regenerative medicine and longevity
+clinic. Care covers regenerative treatments, longevity and healthspan
+programmes, chronic pain management, advanced diagnostics and functional
+medicine. Every plan is built around an individual clinical assessment.
 
 ## Key Pages
-- [Home](https://{settings.SITE_DOMAIN}/{region['code']}/): Overview of services and care.
-- [Services](https://{settings.SITE_DOMAIN}/{region['code']}/services/): Stem cell & regenerative treatments.
-- [Events](https://{settings.SITE_DOMAIN}/{region['code']}/events/): Seminars and clinics.
-- [About](https://{settings.SITE_DOMAIN}/{region['code']}/about/): Our approach and team.
-- [Contact](https://{settings.SITE_DOMAIN}/{region['code']}/contact/): Book a consultation.
-
+- [Home]({base}/): Overview of the clinic and its care model.
+- [Services]({base}/services/): All treatments and specialities.
+- [Our Team]({base}/team/): The clinicians and their credentials.
+- [Locations]({base}/locations/): Clinics, addresses and opening hours.
+- [Events]({base}/events/): Training workshops and clinical events.
+- [Blog]({base}/blog/): Educational articles on regenerative medicine.
+- [About]({base}/about/): Our approach, standards and philosophy.
+- [Contact]({base}/contact/): Enquiries and consultation bookings.
+{section("Services", cat_rows)}{section("Clinics", clinic_rows)}
 ## Contact
 - Phone: {region['phone']}
 - Email: {region['email']}
-- Location: {region['address']}
+- Address: {region['address']}
+- Region: {region['name']} ({region['locale']})
+
+## Machine-Readable
+- Sitemap: https://{domain}/sitemap-{code}.xml
+- Structured data: JSON-LD (MedicalClinic, MedicalBusiness, Physician,
+  MedicalWebPage, FAQPage, Event, BlogPosting) is embedded on every page.
+
+## Usage
+Content may be quoted or summarised with attribution to
+{settings.BRAND_NAME} ({base}/). Medical information is educational and is
+not a substitute for individual clinical advice.
 """
     return _text_response(body)
 
