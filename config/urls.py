@@ -15,8 +15,15 @@ from django.views.static import serve as media_serve
 
 from core import views as core_views
 from core.region_admin import build_region_admin_sites
-from core.sitemaps import sitemaps
-from django.contrib.sitemaps.views import sitemap
+from core.sitemaps import non_empty_sitemaps, sitemaps
+from django.contrib.sitemaps.views import index as sitemap_index, sitemap
+
+
+def sitemap_index_view(request):
+    """Sitemap index listing only the sections that currently have URLs."""
+    return sitemap_index(
+        request, non_empty_sitemaps(), sitemap_url_name="sitemap-section"
+    )
 
 # Per-region admin panels at /admin/<code>/ (generated from settings.REGIONS).
 # Must be listed BEFORE the master /admin/ so the more specific paths win.
@@ -35,7 +42,14 @@ urlpatterns = [
         {"document_root": settings.MEDIA_ROOT},
     ),
     # Technical SEO endpoints (region-exempt).
-    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    # Sitemap index at /sitemap.xml pointing at one sitemap per content type
+    # (/sitemap-main.xml, /sitemap-services.xml, /sitemap-blog.xml, …) so
+    # Search Console can report indexing coverage per section.
+    path("sitemap.xml", sitemap_index_view, name="sitemap"),
+    path(
+        "sitemap-<section>.xml", sitemap,
+        {"sitemaps": sitemaps}, name="sitemap-section",
+    ),
     path("robots.txt", core_views.robots_txt, name="robots"),
     path("llms.txt", core_views.llms_txt, name="llms"),
     path("healthz", core_views.healthz, name="healthz"),
