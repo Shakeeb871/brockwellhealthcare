@@ -424,6 +424,50 @@
         track.dataset.cloned = '1';
       });
     })();
+
+    /* Floating quick-contact speed dial: one trigger fans out the actions.
+       The collapse is applied here (via .fab--js) so the links stay usable if
+       this script never runs. */
+    (function () {
+      var fab = document.querySelector('[data-fab]');
+      if (!fab) return;
+      var toggle = fab.querySelector('[data-fab-toggle]');
+      if (!toggle) return;
+      var links = fab.querySelectorAll('.fab__actions a');
+      fab.classList.add('fab--js');
+
+      function setOpen(open) {
+        fab.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close contact options' : 'Open contact options');
+        // Keep collapsed actions out of the tab order.
+        links.forEach(function (a) { a.tabIndex = open ? 0 : -1; });
+      }
+      setOpen(false);
+
+      toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var open = !fab.classList.contains('is-open');
+        setOpen(open);
+        if (open && links.length) links[links.length - 1].focus();
+      });
+
+      // Clicking an action closes the dial behind it.
+      links.forEach(function (a) { a.addEventListener('click', function () { setOpen(false); }); });
+
+      document.addEventListener('click', function (e) {
+        if (fab.classList.contains('is-open') && !fab.contains(e.target)) setOpen(false);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && fab.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
+      });
+      fab.addEventListener('focusout', function () {
+        // Close when focus leaves the whole widget (keyboard users tabbing away).
+        setTimeout(function () {
+          if (!fab.contains(document.activeElement)) setOpen(false);
+        }, 0);
+      });
+    })();
   </script>
   {# Global toast + AJAX forms: notices appear without a page refresh. #}
   <script>
@@ -450,6 +494,10 @@
     }
     function toast(message, level) {
       if (!message) return;
+      // A notice takes precedence over the contact dial: collapse it so the
+      // two never fight for the same corner on narrow screens.
+      var openFab = document.querySelector('[data-fab].is-open [data-fab-toggle]');
+      if (openFab) openFab.click();
       var d = document.createElement('div');
       d.className = 'flash flash--' + (level || 'info');
       d.setAttribute('data-flash', '');

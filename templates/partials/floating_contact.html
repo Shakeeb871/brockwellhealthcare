@@ -1,25 +1,37 @@
 {% load icons region_tags %}
 {% comment %}
-Floating contact buttons (bottom-right): WhatsApp + Call.
-Region-aware — each market shows its own number. Purely links, no JS needed.
+Floating quick-contact speed dial (bottom-right).
+
+One trigger button; tapping it fans out WhatsApp + Call. Region-aware — each
+market shows its own number. Progressive enhancement: with JS disabled the
+actions stay reachable because the panel is only hidden via a class the script
+adds on load.
 {% endcomment %}
 {% if region.phone %}
-<div class="fab" role="complementary" aria-label="Quick contact">
-  <a class="fab__btn fab__btn--wa"
-     href="https://wa.me/{{ region.phone|digits }}"
-     target="_blank" rel="noopener noreferrer"
-     aria-label="Chat with us on WhatsApp">
-    <span class="fab__ring" aria-hidden="true"></span>
-    <span class="fab__ic">{% social 'whatsapp' %}</span>
-    <span class="fab__label">Chat on WhatsApp</span>
-  </a>
+<div class="fab" data-fab>
+  <ul class="fab__actions" id="fab-actions" role="list">
+    <li>
+      <a class="fab__btn fab__btn--wa"
+         href="https://wa.me/{{ region.phone|digits }}"
+         target="_blank" rel="noopener noreferrer">
+        <span class="fab__ic">{% social 'whatsapp' %}</span>
+        <span class="fab__label">Chat on WhatsApp</span>
+      </a>
+    </li>
+    <li>
+      <a class="fab__btn fab__btn--call" href="tel:{{ region.phone|digits }}">
+        <span class="fab__ic">{% icon 'phone' %}</span>
+        <span class="fab__label">Call {{ region.phone }}</span>
+      </a>
+    </li>
+  </ul>
 
-  <a class="fab__btn fab__btn--call"
-     href="tel:{{ region.phone|digits }}"
-     aria-label="Call us on {{ region.phone }}">
+  <button type="button" class="fab__toggle" data-fab-toggle
+          aria-expanded="false" aria-controls="fab-actions"
+          aria-label="Open contact options">
     <span class="fab__ring" aria-hidden="true"></span>
-    <span class="fab__ic">{% icon 'phone' %}</span>
-    <span class="fab__label">Call {{ region.phone }}</span>
-  </a>
+    <span class="fab__toggle-ic fab__toggle-ic--open" aria-hidden="true">{% icon 'chat' %}</span>
+    <span class="fab__toggle-ic fab__toggle-ic--close" aria-hidden="true">{% icon 'close' %}</span>
+  </button>
 </div>
 {% endif %}

@@ -2379,42 +2379,83 @@ form.evt-price { margin: 0; }
 }
 
 /* =========================================================================
-   Floating contact buttons (WhatsApp + Call), bottom-right
+   Floating quick-contact speed dial (bottom-right)
+   One trigger button; tapping it fans out WhatsApp + Call.
    ========================================================================= */
+:root {
+  --fab-blue: #1668c9;        /* trigger + call */
+  --fab-blue-dark: #0f4f9e;
+  --fab-wa: #25d366;          /* WhatsApp brand green */
+}
+
 .fab {
   position: fixed; right: 22px; bottom: 22px; z-index: 1100;
-  display: flex; flex-direction: column-reverse; gap: .75rem;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .75rem;
 }
-.fab__btn {
-  position: relative; width: 54px; height: 54px; border-radius: 50%;
-  display: grid; place-items: center; color: #fff; text-decoration: none;
+
+/* ---- action list (hidden until opened) ---- */
+.fab__actions {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .75rem;
+}
+.fab__actions li { display: block; }
+
+/* Only collapse once JS is running, so the links stay usable without it. */
+.fab--js .fab__actions li {
+  opacity: 0; transform: translateY(14px) scale(.6); pointer-events: none;
+  transition: opacity .25s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.fab--js.is-open .fab__actions li { opacity: 1; transform: none; pointer-events: auto; }
+/* Fan out bottom-up, so the nearest button appears first. */
+.fab--js.is-open .fab__actions li:nth-last-child(1) { transition-delay: .04s; }
+.fab--js.is-open .fab__actions li:nth-last-child(2) { transition-delay: .11s; }
+
+/* ---- shared button shape ---- */
+.fab__btn, .fab__toggle {
+  position: relative; width: 54px; height: 54px; border: 0; border-radius: 50%;
+  display: grid; place-items: center; padding: 0; cursor: pointer;
+  color: #fff; text-decoration: none;
   box-shadow: 0 8px 22px rgba(12, 38, 22, .28);
-  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
-  /* staggered entrance */
-  animation: fabIn .5s cubic-bezier(.34,1.56,.64,1) both;
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, background .2s ease;
 }
-.fab__btn--wa   { background: #25d366; animation-delay: .15s; }
-.fab__btn--call { background: var(--teal-600); animation-delay: .3s; }
-.fab__btn:hover, .fab__btn:focus-visible {
-  transform: translateY(-3px) scale(1.06);
-  box-shadow: 0 12px 28px rgba(12, 38, 22, .36);
-}
-.fab__btn:focus-visible { outline: 3px solid var(--mint-50); outline-offset: 3px; }
+/* Beat the global `a:hover` colour so the icon never darkens on hover. */
+.fab__btn, .fab__btn:hover, .fab__btn:focus, .fab__btn:active,
+.fab__btn:visited, .fab__toggle:hover, .fab__toggle:focus { color: #fff; }
+.fab__btn svg, .fab__toggle svg { color: #fff; }
+
+.fab__btn--wa   { background: var(--fab-wa); }
+.fab__btn--call { background: var(--fab-blue); }
+.fab__btn:hover, .fab__btn:focus-visible { transform: scale(1.09); box-shadow: 0 12px 28px rgba(12, 38, 22, .36); }
+.fab__btn--wa:hover   { background: #1fbe5b; }
+.fab__btn--call:hover { background: var(--fab-blue-dark); }
+.fab__btn:focus-visible, .fab__toggle:focus-visible { outline: 3px solid #bcd8fb; outline-offset: 3px; }
+
 .fab__ic { display: grid; place-items: center; position: relative; z-index: 2; }
 .fab__ic svg { width: 27px; height: 27px; display: block; }
-.fab__btn--call .fab__ic svg { width: 25px; height: 25px; stroke-width: 2; }
+.fab__btn--call .fab__ic svg { width: 25px; height: 25px; }
 
-/* Pulsing halo that radiates outward */
+/* ---- trigger ---- */
+.fab__toggle { width: 60px; height: 60px; background: var(--fab-blue); }
+.fab__toggle:hover { background: var(--fab-blue-dark); transform: scale(1.06); }
+.fab__toggle-ic {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 2;
+  transition: opacity .25s ease, transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.fab__toggle-ic svg { width: 28px; height: 28px; display: block; }
+.fab__toggle-ic--close { opacity: 0; transform: rotate(-90deg) scale(.5); }
+.fab.is-open .fab__toggle-ic--open  { opacity: 0; transform: rotate(90deg) scale(.5); }
+.fab.is-open .fab__toggle-ic--close { opacity: 1; transform: none; }
+.fab.is-open .fab__toggle { background: var(--navy-800); }
+
+/* Pulsing halo — attention while closed, silent once open. */
 .fab__ring {
   position: absolute; inset: 0; border-radius: 50%; z-index: 1;
-  background: inherit; opacity: .55;
+  background: var(--fab-blue); opacity: .5;
   animation: fabPulse 2.4s ease-out infinite;
 }
-.fab__btn--wa   .fab__ring { background: #25d366; }
-.fab__btn--call .fab__ring { background: var(--teal-600); animation-delay: 1.2s; }
-.fab__btn:hover .fab__ring { animation-play-state: paused; }
+.fab.is-open .fab__ring, .fab__toggle:hover .fab__ring { animation-play-state: paused; opacity: 0; }
 
-/* Slide-out label on hover (desktop only — needs a pointer) */
+/* ---- hover label ---- */
 .fab__label {
   position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%;
   white-space: nowrap; background: var(--navy-800); color: #fff;
@@ -2427,38 +2468,34 @@ form.evt-price { margin: 0; }
   border: 6px solid transparent; border-left-color: var(--navy-800);
 }
 @media (hover: hover) {
-  .fab__btn:hover .fab__label, .fab__btn:focus-visible .fab__label {
-    opacity: 1; transform: translateX(0);
-  }
+  .fab__btn:hover .fab__label, .fab__btn:focus-visible .fab__label { opacity: 1; transform: translateX(0); }
 }
 @media (hover: none) { .fab__label { display: none; } }
 
-@keyframes fabIn {
-  from { opacity: 0; transform: translateY(18px) scale(.8); }
-  to   { opacity: 1; transform: none; }
-}
 @keyframes fabPulse {
-  0%   { transform: scale(1);    opacity: .55; }
-  70%  { transform: scale(1.75); opacity: 0; }
-  100% { transform: scale(1.75); opacity: 0; }
+  0%   { transform: scale(1);    opacity: .5; }
+  70%  { transform: scale(1.7);  opacity: 0; }
+  100% { transform: scale(1.7);  opacity: 0; }
 }
 
-/* Toasts share the bottom-right corner — lift them clear of the whole button
-   stack (2 x 54px + .75rem gap + 22px offset ≈ 142px) so a notice can never
-   land on top of the buttons. */
-.flash-wrap { bottom: 158px; }
+/* Toasts share this corner. On wide screens they sit to the LEFT of the dial,
+   so they never collide however far it expands. (Narrow screens are handled in
+   the media query below, where toasts are full-width.) */
+.flash-wrap { right: 100px; bottom: 22px; }
 
 @media (max-width: 560px) {
-  .fab { right: 16px; bottom: 16px; gap: .6rem; }
+  .fab { right: 16px; bottom: 16px; gap: .65rem; }
   .fab__btn { width: 50px; height: 50px; }
+  .fab__toggle { width: 56px; height: 56px; }
   .fab__ic svg { width: 25px; height: 25px; }
-  /* Full-width toasts sit above the stacked buttons (2 x 50 + gap + 16). */
-  .flash-wrap { bottom: 142px; }
+  /* Full-width toasts: stack them above the collapsed trigger instead. The
+     dial is closed automatically when a toast appears (see base.html). */
+  .flash-wrap { right: 16px; bottom: 88px; }
 }
 
-/* Respect reduced-motion: keep the buttons, drop the movement. */
 @media (prefers-reduced-motion: reduce) {
-  .fab__btn { animation: none; }
   .fab__ring { animation: none; opacity: 0; }
-  .fab__btn:hover, .fab__btn:focus-visible { transform: none; }
+  .fab--js .fab__actions li { transition-duration: .01ms; transform: none; }
+  .fab__btn:hover, .fab__btn:focus-visible, .fab__toggle:hover { transform: none; }
+  .fab__toggle-ic { transition-duration: .01ms; }
 }
