@@ -1,12 +1,24 @@
-"""Region-aware XML sitemaps for every enabled region.
+"""Region-aware XML sitemaps — split per country AND per content type.
 
-These are served as a **sitemap index** (``/sitemap.xml``) that points at one
-sitemap per content type (``/sitemap-main.xml``, ``/sitemap-services.xml``,
-``/sitemap-blog.xml``, …). Splitting by type is the recommended structure: it
-lets Search Console report indexing coverage per section, so you can see at a
-glance which content type has a problem, and it scales as the site grows.
+Served as a **sitemap index** at ``/sitemap.xml`` pointing at one sitemap per
+country/content-type pair::
+
+    /sitemap-uae-main.xml       /sitemap-us-main.xml
+    /sitemap-uae-services.xml   /sitemap-us-services.xml
+    /sitemap-uae-blog.xml       /sitemap-us-blog.xml
+    …
+
+Country-first is the right structure for an international site: Search Console
+reports coverage per country *and* per section, so "UAE blog isn't indexing"
+is visible immediately, and each market can be diagnosed on its own. Sections
+are generated from ``settings.REGIONS``, so adding a country adds its sitemaps
+automatically — no code changes.
+
+A region that isn't indexable yields empty sitemaps and is left out of the
+index entirely, so a de-indexed market is never advertised.
 """
 
+from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 
 from blog.models import BlogCategory, BlogPost
@@ -16,19 +28,22 @@ from services.models import Service, ServiceCategory
 from team.models import Doctor
 
 from .models import Page
-from .regions import indexable_regions, region_path, region_prefix
+from .regions import region_indexable, region_path, region_prefix
 
 
-def _codes():
-    # Only list URLs for regions that are actually indexable, so the sitemap
-    # never advertises de-indexed (noindex) pages.
-    return [r["code"] for r in indexable_regions()]
+class _RegionSitemap(Sitemap):
+    """Base: every sitemap is scoped to a single region (country).
 
-
-class _ModelSitemap(Sitemap):
-    """Base for sitemaps built from published, region-scoped models."""
+    ``region_code`` is set by the factory below. When that region isn't
+    indexable the sitemap is empty, so nothing de-indexed is ever listed.
+    """
 
     protocol = "https"
+    region_code = None
+
+    @property
+    def _live(self):
+        return region_indexable(self.region_code)
 
     def location(self, obj):
         return obj.get_absolute_url()
@@ -38,18 +53,13 @@ class _ModelSitemap(Sitemap):
 
 
 # --------------------------------------------------------------------------- #
-# 1. Main pages — home, about, contact, the section landing pages and legal
+# 1. Main pages — home, about, contact, section landing pages and legal
 # --------------------------------------------------------------------------- #
-class MainSitemap(Sitemap):
-    """Home + key landing pages, plus the editable legal pages.
-
-    Items are either ``(region_code, url_name)`` tuples for routed views or
-    ``Page`` instances, so ``location``/``lastmod`` dispatch on the type.
-    """
+class MainSitemap(_RegionSitemap):
+    """Items are either ``url_name`` strings (routed views) or ``Page`` rows,
+    so ``location``/``lastmod``/``priority`` dispatch on the type."""
 
     changefreq = "weekly"
-    priority = 0.9
-    protocol = "https"
 
     ROUTES = [
         "core:home", "core:about", "core:contact",
@@ -58,40 +68,42 @@ class MainSitemap(Sitemap):
     ]
 
     def items(self):
-        routed = [
-            (region["code"], name)
-            for region in indexable_regions()
-            for name in self.ROUTES
-        ]
-        legal = list(Page.objects.filter(region__in=_codes(), is_published=True))
-        return routed + legal
+        if not self._live:
+            return []
+        legal = list(
+            Page.objects.filter(region=self.region_code, is_published=True)
+        )
+        return list(self.ROUTES) + legal
 
     def location(self, item):
-        if isinstance(item, tuple):
-            region_code, name = item
-            return region_path(region_code, name)
+        if isinstance(item, str):
+            return region_path(self.region_code, item)
         return f"{region_prefix(item.region)}/{item.slug}/"
 
     def lastmod(self, item):
-        return None if isinstance(item, tuple) else item.updated_at
+        return None if isinstance(item, str) else item.updated_at
 
-    def priority(self, item):  # noqa: D401 - Django calls this per item
-        """Home ranks highest, landing pages next, legal pages lowest."""
-        if isinstance(item, tuple):
-            return 1.0 if item[1] == "core:home" else 0.9
+    def priority(self, item):
+        if isinstance(item, str):
+            return 1.0 if item == "core:home" else 0.9
         return 0.3
 
 
 # --------------------------------------------------------------------------- #
 # 2. Services — categories and every published service/sub-service
 # --------------------------------------------------------------------------- #
-class ServicesSitemap(_ModelSitemap):
+class ServicesSitemap(_RegionSitemap):
     changefreq = "monthly"
 
     def items(self):
-        codes = _codes()
-        cats = list(ServiceCategory.objects.filter(region__in=codes, is_published=True))
-        svcs = list(Service.objects.filter(region__in=codes, is_published=True))
+        if not self._live:
+            return []
+        cats = list(
+            ServiceCategory.objects.filter(region=self.region_code, is_published=True)
+        )
+        svcs = list(
+            Service.objects.filter(region=self.region_code, is_published=True)
+        )
         return cats + svcs
 
     def priority(self, obj):
@@ -102,24 +114,31 @@ class ServicesSitemap(_ModelSitemap):
 # --------------------------------------------------------------------------- #
 # 3. Events
 # --------------------------------------------------------------------------- #
-class EventsSitemap(_ModelSitemap):
+class EventsSitemap(_RegionSitemap):
     changefreq = "weekly"
     priority = 0.6
 
     def items(self):
-        return list(Event.objects.filter(region__in=_codes(), is_published=True))
+        if not self._live:
+            return []
+        return list(Event.objects.filter(region=self.region_code, is_published=True))
 
 
 # --------------------------------------------------------------------------- #
 # 4. Blog — posts and category archives
 # --------------------------------------------------------------------------- #
-class BlogSitemap(_ModelSitemap):
+class BlogSitemap(_RegionSitemap):
     changefreq = "weekly"
 
     def items(self):
-        codes = _codes()
-        posts = list(BlogPost.objects.filter(region__in=codes, is_published=True))
-        cats = list(BlogCategory.objects.filter(region__in=codes, is_published=True))
+        if not self._live:
+            return []
+        posts = list(
+            BlogPost.objects.filter(region=self.region_code, is_published=True)
+        )
+        cats = list(
+            BlogCategory.objects.filter(region=self.region_code, is_published=True)
+        )
         return posts + cats
 
     def priority(self, obj):
@@ -129,28 +148,33 @@ class BlogSitemap(_ModelSitemap):
 # --------------------------------------------------------------------------- #
 # 5. Team
 # --------------------------------------------------------------------------- #
-class TeamSitemap(_ModelSitemap):
+class TeamSitemap(_RegionSitemap):
     changefreq = "monthly"
     priority = 0.6
 
     def items(self):
-        return list(Doctor.objects.filter(region__in=_codes(), is_published=True))
+        if not self._live:
+            return []
+        return list(Doctor.objects.filter(region=self.region_code, is_published=True))
 
 
 # --------------------------------------------------------------------------- #
 # 6. Locations (local SEO)
 # --------------------------------------------------------------------------- #
-class LocationsSitemap(_ModelSitemap):
+class LocationsSitemap(_RegionSitemap):
     changefreq = "monthly"
     priority = 0.7
 
     def items(self):
-        return list(Location.objects.filter(region__in=_codes(), is_active=True))
+        if not self._live:
+            return []
+        return list(Location.objects.filter(region=self.region_code, is_active=True))
 
 
-# Section name -> sitemap. The keys become the child sitemap filenames, e.g.
-# "services" -> /sitemap-services.xml, and are what Search Console reports on.
-sitemaps = {
+# --------------------------------------------------------------------------- #
+# Build "<country>-<section>" sitemaps for every configured region
+# --------------------------------------------------------------------------- #
+SECTIONS = {
     "main": MainSitemap,
     "services": ServicesSitemap,
     "events": EventsSitemap,
@@ -160,12 +184,30 @@ sitemaps = {
 }
 
 
+def _build_sitemaps():
+    """One sitemap per (region, section) — e.g. ``uae-services``.
+
+    Generated from ``settings.REGIONS`` so a new country automatically gets its
+    own full set of sitemaps with no code change.
+    """
+    built = {}
+    for code in settings.REGIONS:
+        for name, base in SECTIONS.items():
+            built[f"{code}-{name}"] = type(
+                f"{code.title()}{base.__name__}", (base,), {"region_code": code}
+            )
+    return built
+
+
+sitemaps = _build_sitemaps()
+
+
 def non_empty_sitemaps():
     """The sections that currently have URLs.
 
-    Used for the index so it never advertises an empty child sitemap (Search
-    Console flags those as "sitemap is empty"). The child URLs themselves stay
-    routable, so an empty section simply isn't listed until it has content.
+    Keeps de-indexed countries and empty sections out of the index (Search
+    Console flags empty child sitemaps). The child URLs stay routable, so a
+    section simply isn't listed until it has content.
     """
     live = {}
     for name, cls in sitemaps.items():
