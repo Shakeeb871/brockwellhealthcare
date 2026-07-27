@@ -270,13 +270,18 @@ GOOGLE_REVIEW_COUNT = int(os.getenv("GOOGLE_REVIEW_COUNT", "0") or 0)
 SITE_NOINDEX = env_bool("SITE_NOINDEX", True)
 
 # Per-region indexing. Only the region codes listed here may be indexed by
-# search engines (comma-separated in the env, e.g. "uae" or "uae,us"). Any
-# region not listed keeps a full noindex (meta + X-Robots-Tag header), and is
-# left out of hreflang and the sitemap. ``SITE_NOINDEX`` stays a master
-# kill-switch: while it is True nothing is indexed regardless of this list.
-# To index only the UAE site set:  SITE_NOINDEX=False  and  SEO_INDEX_REGIONS=uae
+# search engines (comma-separated, e.g. "uae" or "uae,us"). Any region not
+# listed keeps a full noindex (meta + X-Robots-Tag header) and is left out of
+# hreflang and the sitemaps. ``SITE_NOINDEX`` stays the master kill-switch:
+# while it is True nothing is indexed regardless of this list.
+#
+# Defaults to the UAE site, so going live only needs SITE_NOINDEX=False in the
+# environment. Add more codes (e.g. "uae,us") when another market should be
+# indexed too.
 SEO_INDEX_REGIONS = [
-    c.strip().lower() for c in os.getenv("SEO_INDEX_REGIONS", "").split(",") if c.strip()
+    c.strip().lower()
+    for c in os.getenv("SEO_INDEX_REGIONS", "uae").split(",")
+    if c.strip()
 ]
 
 # Region configuration. The bare domain opens on the US site by default; UAE

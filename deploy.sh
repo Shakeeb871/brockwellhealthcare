@@ -32,3 +32,6 @@ echo "==> Restarting the app..."
 mkdir -p tmp && touch tmp/restart.txt
 
 echo "✅ Done! Your live site is now updated."
+
+# Show what search engines are being told, so an unintended noindex is obvious.
+"$PYBIN" manage.py seostatus || true
