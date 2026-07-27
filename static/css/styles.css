@@ -326,7 +326,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .card:hover .card__media img { transform: scale(1.06); }
 /* Date badge overlaid on an event image. */
 .tag--onmedia { position: absolute; top: 12px; left: 12px; z-index: 2; box-shadow: var(--shadow); }
-.card h3 { margin: 0 0 .4rem; }
+/* Card titles keep the same compact look whether they are h2 (list pages,
+   where the card title is the next level under the page h1) or h3. */
+.card h3, .card h2 { font-size: 1.25rem; letter-spacing: normal; margin: 0 0 .4rem; }
 .card p { color: var(--ink); font-size: 1rem; }
 /* Standard grid-card CTA link — used site-wide (no background). */
 /* CTA in card grids: a small filled button matching the primary "Book a Consultation"
@@ -720,7 +722,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 
 /* Main columns */
 .site-footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.8fr; gap: 2.5rem; padding-block: 3rem 2.5rem; }
-.site-footer h4 { color: var(--white); font-family: var(--font-sans); font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.1rem; }
+/* Footer column headings are <h2> (they sit below the page h1, so h4 would
+   skip a level); this keeps their original compact look. */
+.site-footer__col h2, .site-footer .footwide__h2, .site-footer h4 { color: var(--white); font-family: var(--font-sans); font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.1rem; }
 .site-footer__col { display: grid; gap: .6rem; align-content: start; }
 .site-footer__col a { color: var(--mint-50); transition: color .2s ease, padding-left .2s ease; }
 .site-footer__col a:hover { color: var(--teal-400); padding-left: .25rem; }

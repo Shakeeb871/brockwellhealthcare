@@ -32,7 +32,7 @@
               <span class="post__metaitem">{% icon 'calendar' 'ico' %} {{ p.published_at|date:"d M Y" }}</span>
               <span class="post__metaitem">{% icon 'clock' 'ico' %} {{ p.reading_time }} min read</span>
             </div>
-            <h3 class="post__title"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3>
+            <h2 class="post__title"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h2>
             <p class="post__desc">{{ p.excerpt }}</p>
             <a class="post__link" href="{{ p.get_absolute_url }}">Read More {% icon 'arrow' 'ico' %}</a>
           </div>

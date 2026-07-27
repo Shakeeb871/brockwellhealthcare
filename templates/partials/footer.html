@@ -44,7 +44,7 @@
 
     {# Col 2 — quick links #}
     <nav class="site-footer__col" aria-label="Quick links">
-      <h4>Quick Links</h4>
+      <h2>Quick Links</h2>
       <a href="{% rurl 'core:about' %}">About Us</a>
       <a href="{% rurl 'services:list' %}">Our Services</a>
       <a href="{% rurl 'team:list' %}">Team Members</a>
@@ -54,7 +54,7 @@
 
     {# Col 3 — services list #}
     <nav class="site-footer__col" aria-label="Our services">
-      <h4>Our Services</h4>
+      <h2>Our Services</h2>
       {% for cat in nav_categories %}
       <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
       {% empty %}
@@ -67,7 +67,7 @@
 
     {# Col 4 — recent posts + contact #}
     <div class="footwide">
-      <h4>Recent Posts</h4>
+      <h2>Recent Posts</h2>
       <ul class="footposts">
         {% for p in footer_posts %}
         <li class="footpost">
@@ -82,7 +82,7 @@
         {% endfor %}
       </ul>
 
-      <h4 class="footwide__h2">Contact Us</h4>
+      <h2 class="footwide__h2">Contact Us</h2>
       <p class="footcontact__desc">Advancing regenerative medicine to improve quality and duration of life for every patient.</p>
       <p class="footcontact__row"><span class="footcontact__ic" aria-hidden="true">{% icon 'mail' %}</span><a href="mailto:{{ region.email }}">{{ region.email }}</a></p>
       <p class="footcontact__row"><span class="footcontact__ic" aria-hidden="true">{% icon 'pin' %}</span>{{ region.address }}</p>

@@ -73,7 +73,15 @@ def _render_category(request, region, category):
     meta = seo.build_meta(
         request,
         title=f"{category.name} — Insights | {settings.BRAND_NAME}",
-        description=category.description or f"{category.name} articles from {settings.BRAND_NAME}.",
+        # The category tagline is deliberately short on the page; pad the meta
+        # description out so the search snippet isn't half-empty.
+        description=(
+            f"{category.description.rstrip('.')}. " if category.description
+            else f"{category.name} articles from {settings.BRAND_NAME}. "
+        ) + (
+            f"Doctor-reviewed articles from {settings.BRAND_NAME} on treatments, "
+            f"evidence and what to expect{region['in_loc']}."
+        ),
         path=f"/blog/{category.slug}/",
     )
     crumbs = seo.breadcrumb_schema(

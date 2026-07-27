@@ -32,6 +32,60 @@ def absolute(path: str) -> str:
     return f"https://{settings.SITE_DOMAIN}{path}"
 
 
+# Google renders roughly 60 characters of a <title> and ~155-160 of a meta
+# description; past that the snippet is truncated with an ellipsis. These are
+# enforced centrally in ``build_meta`` so no page — whatever its title/summary
+# came from — can ever ship an over-length snippet.
+TITLE_MAX = 60
+DESC_MAX = 158
+
+
+def _clamp_title(title: str) -> str:
+    """Fit a title into ``TITLE_MAX``, cutting at a separator or word break."""
+    title = (title or "").strip()
+    if len(title) <= TITLE_MAX:
+        return title
+    # Prefer dropping trailing clauses at a natural separator.
+    for sep in (" | ", " — ", " – ", " - ", ", "):
+        if sep in title:
+            head = title.split(sep)[0].strip()
+            if 20 <= len(head) <= TITLE_MAX:
+                return head
+    cut = title[:TITLE_MAX].rfind(" ")
+    return title[:cut].rstrip(" ,;:-–—|") if cut > 20 else title[:TITLE_MAX]
+
+
+def _clamp_description(desc: str) -> str:
+    """Fit a description into ``DESC_MAX``, ending on a whole sentence/word."""
+    desc = " ".join((desc or "").split())        # collapse stray whitespace
+    if len(desc) <= DESC_MAX:
+        return desc
+    window = desc[:DESC_MAX]
+    cut = max(window.rfind(". "), window.rfind("! "), window.rfind("? "))
+    if cut >= 90:
+        return window[: cut + 1].strip()
+    cut = window.rfind(" ")
+    return (window[:cut].rstrip(" ,;:-–—") + "…") if cut > 0 else window
+
+
+def _with_brand(title: str) -> str:
+    """Append the brand to a title unless it's already there or won't fit.
+
+    Matches on the brand's first word too, so a title ending in "… | Brockwell"
+    doesn't become "… | Brockwell | Brockwell Healthcare".
+    """
+    brand = settings.BRAND_NAME
+    root = brand.split()[0]
+    if brand.lower() in title.lower() or title.lower().rstrip().endswith(root.lower()):
+        return title
+    suffixed = f"{title} | {brand}"
+    if len(suffixed) <= TITLE_MAX:
+        return suffixed
+    # Too long with the full brand — try the short form, else leave it clean.
+    short = f"{title} | {root}"
+    return short if len(short) <= TITLE_MAX else title
+
+
 def build_meta(request, *, title, description, path, image=None, robots="index, follow", og_type="website"):
     """Assemble the full <head> metadata bundle for a page.
 
@@ -63,8 +117,8 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
              "href": absolute(f"{region_prefix(x_default)}{path}")}
         )
 
-    brand = settings.BRAND_NAME
-    full_title = title if brand in title else f"{title} | {brand}"
+    full_title = _with_brand(_clamp_title(title))
+    description = _clamp_description(description)
 
     # ``image`` may be: a media/absolute URL (starts with "/" or "http", e.g. an
     # uploaded blog/event image) used as-is, a static-relative path prefixed with

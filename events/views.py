@@ -55,7 +55,15 @@ def event_detail(request, slug):
     form = RegistrationForm()
 
     title = event.seo_title or f"{event.title} — {region['short']}"
-    description = event.seo_description or event.summary
+    # Event summaries can be a single line; add the practical details (date and
+    # venue) so the search snippet is useful. build_meta clamps the length.
+    description = event.seo_description or " ".join(
+        p for p in (
+            event.summary,
+            f"{event.start:%d %B %Y}." if event.start else "",
+            f"{event.location}." if event.location else "",
+        ) if p
+    )
     meta = seo.build_meta(
         request,
         title=title,

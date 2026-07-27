@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.staticfiles import finders
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.utils.html import strip_tags
 from django.views.decorators.http import require_http_methods
 
 from django.http import Http404
@@ -345,10 +346,17 @@ def page(request, slug):
     except Page.DoesNotExist:
         raise Http404("Page not found")
 
+    # Fall back to the page's own opening copy rather than just its title, so
+    # the search snippet actually describes the page (build_meta clamps it).
+    intro = " ".join(strip_tags(obj.body).split())
     meta = seo.build_meta(
         request,
         title=obj.seo_title or obj.title,
-        description=obj.seo_description or f"{obj.title} — {settings.BRAND_NAME}.",
+        description=(
+            obj.seo_description
+            or (f"{obj.title} — {settings.BRAND_NAME}. {intro}" if intro
+                else f"{obj.title} — {settings.BRAND_NAME}.")
+        ),
         path=f"/{slug}/",
     )
     jsonld = [
