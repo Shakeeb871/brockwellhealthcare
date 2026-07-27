@@ -57,6 +57,24 @@ def is_enabled(code: str) -> bool:
     return bool(region and region.get("enabled"))
 
 
+def region_indexable(code: str) -> bool:
+    """Whether search engines may index a region.
+
+    ``SITE_NOINDEX`` is a master kill-switch (staging): while it is True nothing
+    is indexed. Otherwise a region is indexable only if its code is listed in
+    ``SEO_INDEX_REGIONS``. This drives the robots meta, the X-Robots-Tag header,
+    hreflang alternates and the sitemap so they never disagree.
+    """
+    if getattr(settings, "SITE_NOINDEX", True):
+        return False
+    return code in getattr(settings, "SEO_INDEX_REGIONS", [])
+
+
+def indexable_regions() -> list[dict]:
+    """Enabled regions that are also allowed to be indexed, in declaration order."""
+    return [r for r in enabled_regions() if region_indexable(r["code"])]
+
+
 def region_path(region_code: str, urlname: str, *args, **kwargs) -> str:
     """Reverse a URL name and prefix it with the region segment.
 

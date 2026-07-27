@@ -4,15 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#12351f">
+  <meta name="google-site-verification" content="595ge8UEmuPXNqOy7gQcrBb1fCkXBdNamwxjGTG2EEo">
 
   {# ---------- Primary SEO ---------- #}
   <title>{{ meta.title|default:BRAND_NAME }}</title>
   <meta name="description" content="{{ meta.description|default:BRAND_TAGLINE }}">
   {% if meta.canonical %}<link rel="canonical" href="{{ meta.canonical }}">{% endif %}
-  {% if SITE_NOINDEX %}
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
-  {% else %}
+  {% if page_indexable %}
   <meta name="robots" content="{{ meta.robots|default:'index, follow' }}">
+  {% else %}
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   {% endif %}
 
   {# ---------- hreflang alternates (region targeting) ---------- #}

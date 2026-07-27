@@ -9,7 +9,7 @@ from services.models import Service, ServiceCategory
 from team.models import Doctor
 
 from .models import Page
-from .regions import enabled_regions, region_path, region_prefix
+from .regions import indexable_regions, region_path, region_prefix
 
 
 class StaticViewSitemap(Sitemap):
@@ -25,7 +25,7 @@ class StaticViewSitemap(Sitemap):
         ]
         return [
             (region["code"], name)
-            for region in enabled_regions()
+            for region in indexable_regions()
             for name in pages
         ]
 
@@ -35,7 +35,9 @@ class StaticViewSitemap(Sitemap):
 
 
 def _codes():
-    return [r["code"] for r in enabled_regions()]
+    # Only list URLs for regions that are actually indexable, so the sitemap
+    # never advertises de-indexed (noindex) pages.
+    return [r["code"] for r in indexable_regions()]
 
 
 class CategorySitemap(Sitemap):

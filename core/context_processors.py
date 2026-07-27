@@ -2,7 +2,7 @@
 
 from django.conf import settings
 
-from .regions import enabled_regions, get_region
+from .regions import enabled_regions, get_region, region_indexable
 
 
 def site_context(request):
@@ -40,6 +40,7 @@ def site_context(request):
         "SITE_DOMAIN": settings.SITE_DOMAIN,
         "region": region,
         "region_code": region_code,
+        "page_indexable": region_indexable(region_code),
         "enabled_regions": enabled_regions(),
         "nav_categories": nav_categories,
         "footer_posts": footer_posts,

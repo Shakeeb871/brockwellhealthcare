@@ -14,7 +14,14 @@ own canonical URLs, locale and contact details.
 
 from django.conf import settings
 
-from .regions import enabled_regions, region_absolute, region_path, region_prefix
+from .regions import (
+    enabled_regions,
+    indexable_regions,
+    region_absolute,
+    region_indexable,
+    region_path,
+    region_prefix,
+)
 
 
 def absolute(path: str) -> str:
@@ -34,19 +41,27 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
     region_code = getattr(request, "region_code", settings.DEFAULT_REGION)
     canonical = absolute(f"{region_prefix(region_code)}{path}")
 
-    # hreflang alternates: one per enabled region + an x-default.
+    # hreflang alternates: one per INDEXABLE region + an x-default. Never
+    # advertise a de-indexed region (that would be an SEO mistake), and point
+    # x-default at an indexable region.
+    indexable = indexable_regions()
     alternates = []
-    for region in enabled_regions():
+    for region in indexable:
         alternates.append(
             {
                 "hreflang": region["locale"],
                 "href": absolute(f"{region_prefix(region['code'])}{path}"),
             }
         )
-    alternates.append(
-        {"hreflang": "x-default",
-         "href": absolute(f"{region_prefix(settings.DEFAULT_REGION)}{path}")}
-    )
+    if indexable:
+        if region_indexable(settings.DEFAULT_REGION):
+            x_default = settings.DEFAULT_REGION
+        else:
+            x_default = indexable[0]["code"]
+        alternates.append(
+            {"hreflang": "x-default",
+             "href": absolute(f"{region_prefix(x_default)}{path}")}
+        )
 
     brand = settings.BRAND_NAME
     full_title = title if brand in title else f"{title} | {brand}"

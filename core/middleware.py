@@ -143,12 +143,14 @@ class SecurityHeadersMiddleware:
 
 
 class NoIndexMiddleware:
-    """Emit ``X-Robots-Tag: noindex`` on every response when ``SITE_NOINDEX``.
+    """Emit ``X-Robots-Tag: noindex`` for any region that isn't indexable.
 
-    A response header is the most reliable way to de-index a whole site: it
-    covers HTML pages, files, redirects and error responses alike, and search
-    engines honour it even where they wouldn't parse a ``<meta>`` tag. Set
-    ``SITE_NOINDEX=False`` in the environment to lift it and allow indexing.
+    A response header is the most reliable way to de-index: it covers HTML
+    pages, files, redirects and error responses alike, and search engines
+    honour it even where they wouldn't parse a ``<meta>`` tag. Indexability is
+    decided per region by ``region_indexable`` (``SITE_NOINDEX`` master switch +
+    ``SEO_INDEX_REGIONS``), so an indexed region (e.g. UAE) is never suppressed
+    while others (e.g. US) stay de-indexed.
     """
 
     def __init__(self, get_response):
@@ -156,6 +158,9 @@ class NoIndexMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        if getattr(settings, "SITE_NOINDEX", False):
+        from .regions import region_indexable
+
+        code = getattr(request, "region_code", settings.DEFAULT_REGION)
+        if not region_indexable(code):
             response["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
         return response
