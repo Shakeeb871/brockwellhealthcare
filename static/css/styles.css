@@ -2377,3 +2377,88 @@ form.evt-price { margin: 0; }
 @media (max-width: 600px) {
   .loc-hero__in { padding: 60px 0 46px; }
 }
+
+/* =========================================================================
+   Floating contact buttons (WhatsApp + Call), bottom-right
+   ========================================================================= */
+.fab {
+  position: fixed; right: 22px; bottom: 22px; z-index: 1100;
+  display: flex; flex-direction: column-reverse; gap: .75rem;
+}
+.fab__btn {
+  position: relative; width: 54px; height: 54px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; text-decoration: none;
+  box-shadow: 0 8px 22px rgba(12, 38, 22, .28);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease;
+  /* staggered entrance */
+  animation: fabIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.fab__btn--wa   { background: #25d366; animation-delay: .15s; }
+.fab__btn--call { background: var(--teal-600); animation-delay: .3s; }
+.fab__btn:hover, .fab__btn:focus-visible {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 12px 28px rgba(12, 38, 22, .36);
+}
+.fab__btn:focus-visible { outline: 3px solid var(--mint-50); outline-offset: 3px; }
+.fab__ic { display: grid; place-items: center; position: relative; z-index: 2; }
+.fab__ic svg { width: 27px; height: 27px; display: block; }
+.fab__btn--call .fab__ic svg { width: 25px; height: 25px; stroke-width: 2; }
+
+/* Pulsing halo that radiates outward */
+.fab__ring {
+  position: absolute; inset: 0; border-radius: 50%; z-index: 1;
+  background: inherit; opacity: .55;
+  animation: fabPulse 2.4s ease-out infinite;
+}
+.fab__btn--wa   .fab__ring { background: #25d366; }
+.fab__btn--call .fab__ring { background: var(--teal-600); animation-delay: 1.2s; }
+.fab__btn:hover .fab__ring { animation-play-state: paused; }
+
+/* Slide-out label on hover (desktop only — needs a pointer) */
+.fab__label {
+  position: absolute; right: calc(100% + 12px); top: 50%; translate: 0 -50%;
+  white-space: nowrap; background: var(--navy-800); color: #fff;
+  font-size: .84rem; font-weight: 500; padding: .5rem .85rem; border-radius: 8px;
+  box-shadow: var(--shadow); pointer-events: none;
+  opacity: 0; transform: translateX(8px); transition: opacity .22s ease, transform .22s ease;
+}
+.fab__label::after {
+  content: ""; position: absolute; left: 100%; top: 50%; translate: 0 -50%;
+  border: 6px solid transparent; border-left-color: var(--navy-800);
+}
+@media (hover: hover) {
+  .fab__btn:hover .fab__label, .fab__btn:focus-visible .fab__label {
+    opacity: 1; transform: translateX(0);
+  }
+}
+@media (hover: none) { .fab__label { display: none; } }
+
+@keyframes fabIn {
+  from { opacity: 0; transform: translateY(18px) scale(.8); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fabPulse {
+  0%   { transform: scale(1);    opacity: .55; }
+  70%  { transform: scale(1.75); opacity: 0; }
+  100% { transform: scale(1.75); opacity: 0; }
+}
+
+/* Toasts share the bottom-right corner — lift them clear of the whole button
+   stack (2 x 54px + .75rem gap + 22px offset ≈ 142px) so a notice can never
+   land on top of the buttons. */
+.flash-wrap { bottom: 158px; }
+
+@media (max-width: 560px) {
+  .fab { right: 16px; bottom: 16px; gap: .6rem; }
+  .fab__btn { width: 50px; height: 50px; }
+  .fab__ic svg { width: 25px; height: 25px; }
+  /* Full-width toasts sit above the stacked buttons (2 x 50 + gap + 16). */
+  .flash-wrap { bottom: 142px; }
+}
+
+/* Respect reduced-motion: keep the buttons, drop the movement. */
+@media (prefers-reduced-motion: reduce) {
+  .fab__btn { animation: none; }
+  .fab__ring { animation: none; opacity: 0; }
+  .fab__btn:hover, .fab__btn:focus-visible { transform: none; }
+}

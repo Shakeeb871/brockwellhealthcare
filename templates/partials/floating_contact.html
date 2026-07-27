@@ -1,0 +1,25 @@
+{% load icons region_tags %}
+{% comment %}
+Floating contact buttons (bottom-right): WhatsApp + Call.
+Region-aware — each market shows its own number. Purely links, no JS needed.
+{% endcomment %}
+{% if region.phone %}
+<div class="fab" role="complementary" aria-label="Quick contact">
+  <a class="fab__btn fab__btn--wa"
+     href="https://wa.me/{{ region.phone|digits }}"
+     target="_blank" rel="noopener noreferrer"
+     aria-label="Chat with us on WhatsApp">
+    <span class="fab__ring" aria-hidden="true"></span>
+    <span class="fab__ic">{% social 'whatsapp' %}</span>
+    <span class="fab__label">Chat on WhatsApp</span>
+  </a>
+
+  <a class="fab__btn fab__btn--call"
+     href="tel:{{ region.phone|digits }}"
+     aria-label="Call us on {{ region.phone }}">
+    <span class="fab__ring" aria-hidden="true"></span>
+    <span class="fab__ic">{% icon 'phone' %}</span>
+    <span class="fab__label">Call {{ region.phone }}</span>
+  </a>
+</div>
+{% endif %}

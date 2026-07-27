@@ -28,3 +28,13 @@ def rurl_for(context, region_code, urlname, *args, **kwargs):
 @register.simple_tag
 def region_home(region_code):
     return f"/{region_code}/"
+
+
+@register.filter
+def digits(value):
+    """Strip everything but digits — for tel:/wa.me links.
+
+    Phone numbers are stored for display ("+1 (262) 302-1216"), but wa.me and
+    tel: need bare digits, so "+1 (262) 302-1216" -> "12623021216".
+    """
+    return "".join(ch for ch in str(value or "") if ch.isdigit())

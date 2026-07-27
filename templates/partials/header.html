@@ -9,7 +9,7 @@
           <span class="topbar__ic">{% icon 'phone' %}</span>
           <span class="topbar__txt"><small>Cellphone</small><b>{{ region.phone }}</b></span>
         </a>
-        <a class="topbar__item" href="https://wa.me/{{ region.phone|cut:'+'|cut:' ' }}" target="_blank" rel="noopener">
+        <a class="topbar__item" href="https://wa.me/{{ region.phone|digits }}" target="_blank" rel="noopener">
           <span class="topbar__ic">{% social 'whatsapp' %}</span>
           <span class="topbar__txt"><small>WhatsApp</small><b>{{ region.phone }}</b></span>
         </a>
@@ -122,7 +122,7 @@
     {% endif %}
     <div class="mobile-menu__contact">
       <a href="tel:{{ region.phone }}">{% icon 'phone' 'ico-inline' %}{{ region.phone }}</a>
-      <a href="https://wa.me/{{ region.phone|cut:'+'|cut:' ' }}">{% social 'whatsapp' 'soc-sm' %}WhatsApp</a>
+      <a href="https://wa.me/{{ region.phone|digits }}">{% social 'whatsapp' 'soc-sm' %}WhatsApp</a>
       <span>{% icon 'pin' 'ico-inline' %}{{ region.address }}</span>
     </div>
     <div class="mobile-menu__social" aria-label="Social links">
