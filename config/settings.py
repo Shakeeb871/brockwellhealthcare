@@ -275,12 +275,14 @@ SITE_NOINDEX = env_bool("SITE_NOINDEX", True)
 # hreflang and the sitemaps. ``SITE_NOINDEX`` stays the master kill-switch:
 # while it is True nothing is indexed regardless of this list.
 #
-# Defaults to the UAE site, so going live only needs SITE_NOINDEX=False in the
-# environment. Add more codes (e.g. "uae,us") when another market should be
-# indexed too.
+# Defaults to BOTH live markets, so going live only needs SITE_NOINDEX=False.
+# The default region must be included: it is served at the root domain, which is
+# where Googlebot enters (it crawls mostly from US IPs and sends no country
+# header). Leaving the root de-indexed tells Google "noindex" at the front door
+# and stalls indexing site-wide — `manage.py seostatus` warns if that happens.
 SEO_INDEX_REGIONS = [
     c.strip().lower()
-    for c in os.getenv("SEO_INDEX_REGIONS", "uae").split(",")
+    for c in os.getenv("SEO_INDEX_REGIONS", "uae,us").split(",")
     if c.strip()
 ]
 

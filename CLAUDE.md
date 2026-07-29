@@ -40,7 +40,16 @@ Two settings, both from the environment (`.env`):
 | Setting | Meaning |
 |---|---|
 | `SITE_NOINDEX` | Master kill-switch. `True` (default) = whole site de-indexed. Set `False` to go live. |
-| `SEO_INDEX_REGIONS` | Which regions may be indexed. Defaults to `uae`. Use `uae,us` for both. |
+| `SEO_INDEX_REGIONS` | Which regions may be indexed. Defaults to `uae,us` (both). |
+
+**Always keep the default region (`us`) in that list.** It is served at the root
+domain, and Googlebot enters there — it crawls mostly from US IPs and sends no
+country header, so region detection falls back to the default. A de-indexed root
+means Google's front door says `noindex` and indexing stalls site-wide.
+`manage.py seostatus` prints a loud warning if that ever happens.
+
+De-indexed regions send `noindex, follow` — never `nofollow`, or crawlers stop
+following links onward and the indexable pages are never discovered.
 
 A region that isn't indexable sends `noindex` via **both** a meta tag and an
 `X-Robots-Tag` header, and is excluded from hreflang and every sitemap.
