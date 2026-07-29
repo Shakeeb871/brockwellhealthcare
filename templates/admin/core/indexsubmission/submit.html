@@ -12,72 +12,132 @@
 
 {% block content %}
 <style>
-  .isb { max-width: 900px; }
-  .isb h2 { margin-top: 1.6rem; font-size: 1.1rem; color: #223; }
-  .isb .status-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+  .isb { max-width: 940px; }
+  .isb .status-row { display: flex; gap: 10px; margin: 14px 0 18px; flex-wrap: wrap; }
   .isb .pill { padding: 6px 12px; border-radius: 999px; font-size: .82rem; font-weight: 600; }
-  .isb .pill.ok   { background: #e5f5ea; color: #14663a; }
-  .isb .pill.bad  { background: #fdecec; color: #a4241a; }
-  .isb textarea {
-    width: 100%; min-height: 240px; padding: 12px 14px; font-family: ui-monospace, monospace;
+  .isb .pill.ok  { background: #e5f5ea; color: #14663a; }
+  .isb .pill.bad { background: #fdecec; color: #a4241a; }
+  .isb .pill.neutral { background: #eef1f6; color: #3b4453; }
+  .isb textarea#urls {
+    width: 100%; min-height: 230px; padding: 12px 14px; font-family: ui-monospace, monospace;
     font-size: .92rem; line-height: 1.55; border: 1px solid #cbd0d6; border-radius: 8px;
   }
-  .isb .btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .isb .targets { display: flex; gap: 18px; flex-wrap: wrap; margin: 16px 0 4px; }
+  .isb .target {
+    flex: 1 1 300px; border: 1px solid #dfe4eb; border-radius: 10px; padding: 14px 16px;
+    background: #fbfcfe;
+  }
+  .isb .target.off { opacity: .55; }
+  .isb .target label { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; cursor: pointer; }
+  .isb .target p { margin: 8px 0 0 28px; font-size: .86rem; color: #5a6472; line-height: 1.5; }
+  .isb .btn-row { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; align-items: center; }
   .isb button, .isb .btn-outline {
     background: #1668c9; color: #fff; border: 0; border-radius: 8px;
-    padding: 10px 18px; font-weight: 600; font-size: .95rem; cursor: pointer;
+    padding: 11px 20px; font-weight: 600; font-size: .95rem; cursor: pointer;
   }
+  .isb button[disabled] { background: #9aa6b5; cursor: not-allowed; }
   .isb .btn-outline { background: #fff; color: #1668c9; border: 1px solid #1668c9; text-decoration: none; }
-  .isb .helper { background: #f6f8fb; border: 1px solid #dfe4eb; border-radius: 8px; padding: 14px 16px; font-size: .9rem; color: #445; margin-top: 20px; }
+  .isb .box { border-radius: 8px; padding: 13px 16px; margin: 14px 0; font-size: .9rem; line-height: 1.6; }
+  .isb .box.err  { background: #fdecec; border-left: 4px solid #c0392b; }
+  .isb .box.info { background: #f4f8fd; border-left: 4px solid #1668c9; }
+  .isb .box code { background: #fff; padding: 1px 6px; border-radius: 4px; border: 1px solid #dde3ea; }
   .isb ol { margin: 8px 0 0 20px; padding: 0; }
-  .isb ol li { margin: 4px 0; }
-  .isb .warn { background: #fff5e5; border-left: 4px solid #e08a00; padding: 12px 14px; margin: 12px 0; border-radius: 6px; }
-  .isb .err  { background: #fdecec; border-left: 4px solid #c0392b; padding: 12px 14px; margin: 12px 0; border-radius: 6px; }
+  .isb ol li { margin: 5px 0; }
 </style>
 
 <div class="isb">
   <h1>Submit URLs for indexing</h1>
-  <p style="color:#555">Paste one URL per line and hit <b>Submit</b>. We push them to
-    <b>IndexNow</b> which delivers to Bing, Yandex, Seznam and Naver instantly —
-    and Google reads Bing crawl signals to discover new URLs. Every submission
-    is logged so you can track what was sent.</p>
+  <p style="color:#555;max-width:760px">Paste URLs (one per line) and submit. The
+    <b>Google Indexing API</b> puts each URL directly into Google's crawl queue —
+    normally crawled within minutes. <b>IndexNow</b> pushes the same list to Bing,
+    Yandex, Seznam and Naver instantly. Every submission is logged below.</p>
 
   <div class="status-row">
-    {% if key_configured %}
-      <span class="pill ok">IndexNow key configured ✓</span>
+    {% if google_ready %}
+      <span class="pill ok">Google Indexing API ready ✓</span>
+      <span class="pill neutral">{{ google_used_today }}/{{ google_quota }} Google quota used today</span>
     {% else %}
-      <span class="pill bad">INDEXNOW_KEY missing in .env</span>
+      <span class="pill bad">Google Indexing API not configured</span>
+    {% endif %}
+    {% if key_configured %}
+      <span class="pill ok">IndexNow key ✓</span>
+    {% else %}
+      <span class="pill bad">IndexNow key missing</span>
     {% endif %}
     {% if site_live %}
-      <span class="pill ok">Site is indexable ✓</span>
+      <span class="pill ok">Site indexable ✓</span>
     {% else %}
-      <span class="pill bad">SITE_NOINDEX = True (site is de-indexed)</span>
+      <span class="pill bad">SITE_NOINDEX = True</span>
     {% endif %}
-    <span class="pill" style="background:#eef;color:#334">{{ url_count }} URLs in sitemap</span>
+    <span class="pill neutral">{{ url_count }} URLs in sitemap</span>
   </div>
 
-  {% if not key_configured %}
-    <div class="err">
-      <b>Setup needed:</b> Add these two lines to your server <code>.env</code>, then redeploy:<br>
-      <code>INDEXNOW_KEY=&lt;a 32-character hex string&gt;</code><br>
-      <code>SITE_NOINDEX=False</code><br>
-      Generate a key with <code>python -c "import secrets; print(secrets.token_hex(16))"</code>.
+  {% if not site_live %}
+    <div class="box err"><b>Site is de-indexed.</b> Set <code>SITE_NOINDEX=False</code>
+      in the server <code>.env</code> and redeploy, otherwise every page still sends
+      <code>noindex</code> and submitting is pointless.</div>
+  {% endif %}
+
+  {% if not google_ready %}
+    <div class="box err">
+      <b>Google Indexing API setup (one time, ~10 min)</b> — this is the part that gets
+      Google crawling in minutes:
+      <ol>
+        <li><a href="https://console.cloud.google.com/projectcreate" target="_blank" rel="noopener">Google Cloud console</a> → create a project.</li>
+        <li>APIs &amp; Services → Library → search <b>Indexing API</b> → <b>Enable</b>.</li>
+        <li>APIs &amp; Services → Credentials → <b>Create credentials</b> → <b>Service account</b>. Open it → <b>Keys</b> → Add key → <b>JSON</b> → download.</li>
+        <li><a href="https://search.google.com/search-console" target="_blank" rel="noopener">Search Console</a> → Settings → <b>Users and permissions</b> → Add user → paste the service account's <code>client_email</code> → permission <b>Owner</b>. <i>(Without Owner, Google returns "Permission denied".)</i></li>
+        <li>Upload the JSON to the server (outside <code>public_html</code>) and set in <code>.env</code>:<br>
+          <code>GOOGLE_INDEXING_CREDENTIALS=/home/USER/google-indexing.json</code><br>
+          then redeploy.</li>
+      </ol>
     </div>
+  {% else %}
+    <div class="box info">Service account: <code>{{ google_email }}</code> — this email must be
+      an <b>Owner</b> of the property in Search Console, or Google will reject the calls.
+      Google's quota is <b>{{ google_quota }} URLs/day</b>.</div>
   {% endif %}
 
   <form method="post" novalidate>
     {% csrf_token %}
-    <label for="urls" style="font-weight:600;">URLs (one per line)</label>
+
+    <div class="targets">
+      <div class="target {% if not google_ready %}off{% endif %}">
+        <label>
+          <input type="checkbox" name="use_google" value="1"
+                 {% if google_ready %}checked{% else %}disabled{% endif %}>
+          <span>Google Indexing API</span>
+        </label>
+        <p>Direct crawl request to Google. Fastest route — typically crawled within
+           minutes. Limited to {{ google_quota }} URLs/day.</p>
+      </div>
+      <div class="target {% if not key_configured %}off{% endif %}">
+        <label>
+          <input type="checkbox" name="use_indexnow" value="1"
+                 {% if key_configured %}checked{% else %}disabled{% endif %}>
+          <span>IndexNow (Bing, Yandex, Seznam, Naver)</span>
+        </label>
+        <p>Instant push to the other engines, unlimited. Google also picks up
+           discovery signals from Bing's crawl.</p>
+      </div>
+    </div>
+
+    <label for="urls" style="font-weight:600;display:block;margin-top:14px;">URLs (one per line)</label>
     <textarea id="urls" name="urls" placeholder="https://{{ domain }}/uae/
 https://{{ domain }}/uae/services/
-https://{{ domain }}/uae/team/">{{ prefilled }}</textarea>
+/uae/team/    ← paths work too">{{ prefilled }}</textarea>
 
     <div class="btn-row">
-      <button type="submit" {% if not key_configured or not site_live %}disabled title="Configure INDEXNOW_KEY and SITE_NOINDEX first"{% endif %}>
-        Submit to search engines
+      <button type="submit" {% if not site_live or not google_ready and not key_configured %}disabled{% endif %}>
+        Submit for indexing
       </button>
-      <button type="button" class="btn-outline" onclick="document.getElementById('urls').value = document.getElementById('all-urls').textContent.trim();">
+      <button type="button" class="btn-outline"
+              onclick="document.getElementById('urls').value=document.getElementById('all-urls').textContent.trim();">
         Load all {{ url_count }} sitemap URLs
+      </button>
+      <button type="button" class="btn-outline"
+              onclick="var t=document.getElementById('all-urls').textContent.trim().split('\n').slice(0,{{ google_quota }}).join('\n');document.getElementById('urls').value=t;">
+        Load first {{ google_quota }} (Google daily limit)
       </button>
       <a class="btn-outline" href="{% url 'admin:core_indexsubmission_changelist' %}">Back to log</a>
     </div>
@@ -85,17 +145,14 @@ https://{{ domain }}/uae/team/">{{ prefilled }}</textarea>
 {% endfor %}</textarea>
   </form>
 
-  <div class="helper">
-    <b>Also do these in Google Search Console (5 minutes, high impact):</b>
-    <ol>
-      <li>Open <a href="https://search.google.com/search-console" target="_blank" rel="noopener">Search Console</a> → your property.</li>
-      <li>Left menu → <b>Sitemaps</b> → add <code>https://{{ domain }}/sitemap.xml</code> and click <b>Submit</b>.</li>
-      <li>Top bar → <b>URL Inspection</b> → paste any URL → <b>Request indexing</b>. Do this for your top 10–15 pages (Google limits ~10/day).</li>
-      <li>Left menu → <b>Pages</b> → check the "Why pages aren't indexed" list a few days later to see what Google actually did.</li>
-    </ol>
-    Building initial links (Google Business Profile, LinkedIn, directories,
-    partner sites) accelerates indexing more than anything else — Google needs
-    an external signal that the site exists and is trusted.
+  <div class="box info" style="margin-top:24px">
+    <b>Straight answer on speed:</b> these APIs make Google <i>crawl</i> a URL within
+    minutes — that part is real and it is exactly what paid "instant indexer" services do
+    under the hood. Whether Google then <i>keeps</i> the page in its index is still
+    Google's call; no tool or service can override that. For a new domain, also add the
+    sitemap in Search Console and use <b>URL Inspection → Request indexing</b> on your
+    most important pages, and get a few real external links (Google Business Profile,
+    LinkedIn, directories) — that trust signal is what moves a new site fastest.
   </div>
 </div>
 {% endblock %}

@@ -289,6 +289,12 @@ SEO_INDEX_REGIONS = [
 # and put it in .env. Enables instant Bing / Yandex / Seznam / Naver push.
 INDEXNOW_KEY = os.getenv("INDEXNOW_KEY", "")
 
+# Google Indexing API service-account credentials: either a path to the
+# downloaded JSON key file, or the raw JSON itself. This is what puts a URL
+# straight into Google's crawl queue (see SEO-INDEXING.md for the 10-minute
+# Google Cloud + Search Console setup).
+GOOGLE_INDEXING_CREDENTIALS = os.getenv("GOOGLE_INDEXING_CREDENTIALS", "")
+
 # Region configuration. The bare domain opens on the US site by default; UAE
 # visitors are routed to /uae/ (by geo-detection), and /uae/ is always reachable
 # directly. Change DEFAULT_REGION to flip which region the root serves.

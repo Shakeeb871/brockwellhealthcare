@@ -4,10 +4,11 @@ from django.contrib.contenttypes.admin import GenericStackedInline
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import path, reverse
+from django.utils import timezone
 from django.utils.html import format_html
 from tinymce.widgets import TinyMCE
 
-from . import indexnow
+from . import google_indexing, indexnow
 from .models import ContactLead, FAQ, FAQItem, IndexSubmission, Page
 
 
@@ -101,36 +102,70 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
         ] + super().get_urls()
 
     def submit_view(self, request):
-        """Paste URLs → push to IndexNow → log every result."""
+        """Paste URLs → push to Google Indexing API + IndexNow → log results."""
         domain = settings.SITE_DOMAIN
         key_configured = bool(getattr(settings, "INDEXNOW_KEY", ""))
+        google_ready = google_indexing.is_configured()
         site_live = not getattr(settings, "SITE_NOINDEX", True)
 
         if request.method == "POST":
-            raw = request.POST.get("urls", "")
-            urls = _normalise_urls(raw, domain)
+            urls = _normalise_urls(request.POST.get("urls", ""), domain)
+            use_google = bool(request.POST.get("use_google")) and google_ready
+            use_indexnow = bool(request.POST.get("use_indexnow")) and key_configured
 
             if not urls:
                 messages.error(request, "No valid URLs found. Paste one URL per line.")
-            elif not key_configured:
-                messages.error(request, "INDEXNOW_KEY is not set in the server .env — nothing was submitted.")
             elif not site_live:
-                messages.error(request, "SITE_NOINDEX is True — the site is de-indexed so search engines would ignore this. Set SITE_NOINDEX=False first.")
+                messages.error(request, "SITE_NOINDEX is True — the site is de-indexed, so search engines would ignore these URLs. Set SITE_NOINDEX=False first.")
+            elif not (use_google or use_indexnow):
+                messages.error(request, "Nothing to submit to — configure the Google Indexing API and/or an IndexNow key first.")
             else:
-                status, body = indexnow.submit(urls)
-                ok = 200 <= status < 300
-                for u in urls:
-                    IndexSubmission.objects.create(
-                        url=u, engine="indexnow",
-                        status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
-                        http_code=status,
-                        response=(body or "")[:200],
-                        submitted_by=request.user if request.user.is_authenticated else None,
+                rows, ok_count = [], 0
+
+                # Google Indexing API — one call per URL, straight into the crawl queue.
+                if use_google:
+                    for url, status, msg in google_indexing.publish_many(urls):
+                        ok = 200 <= status < 300
+                        ok_count += ok
+                        rows.append(IndexSubmission(
+                            url=url, engine="google",
+                            status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
+                            http_code=status, response=msg,
+                            submitted_by=request.user if request.user.is_authenticated else None,
+                        ))
+
+                # IndexNow — one batched call for Bing / Yandex / Seznam / Naver.
+                if use_indexnow:
+                    status, body = indexnow.submit(urls)
+                    ok = 200 <= status < 300
+                    for url in urls:
+                        rows.append(IndexSubmission(
+                            url=url, engine="indexnow",
+                            status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
+                            http_code=status, response=(body or "")[:200],
+                            submitted_by=request.user if request.user.is_authenticated else None,
+                        ))
+
+                IndexSubmission.objects.bulk_create(rows)
+
+                targets = []
+                if use_google:
+                    targets.append(f"Google ({ok_count}/{len(urls)} accepted)")
+                if use_indexnow:
+                    targets.append("IndexNow (Bing, Yandex, Seznam, Naver)")
+                failures = sum(1 for r in rows if r.status == IndexSubmission.STATUS_FAIL)
+                if failures:
+                    messages.warning(
+                        request,
+                        f"Submitted {len(urls)} URL(s) to {' + '.join(targets)}, "
+                        f"but {failures} call(s) returned an error — see the log below.",
                     )
-                if ok:
-                    messages.success(request, f"Submitted {len(urls)} URL(s) to IndexNow (Bing, Yandex, Seznam, Naver). Google reads Bing signals too. Response: HTTP {status}.")
                 else:
-                    messages.warning(request, f"Submission accepted with warnings — HTTP {status}. Check the log below.")
+                    messages.success(
+                        request,
+                        f"Submitted {len(urls)} URL(s) to {' + '.join(targets)}. "
+                        "Google usually crawls within minutes; indexing remains Google's decision.",
+                    )
                 return HttpResponseRedirect(reverse("admin:core_indexsubmission_changelist"))
 
         # Sitemap URLs so the operator can copy the full set in one click.
@@ -148,6 +183,13 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
             "opts": IndexSubmission._meta,
             "domain": domain,
             "key_configured": key_configured,
+            "google_ready": google_ready,
+            "google_email": google_indexing.service_account_email(),
+            "google_quota": google_indexing.DAILY_QUOTA,
+            "google_used_today": IndexSubmission.objects.filter(
+                engine="google", status=IndexSubmission.STATUS_OK,
+                submitted_at__date=timezone.localdate(),
+            ).count(),
             "site_live": site_live,
             "all_urls": all_urls,
             "url_count": len(all_urls),
