@@ -8,6 +8,8 @@ It reports the effective settings (as loaded from the environment/.env) and,
 per region, whether pages are indexable and which robots directive they send.
 """
 
+import os
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -61,4 +63,39 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(
                 "  Nothing is indexable right now, so the sitemap index is empty."
             ))
+
+        # --- Instant-indexing credentials -------------------------------- #
+        from core import google_indexing, indexnow
+
+        self.stdout.write("")
+        self.stdout.write(self.style.MIGRATE_HEADING("Instant indexing"))
+
+        raw = (getattr(settings, "GOOGLE_INDEXING_CREDENTIALS", "") or "").strip()
+        if google_indexing.is_configured():
+            self.stdout.write(self.style.SUCCESS(
+                f"  Google Indexing API  READY   {google_indexing.service_account_email()}"
+            ))
+            self.stdout.write(
+                "    Reminder: that email must be an OWNER of the property in Search Console."
+            )
+        elif not raw:
+            self.stdout.write("  Google Indexing API  not set (GOOGLE_INDEXING_CREDENTIALS empty)")
+        else:
+            # A value is present but unusable — say exactly why.
+            hint = "file not found" if not raw.startswith("{") and not os.path.exists(raw) else "unreadable or missing client_email/private_key"
+            self.stdout.write(self.style.ERROR(
+                f"  Google Indexing API  BROKEN  ({hint})"
+            ))
+            self.stdout.write(f"    value: {raw[:70]}{'…' if len(raw) > 70 else ''}")
+
+        key = getattr(settings, "INDEXNOW_KEY", "")
+        if key:
+            state = "READY" if indexnow.is_enabled() else "key set, but site is de-indexed"
+            style = self.style.SUCCESS if indexnow.is_enabled() else self.style.WARNING
+            self.stdout.write(style(f"  IndexNow             {state}"))
+            self.stdout.write(
+                f"    verification file: https://{settings.SITE_DOMAIN}/{key}.txt"
+            )
+        else:
+            self.stdout.write("  IndexNow             not set (INDEXNOW_KEY empty)")
         self.stdout.write("")

@@ -32,14 +32,56 @@ remove the discovery delay, which on a new domain is the biggest bottleneck.
    - Permission: **Owner** (not Full — it must be Owner)
 
    Without this you get `Permission denied. Failed to verify the URL ownership.`
-6. **Put the key on the server** — upload the JSON somewhere **outside**
-   `public_html` (e.g. `/home/USER/google-indexing.json`), then add to `.env`:
+6. **Upload the key to cPanel** — see the walkthrough below.
+
+### Uploading the JSON in cPanel (step by step)
+
+The file must sit **outside `public_html`** so nobody can download it from the
+web. The home folder is the right place.
+
+1. Rename the downloaded file to something simple — e.g.
+   **`google-indexing.json`** (Google names it something like
+   `brockwell-seo-3f9a2c1b7d4e.json`).
+2. cPanel → **File Manager**.
+3. In the left tree click **`/home/USERNAME`** — the very top level, the folder
+   that *contains* `public_html`. **Do not** open `public_html`.
+4. Toolbar → **Upload** → choose the JSON → wait for 100% → click
+   *Go Back to …* .
+5. Confirm it's listed next to `public_html` (not inside it).
+6. Note the full path — it is `/home/USERNAME/google-indexing.json` with your
+   real cPanel username. (File Manager shows the current folder in the path bar
+   at the top.)
+7. Now edit `.env` (File Manager → your app folder → enable
+   *Settings → Show Hidden Files* → right-click `.env` → **Edit**) and add:
 
    ```
-   GOOGLE_INDEXING_CREDENTIALS=/home/USER/google-indexing.json
+   GOOGLE_INDEXING_CREDENTIALS=/home/USERNAME/google-indexing.json
    ```
 
-   (You can also paste the JSON itself as the value if you prefer one env var.)
+8. **Set permissions to 600** (owner-only) — right-click the JSON →
+   *Change Permissions* → untick everything for Group and World → Save.
+9. Redeploy: `bash ~/brockwellhealthcare/deploy.sh`
+10. Verify:
+
+    ```bash
+    python manage.py seostatus
+    ```
+
+    You want to see:
+
+    ```
+    Instant indexing
+      Google Indexing API  READY   xxx@yyy.iam.gserviceaccount.com
+    ```
+
+    If it says `BROKEN (file not found)` the path in `.env` doesn't match where
+    the file actually is — re-check the username and filename, both are
+    case-sensitive.
+
+**No File Manager / prefer the terminal?** Upload via SFTP to your home folder,
+or paste the JSON straight into the env var instead of using a file:
+`GOOGLE_INDEXING_CREDENTIALS={"type":"service_account",...}` (all on one line —
+keep the `\n` sequences inside `private_key` exactly as they are).
 
 ## 2. IndexNow — one-time setup (~1 minute)
 
