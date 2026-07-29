@@ -121,3 +121,5 @@ class Page(TimeStamped):
             else:
                 out.append(("para", chunk))
         return out
+
+from .models_seo import IndexSubmission  # noqa: E402,F401

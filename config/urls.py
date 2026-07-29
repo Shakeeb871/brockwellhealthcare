@@ -77,6 +77,8 @@ urlpatterns = [
     path("robots.txt", core_views.robots_txt, name="robots"),
     path("llms.txt", core_views.llms_txt, name="llms"),
     path("healthz", core_views.healthz, name="healthz"),
+    # IndexNow verification file — must be reachable at /<key>.txt.
+    re_path(r"^(?P<key>[A-Za-z0-9-]{8,128})\.txt$", core_views.indexnow_key, name="indexnow-key"),
     # Stripe calls this directly, without a region prefix.
     path("stripe/webhook/", include("payments.webhook_urls")),
     # Region-routed apps (top-level namespaces; the region prefix is stripped

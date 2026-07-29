@@ -1,0 +1,101 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a> ›
+  <a href="{% url 'admin:app_list' app_label='core' %}">Core</a> ›
+  <a href="{% url 'admin:core_indexsubmission_changelist' %}">Index submissions</a> ›
+  Submit URLs
+</div>
+{% endblock %}
+
+{% block content %}
+<style>
+  .isb { max-width: 900px; }
+  .isb h2 { margin-top: 1.6rem; font-size: 1.1rem; color: #223; }
+  .isb .status-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+  .isb .pill { padding: 6px 12px; border-radius: 999px; font-size: .82rem; font-weight: 600; }
+  .isb .pill.ok   { background: #e5f5ea; color: #14663a; }
+  .isb .pill.bad  { background: #fdecec; color: #a4241a; }
+  .isb textarea {
+    width: 100%; min-height: 240px; padding: 12px 14px; font-family: ui-monospace, monospace;
+    font-size: .92rem; line-height: 1.55; border: 1px solid #cbd0d6; border-radius: 8px;
+  }
+  .isb .btn-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .isb button, .isb .btn-outline {
+    background: #1668c9; color: #fff; border: 0; border-radius: 8px;
+    padding: 10px 18px; font-weight: 600; font-size: .95rem; cursor: pointer;
+  }
+  .isb .btn-outline { background: #fff; color: #1668c9; border: 1px solid #1668c9; text-decoration: none; }
+  .isb .helper { background: #f6f8fb; border: 1px solid #dfe4eb; border-radius: 8px; padding: 14px 16px; font-size: .9rem; color: #445; margin-top: 20px; }
+  .isb ol { margin: 8px 0 0 20px; padding: 0; }
+  .isb ol li { margin: 4px 0; }
+  .isb .warn { background: #fff5e5; border-left: 4px solid #e08a00; padding: 12px 14px; margin: 12px 0; border-radius: 6px; }
+  .isb .err  { background: #fdecec; border-left: 4px solid #c0392b; padding: 12px 14px; margin: 12px 0; border-radius: 6px; }
+</style>
+
+<div class="isb">
+  <h1>Submit URLs for indexing</h1>
+  <p style="color:#555">Paste one URL per line and hit <b>Submit</b>. We push them to
+    <b>IndexNow</b> which delivers to Bing, Yandex, Seznam and Naver instantly —
+    and Google reads Bing crawl signals to discover new URLs. Every submission
+    is logged so you can track what was sent.</p>
+
+  <div class="status-row">
+    {% if key_configured %}
+      <span class="pill ok">IndexNow key configured ✓</span>
+    {% else %}
+      <span class="pill bad">INDEXNOW_KEY missing in .env</span>
+    {% endif %}
+    {% if site_live %}
+      <span class="pill ok">Site is indexable ✓</span>
+    {% else %}
+      <span class="pill bad">SITE_NOINDEX = True (site is de-indexed)</span>
+    {% endif %}
+    <span class="pill" style="background:#eef;color:#334">{{ url_count }} URLs in sitemap</span>
+  </div>
+
+  {% if not key_configured %}
+    <div class="err">
+      <b>Setup needed:</b> Add these two lines to your server <code>.env</code>, then redeploy:<br>
+      <code>INDEXNOW_KEY=&lt;a 32-character hex string&gt;</code><br>
+      <code>SITE_NOINDEX=False</code><br>
+      Generate a key with <code>python -c "import secrets; print(secrets.token_hex(16))"</code>.
+    </div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <label for="urls" style="font-weight:600;">URLs (one per line)</label>
+    <textarea id="urls" name="urls" placeholder="https://{{ domain }}/uae/
+https://{{ domain }}/uae/services/
+https://{{ domain }}/uae/team/">{{ prefilled }}</textarea>
+
+    <div class="btn-row">
+      <button type="submit" {% if not key_configured or not site_live %}disabled title="Configure INDEXNOW_KEY and SITE_NOINDEX first"{% endif %}>
+        Submit to search engines
+      </button>
+      <button type="button" class="btn-outline" onclick="document.getElementById('urls').value = document.getElementById('all-urls').textContent.trim();">
+        Load all {{ url_count }} sitemap URLs
+      </button>
+      <a class="btn-outline" href="{% url 'admin:core_indexsubmission_changelist' %}">Back to log</a>
+    </div>
+    <textarea id="all-urls" hidden>{% for u in all_urls %}{{ u }}
+{% endfor %}</textarea>
+  </form>
+
+  <div class="helper">
+    <b>Also do these in Google Search Console (5 minutes, high impact):</b>
+    <ol>
+      <li>Open <a href="https://search.google.com/search-console" target="_blank" rel="noopener">Search Console</a> → your property.</li>
+      <li>Left menu → <b>Sitemaps</b> → add <code>https://{{ domain }}/sitemap.xml</code> and click <b>Submit</b>.</li>
+      <li>Top bar → <b>URL Inspection</b> → paste any URL → <b>Request indexing</b>. Do this for your top 10–15 pages (Google limits ~10/day).</li>
+      <li>Left menu → <b>Pages</b> → check the "Why pages aren't indexed" list a few days later to see what Google actually did.</li>
+    </ol>
+    Building initial links (Google Business Profile, LinkedIn, directories,
+    partner sites) accelerates indexing more than anything else — Google needs
+    an external signal that the site exists and is trusted.
+  </div>
+</div>
+{% endblock %}

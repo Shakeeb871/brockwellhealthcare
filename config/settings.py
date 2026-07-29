@@ -284,6 +284,11 @@ SEO_INDEX_REGIONS = [
     if c.strip()
 ]
 
+# IndexNow key — 8-128 chars of [a-zA-Z0-9-]. Generate one with
+#   python -c "import secrets; print(secrets.token_hex(16))"
+# and put it in .env. Enables instant Bing / Yandex / Seznam / Naver push.
+INDEXNOW_KEY = os.getenv("INDEXNOW_KEY", "")
+
 # Region configuration. The bare domain opens on the US site by default; UAE
 # visitors are routed to /uae/ (by geo-detection), and /uae/ is always reachable
 # directly. Change DEFAULT_REGION to flip which region the root serves.

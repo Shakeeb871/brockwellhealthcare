@@ -641,6 +641,18 @@ def healthz(request):
     return _text_response("ok")
 
 
+def indexnow_key(request, key):
+    """Serve the IndexNow verification key at /<key>.txt.
+
+    IndexNow requires the exact key content at this path so search engines
+    can confirm the site owner controls it. Any other request 404s.
+    """
+    configured = getattr(settings, "INDEXNOW_KEY", "")
+    if configured and key == configured:
+        return _text_response(configured)
+    raise Http404("Not found")
+
+
 def _text_response(text):
     return HttpResponse(text, content_type="text/plain; charset=utf-8")
 
