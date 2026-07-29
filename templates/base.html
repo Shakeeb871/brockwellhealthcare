@@ -13,10 +13,10 @@
   {% if page_indexable %}
   <meta name="robots" content="{{ meta.robots|default:'index, follow' }}">
   {% else %}
-  {# `follow` on purpose: a de-indexed region must still pass crawlers on to
+  {% comment %}`follow` on purpose: a de-indexed region must still pass crawlers on to
      the rest of the site. `nofollow` here stops Google following any link from
      the page — including from the root domain, which is where it enters — so
-     nothing else ever gets discovered. #}
+     nothing else ever gets discovered.{% endcomment %}
   <meta name="robots" content="noindex, follow">
   {% endif %}
 
@@ -46,8 +46,12 @@
   <meta name="twitter:image" content="{{ meta.image }}">
 
   {# ---------- Icons & fonts ---------- #}
-  <link rel="icon" href="{% static 'img/site-icon.svg' %}" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="{% static 'img/site-icon.svg' %}">
+  {% comment %}Small rasters, not site-icon.svg: that file is a 250kb SVG wrapping a
+     1024px bitmap, and it was being downloaded on every page view. These are
+     the same artwork at the sizes browsers actually render.{% endcomment %}
+  <link rel="icon" href="{% static 'img/favicon-32.png' %}" sizes="32x32" type="image/png">
+  <link rel="icon" href="{% static 'img/favicon-192.png' %}" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" sizes="180x180">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">

@@ -38,7 +38,7 @@
                  aria-labelledby="doctab-{{ forloop.counter0 }}" tabindex="0">
           <div class="docpanel__media">
             {% if d.photo %}
-              <img src="{{ d.photo|region_media:region_code }}" alt="{{ d.name }}, {{ d.title }}" {% if not forloop.first %}loading="lazy"{% endif %}>
+              <img src="{{ d.photo|region_media:region_code }}" {% img_dims d.photo|region_media:region_code %} alt="{{ d.name|add:', '|add:d.title|clamp_alt }}" {% if not forloop.first %}loading="lazy"{% endif %}>
             {% else %}
               <span class="avatar avatar--xl" aria-hidden="true">{{ d.initials }}</span>
             {% endif %}

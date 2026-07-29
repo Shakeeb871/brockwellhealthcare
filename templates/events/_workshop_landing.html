@@ -70,8 +70,10 @@ Pricing posts to the live Stripe checkout.
 .evx-keycol__ic{width:54px;height:54px;border-radius:50%;background:rgba(46,125,70,.2);border:1px solid rgba(46,125,70,.4);color:var(--accent2);display:grid;place-items:center;margin-bottom:16px;}
 .evx-keycol__ic svg{width:25px;height:25px;}
 .evx-keycol .lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:8px;}
-.evx-keycol h3{font-size:20px;color:#fff;font-weight:700;}
 .evx-keycol p{font-size:13px;color:rgba(255,255,255,.6);margin-top:6px;}
+/* Two classes deep so it outranks `.evx-keycol p` above — the key fact is a
+   <p>, not a heading, but has to keep the old h3 look. */
+.evx-keycol .evx-keycol__val{font-size:20px;color:#fff;font-weight:700;margin:0;}
 /* 3 & 5 & 8. Light section base */
 .evx-why{background:#fff;}
 .evx-why__grid{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:center;}
@@ -138,7 +140,7 @@ Pricing posts to the live Stripe checkout.
 @media(max-width:600px){.evx-fac__media{height:auto;aspect-ratio:4/5;}}
 .evx-fac__mono{width:100%;height:100%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent2),var(--navy-800));color:#fff;font-family:var(--font-display);font-size:46px;font-weight:700;}
 .evx-fac__body{padding:22px;flex:1;display:flex;flex-direction:column;}
-.evx-fac__body h4{font-size:18px;color:var(--p);}
+.evx-fac__body h3{font-size:18px;color:var(--p);}
 .evx-fac__creds{font-size:12px;color:var(--accent);font-weight:600;letter-spacing:.02em;margin:4px 0 12px;}
 .evx-fac__list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;}
 .evx-fac__list li{display:flex;gap:8px;font-size:13px;color:var(--muted);line-height:1.45;}
@@ -183,7 +185,7 @@ Pricing posts to the live Stripe checkout.
 
   <!-- 1. HERO -->
   <section class="evx-hero">
-    <div class="evx-hero__bg">{% if hero_image %}<img src="{% static hero_image %}" alt="">{% endif %}</div>
+    <div class="evx-hero__bg">{% if hero_image %}<img src="{% static hero_image %}" {% img_dims hero_image %} alt="">{% endif %}</div>
     <div class="evx-hero__in">
       <span class="evx-badge"><span class="dot"></span> Limited Enrollment Available</span>
       <h1>Hands-On Regenerative Medicine Training</h1>
@@ -200,9 +202,9 @@ Pricing posts to the live Stripe checkout.
       <div class="evx-hero__strip-in">
         <span class="lbl">Learn from industry pioneers</span>
         <div class="evx-avatars">
-          {% if fac_syed %}<img src="{{ fac_syed }}" alt="">{% else %}<span class="mono">SH</span>{% endif %}
+          {% if fac_syed %}<img src="{{ fac_syed }}" {% img_dims fac_syed %} alt="">{% else %}<span class="mono">SH</span>{% endif %}
           <span class="mono">AK</span>
-          {% if fac_rachel %}<img src="{{ fac_rachel }}" alt="">{% else %}<span class="mono">RG</span>{% endif %}
+          {% if fac_rachel %}<img src="{{ fac_rachel }}" {% img_dims fac_rachel %} alt="">{% else %}<span class="mono">RG</span>{% endif %}
           <span class="mono">KB</span>
         </div>
         <span class="cnt">4 World-Class Instructors</span>
@@ -217,25 +219,25 @@ Pricing posts to the live Stripe checkout.
         <div class="evx-keycol">
           <span class="evx-keycol__ic">{% icon 'calendar' 'evx-ic' %}</span>
           <span class="lbl">Event Date</span>
-          <h3>{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</h3>
+          <p class="evx-keycol__val">{{ event.start|date:"j" }}–{{ event.end|date:"j M Y" }}</p>
           <p>2-Day Clinical Intensive</p>
         </div>
         <div class="evx-keycol">
           <span class="evx-keycol__ic">{% icon 'pin' 'evx-ic' %}</span>
           <span class="lbl">Location</span>
-          <h3>{{ event.location }}</h3>
+          <p class="evx-keycol__val">{{ event.location }}</p>
           <p>Hands-On Training Venue</p>
         </div>
         <div class="evx-keycol">
           <span class="evx-keycol__ic">{% icon 'users' 'evx-ic' %}</span>
           <span class="lbl">Availability</span>
-          <h3>{{ event.capacity }} Providers</h3>
+          <p class="evx-keycol__val">{{ event.capacity }} Providers</p>
           <p>Strictly Limited Seats</p>
         </div>
         <div class="evx-keycol">
           <span class="evx-keycol__ic">{% icon 'award' 'evx-ic' %}</span>
           <span class="lbl">Format</span>
-          <h3>Small-Group</h3>
+          <p class="evx-keycol__val">Small-Group</p>
           <p>Instructor-Led Training</p>
         </div>
       </div>
@@ -260,7 +262,7 @@ Pricing posts to the live Stripe checkout.
         <p class="evx-closer">This is the future of hands-on medical education.</p>
       </div>
       <div class="evx-why__media">
-        {% if why_image %}<img src="{% static why_image %}" alt="Advanced interventional injection &amp; longevity medicine training">{% elif card_image %}<img src="{% static card_image %}" alt="Hands-on clinical training">{% endif %}
+        {% if why_image %}<img src="{% static why_image %}" {% img_dims why_image %} alt="Advanced interventional injection &amp; longevity medicine training">{% elif card_image %}<img src="{% static card_image %}" {% img_dims card_image %} alt="Hands-on clinical training">{% endif %}
       </div>
     </div>
   </section>
@@ -325,7 +327,7 @@ Pricing posts to the live Stripe checkout.
   <section class="evtx-sec evx-cap">
     <div class="evtx-c">
       <div class="evx-cap__grid">
-        <div class="evx-cap__img"><img src="{% if learn_image %}{% static learn_image %}{% else %}{% static 'img/about/about-3.webp' %}{% endif %}" alt="Faculty-supervised hands-on session"></div>
+        <div class="evx-cap__img">{% firstof learn_image "img/about/about-3.webp" as learn_src %}<img src="{% static learn_src %}" {% img_dims learn_src %} alt="Faculty-supervised hands-on session"></div>
         <div>
           <span class="evx-eyebrow" style="color:var(--accent2)">Live Hands-On Experience</span>
           <h2>Learn By Doing</h2>
@@ -383,9 +385,9 @@ Pricing posts to the live Stripe checkout.
       </div>
       <div class="evx-fac__grid">
         <article class="evx-fac">
-          <div class="evx-fac__media">{% if fac_syed %}<img src="{{ fac_syed }}" alt="Dr. Syed Hasnain Haider-Shah">{% else %}<div class="evx-fac__mono">SH</div>{% endif %}</div>
+          <div class="evx-fac__media">{% if fac_syed %}<img src="{{ fac_syed }}" {% img_dims fac_syed %} alt="Dr. Syed Hasnain Haider-Shah">{% else %}<div class="evx-fac__mono">SH</div>{% endif %}</div>
           <div class="evx-fac__body">
-            <h4>Dr. Syed Hasnain Haider-Shah</h4>
+            <h3>Dr. Syed Hasnain Haider-Shah</h3>
             <p class="evx-fac__creds">MD, CM (McGill) • MBA • DABR • FINR • FICA</p>
             <ul class="evx-fac__list">
               <li>{% icon 'check' 'evx-ic' %} International Neurointerventional Surgeon</li>
@@ -399,7 +401,7 @@ Pricing posts to the live Stripe checkout.
         <article class="evx-fac">
           <div class="evx-fac__media"><div class="evx-fac__mono">AK</div></div>
           <div class="evx-fac__body">
-            <h4>Aaron Kuehl, PA-C</h4>
+            <h3>Aaron Kuehl, PA-C</h3>
             <p class="evx-fac__creds">Board-Certified Physician Associate</p>
             <ul class="evx-fac__list">
               <li>{% icon 'check' 'evx-ic' %} Wellness &amp; hormone optimization specialist</li>
@@ -409,9 +411,9 @@ Pricing posts to the live Stripe checkout.
           </div>
         </article>
         <article class="evx-fac">
-          <div class="evx-fac__media">{% if fac_rachel %}<img src="{{ fac_rachel }}" alt="Rachel Ann Garcia">{% else %}<div class="evx-fac__mono">RG</div>{% endif %}</div>
+          <div class="evx-fac__media">{% if fac_rachel %}<img src="{{ fac_rachel }}" {% img_dims fac_rachel %} alt="Rachel Ann Garcia">{% else %}<div class="evx-fac__mono">RG</div>{% endif %}</div>
           <div class="evx-fac__body">
-            <h4>Rachel Ann Garcia, AGACNP-BC, APRN</h4>
+            <h3>Rachel Ann Garcia, AGACNP-BC, APRN</h3>
             <p class="evx-fac__creds">Adult-Gerontology Acute Care Nurse Practitioner</p>
             <ul class="evx-fac__list">
               <li>{% icon 'check' 'evx-ic' %} Wound Care Specialist</li>
@@ -426,7 +428,7 @@ Pricing posts to the live Stripe checkout.
         <article class="evx-fac">
           <div class="evx-fac__media"><div class="evx-fac__mono">KB</div></div>
           <div class="evx-fac__body">
-            <h4>Karolina Balkenbush, RDN, LDN, CDCES</h4>
+            <h3>Karolina Balkenbush, RDN, LDN, CDCES</h3>
             <p class="evx-fac__creds">Territory Business Manager</p>
             <ul class="evx-fac__list">
               <li>{% icon 'check' 'evx-ic' %} Territory Business Manager at Dexcom &amp; Board President of ADCES Nevada</li>

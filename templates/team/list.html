@@ -11,7 +11,7 @@
       {% for d in doctors %}
       <article class="team-card">
         <a href="{{ d.get_absolute_url }}" class="team-card__media" aria-label="{{ d.name }}">
-          {% if d.photo %}<img src="{{ d.photo|region_media:region_code }}" alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
+          {% if d.photo %}<img src="{{ d.photo|region_media:region_code }}" {% img_dims d.photo|region_media:region_code %} alt="{{ d.name }}" loading="lazy" decoding="async">{% else %}<span class="team-card__avatar">{{ d.initials }}</span>{% endif %}
         </a>
         <div class="team-card__body">
           <h2 class="team-card__name"><a href="{{ d.get_absolute_url }}">{{ d.name }}</a></h2>

@@ -4,7 +4,7 @@
 {% block content %}
 {% rurl 'blog:list' as blog_list_url %}
 {% if active_category %}
-{% include "partials/page_hero.html" with hero_eyebrow="News & Insights" hero_title=active_category.name hero_lead=active_category.description|default:"Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists." crumb_parent_label="Insights" crumb_parent_url=blog_list_url crumb_label=active_category.name %}
+{% include "partials/page_hero.html" with hero_eyebrow="News & Insights" hero_title=active_category.name|add:" Articles" hero_lead=active_category.description|default:"Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists." crumb_parent_label="Insights" crumb_parent_url=blog_list_url crumb_label=active_category.name %}
 {% else %}
 {% include "partials/page_hero.html" with hero_eyebrow="News & Insights" hero_title="Insights & Articles" hero_lead="Expert insights on regenerative medicine, stem cell therapy, longevity and patient care from our specialists." crumb_label="Insights" %}
 {% endif %}
@@ -24,7 +24,7 @@
         {% for p in posts %}
         <article class="post">
           <a class="post__media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-            {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}" loading="lazy" decoding="async">{% endif %}
+            {% if p.image %}<img src="{{ p.image.url }}" {% img_dims p.image.url %} alt="{{ p.title }}" loading="lazy" decoding="async">{% endif %}
             {% if p.category %}<span class="post__badge">{{ p.category.name }}</span>{% endif %}
           </a>
           <div class="post__body">
@@ -34,7 +34,7 @@
             </div>
             <h2 class="post__title"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h2>
             <p class="post__desc">{{ p.excerpt }}</p>
-            <a class="post__link" href="{{ p.get_absolute_url }}">Read More {% icon 'arrow' 'ico' %}</a>
+            <a class="post__link" href="{{ p.get_absolute_url }}" aria-label="Read more: {{ p.title }}">Read More {% icon 'arrow' 'ico' %}</a>
           </div>
         </article>
         {% endfor %}

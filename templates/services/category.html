@@ -23,7 +23,7 @@
       </div>
     </div>
     <figure class="svc-media{% if not parsed.lead_image %} svc-media--ph{% endif %}" aria-hidden="{% if not parsed.lead_image %}true{% else %}false{% endif %}">
-      {% if parsed.lead_image %}<img src="{{ parsed.lead_image }}" alt="{{ category.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
+      {% if parsed.lead_image %}<img src="{{ parsed.lead_image }}" {% img_dims parsed.lead_image %} alt="{{ category.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
     </figure>
   </div>
 </section>
@@ -60,7 +60,7 @@
         <div class="prose">{{ sec.body }}</div>
       </div>
       <figure class="svc-media{% if not sec.image %} svc-media--ph{% endif %}" aria-hidden="{% if not sec.image %}true{% else %}false{% endif %}">
-        {% if sec.image %}<img src="{{ sec.image }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
+        {% if sec.image %}<img src="{{ sec.image }}" {% img_dims sec.image %} alt="{{ sec.heading }}" loading="lazy" decoding="async">{% else %}<span class="svc-media__ic">{% category_icon category.slug %}</span>{% endif %}
       </figure>
     </div>
   </section>
@@ -81,9 +81,9 @@
       {% service_thumb s.slug as s_thumb %}
       <article class="card">
         {% if s.image %}
-        <div class="card__media"><img src="{{ s.image.url }}" alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
+        <div class="card__media"><img src="{{ s.image.url }}" {% img_dims s.image.url %} alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
         {% elif s_thumb %}
-        <div class="card__media"><img src="{{ s_thumb }}" alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
+        <div class="card__media"><img src="{{ s_thumb }}" {% img_dims s_thumb %} alt="{{ s.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async"></div>
         {% else %}
         <span class="card__icon" aria-hidden="true">{% service_icon s.slug 'ico' category.slug %}</span>
         {% endif %}

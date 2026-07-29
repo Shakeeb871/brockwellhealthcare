@@ -12,7 +12,7 @@
       <article class="loc-card">
         <a class="loc-card__media" href="{{ loc.get_absolute_url }}" aria-label="{{ loc.name }}">
           {% if loc.hero %}
-            <img src="{{ loc.hero.url }}" alt="{{ loc.name }}" loading="lazy" decoding="async">
+            <img src="{{ loc.hero.url }}" {% img_dims loc.hero.url %} alt="{{ loc.name }}" loading="lazy" decoding="async">
           {% else %}
             <span class="loc-card__ph">{% icon 'pin' %}</span>
           {% endif %}

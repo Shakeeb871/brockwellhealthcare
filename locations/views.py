@@ -57,7 +57,12 @@ def location_detail(request, slug):
     )
     doctors = location.published_doctors
 
-    title = location.seo_title or f"{location.name} — Regenerative Medicine & Longevity"
+    # Lead with the city, not location.name — that already carries the brand
+    # ("Brockwell Healthcare — Las Vegas"), so repeating it pushed the title
+    # past TITLE_MAX and the clamp threw the keywords away.
+    title = location.seo_title or (
+        f"{location.city} Regenerative Medicine & Longevity Clinic"
+    )
     description = location.seo_description or location.intro or (
         f"{settings.BRAND_NAME} in {location.city} — {location.full_address}. "
         "Regenerative medicine, longevity and wellness care."

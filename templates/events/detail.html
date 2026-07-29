@@ -81,7 +81,7 @@
     {% if evt.overview_image %}
     <div class="evt-ov__media">
       <figure class="evt-ov__frame">
-        <img src="{{ evt.overview_image }}" alt="Hands-on interventional injection training at the {{ BRAND_NAME }} workshop" loading="lazy" decoding="async">
+        <img src="{{ evt.overview_image }}" {% img_dims evt.overview_image %} alt="Hands-on interventional injection training at the {{ BRAND_NAME }} workshop" loading="lazy" decoding="async">
       </figure>
       <span class="evt-ov__badge">{% icon 'award' 'ico' %} Certificate of attendance</span>
     </div>
@@ -155,7 +155,7 @@
       {% for f in evt.faculty %}
       <article class="evt-fac">
         <div class="evt-fac__media"{% if not f.photo %} data-mono="1"{% endif %}>
-          {% if f.photo %}<img src="{{ f.photo }}" alt="{{ f.name }}" loading="lazy" decoding="async">{% else %}<span class="evt-fac__mono" aria-hidden="true">{{ f.initials }}</span>{% endif %}
+          {% if f.photo %}<img src="{{ f.photo }}" {% img_dims f.photo %} alt="{{ f.name }}" loading="lazy" decoding="async">{% else %}<span class="evt-fac__mono" aria-hidden="true">{{ f.initials }}</span>{% endif %}
         </div>
         <div class="evt-fac__body">
           <h3 class="evt-fac__name">{{ f.name }}</h3>
@@ -225,8 +225,8 @@
 
 {# ---------------- Reserve / contact CTA band (full width) ----------------- #}
 {% if packages %}
-{# Booking happens through the package cards above — no form here, just a
-   prompt back to the packages and a way to reach the team. #}
+{% comment %}Booking happens through the package cards above — no form here, just a
+   prompt back to the packages and a way to reach the team.{% endcomment %}
 <section class="section evt-cta evt-cta--banner" id="register">
   <div class="container evt-cta__banner">
     <span class="eyebrow">Reserve Your Seat</span>

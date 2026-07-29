@@ -109,8 +109,8 @@
       <a class="abt-svc" href="{{ c.get_absolute_url }}">
         {% category_image c.slug as cat_img %}
         <span class="abt-svc__media">
-          {% if cat_img %}<img src="{{ cat_img }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
-          {% elif c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+          {% if cat_img %}<img src="{{ cat_img }}" {% img_dims cat_img %} alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+          {% elif c.image %}<img src="{{ c.image.url }}" {% img_dims c.image.url %} alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
           {% else %}<span class="abt-svc__ic" aria-hidden="true">{% category_icon c.slug %}</span>{% endif %}
         </span>
         <span class="abt-svc__body">
@@ -146,7 +146,7 @@
     </div>
     <div class="abt-founder__media">
       {% if founder.photo %}
-      <figure class="abt-founder__photo"><img src="{{ founder.photo|region_media:region_code }}" alt="Dr. Hasnain Haider-Shah, Founder & Lead Specialist" loading="lazy" decoding="async"></figure>
+      <figure class="abt-founder__photo"><img src="{{ founder.photo|region_media:region_code }}" {% img_dims founder.photo|region_media:region_code %} alt="Dr. Hasnain Haider-Shah, Founder & Lead Specialist" loading="lazy" decoding="async"></figure>
       {% else %}
       <figure class="abt-founder__photo abt-founder__photo--ph"><span aria-hidden="true">{% icon 'stethoscope' %}</span></figure>
       {% endif %}
@@ -165,7 +165,7 @@
     <div class="abt-spec-grid">
       {% for s in specialists %}
       <a class="abt-spec" {% if s.url %}href="{{ s.url }}"{% endif %}>
-        <span class="abt-spec__media">{% if s.photo %}<img src="{{ s.photo|region_media:region_code }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% else %}<span class="abt-spec__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>{% endif %}</span>
+        <span class="abt-spec__media">{% if s.photo %}<img src="{{ s.photo|region_media:region_code }}" {% img_dims s.photo|region_media:region_code %} alt="{{ s.name }}" loading="lazy" decoding="async">{% else %}<span class="abt-spec__ph" aria-hidden="true">{% icon 'stethoscope' %}</span>{% endif %}</span>
         <span class="abt-spec__name">{{ s.name }}</span>
         <span class="abt-spec__role">{{ s.role }}</span>
       </a>
@@ -222,7 +222,7 @@
       {% for p in about_partners %}
       <li class="about__partner">
         {% if p.logo %}
-        <img class="about__partner-logo" src="{% static p.logo %}" alt="{{ p.name }}" loading="lazy"
+        <img class="about__partner-logo" src="{% static p.logo %}" {% img_dims p.logo %} alt="{{ p.name }}" loading="lazy"
              onerror="this.closest('.about__partner').classList.add('no-logo')">
         {% endif %}
         <span class="about__partner-fallback">

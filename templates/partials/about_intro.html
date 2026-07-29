@@ -16,10 +16,10 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
     <div class="about__intro">
       <div class="about__media">
         <figure class="about-shape about-shape--a" aria-label="Clinicians at work">
-          <img src="{% static 'img/about/about-1.webp' %}" alt="Doctor consulting a patient at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+          <img src="{% static 'img/about/about-1.webp' %}" {% img_dims 'img/about/about-1.webp' %} alt="Doctor consulting a patient at {{ BRAND_NAME }}" loading="lazy" decoding="async">
         </figure>
         <figure class="about-shape about-shape--b" aria-label="Modern laboratory">
-          <img src="{% static 'img/about/about-2.webp' %}" alt="Clinical team reviewing advanced diagnostic imaging" loading="lazy" decoding="async">
+          <img src="{% static 'img/about/about-2.webp' %}" {% img_dims 'img/about/about-2.webp' %} alt="Clinical team reviewing advanced diagnostic imaging" loading="lazy" decoding="async">
         </figure>
       </div>
 
@@ -66,7 +66,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
 
       <div class="about__stats-media">
         <figure class="about-shape about-shape--lg" aria-label="Advanced medical research">
-          <img src="{% static 'img/about/about-3.webp' %}" alt="Doctor discussing a personalised treatment plan with a patient" loading="lazy" decoding="async">
+          <img src="{% static 'img/about/about-3.webp' %}" {% img_dims 'img/about/about-3.webp' %} alt="Doctor discussing a personalised treatment plan with a patient" loading="lazy" decoding="async">
         </figure>
       </div>
     </div>
@@ -77,7 +77,7 @@ replace the .about-shape__ph span with an <img> tag (with src + alt).
       {% for p in about_partners %}
       <li class="about__partner">
         {% if p.logo %}
-        <img class="about__partner-logo" src="{% static p.logo %}" alt="{{ p.name }}" loading="lazy"
+        <img class="about__partner-logo" src="{% static p.logo %}" {% img_dims p.logo %} alt="{{ p.name }}" loading="lazy"
              onerror="this.closest('.about__partner').classList.add('no-logo')">
         {% endif %}
         <span class="about__partner-fallback">

@@ -416,7 +416,9 @@ def about(request):
     article = f"a {region['city']}" if code == "uae" else "a"
     meta = seo.build_meta(
         request,
-        title=f"About {settings.BRAND_NAME} | Regenerative Medicine & Longevity Clinic{loc}",
+        # Region-aware and short enough that no region's variant gets clamped
+        # (the old wording ran to 69 chars and lost "& Longevity Clinic").
+        title=f"About {settings.BRAND_NAME} — {region['city']} Longevity Clinic",
         description=(
             f"Brockwell Healthcare is {article} regenerative medicine and longevity clinic built on 25+ "
             "years of experience — doctor-led, root-cause, non-surgical care for pain, recovery and ageing."
@@ -482,7 +484,10 @@ def contact(request):
 
     meta = seo.build_meta(
         request,
-        title=f"Contact {settings.BRAND_NAME}",
+        # Leads with the local keyword and stays inside TITLE_MAX for every
+        # region, so nothing gets clamped. A bare "Contact Brockwell
+        # Healthcare" is 28 characters and wastes the SERP line.
+        title=f"Contact Our {region['city']} Clinic | {settings.BRAND_NAME}",
         description=(
             f"Get in touch with {settings.BRAND_NAME} in {region['name']}. "
             "Call, email, or send an enquiry to book a consultation."

@@ -32,12 +32,17 @@ def absolute(path: str) -> str:
     return f"https://{settings.SITE_DOMAIN}{path}"
 
 
-# Google renders roughly 60 characters of a <title> and ~155-160 of a meta
+# Google renders roughly 60 characters of a <title> and ~155 of a meta
 # description; past that the snippet is truncated with an ellipsis. These are
 # enforced centrally in ``build_meta`` so no page — whatever its title/summary
 # came from — can ever ship an over-length snippet.
+#
+# TITLE_MIN is not clamped (you can't invent words), but ``build_meta`` warns in
+# DEBUG so a too-thin title gets noticed while the page is being written.
 TITLE_MAX = 60
-DESC_MAX = 158
+TITLE_MIN = 30
+DESC_MAX = 155
+DESC_MIN = 70
 
 
 def _clamp_title(title: str) -> str:
@@ -45,14 +50,20 @@ def _clamp_title(title: str) -> str:
     title = (title or "").strip()
     if len(title) <= TITLE_MAX:
         return title
-    # Prefer dropping trailing clauses at a natural separator.
+    # Prefer dropping trailing clauses at a natural separator — but only when
+    # what's left is still a real title. The floor is TITLE_MIN, not 20: a
+    # location called "Brockwell Healthcare — Las Vegas" would otherwise clamp
+    # to the bare brand name, throwing away every keyword on the page.
+    brand = settings.BRAND_NAME.lower()
     for sep in (" | ", " — ", " – ", " - ", ", "):
         if sep in title:
             head = title.split(sep)[0].strip()
-            if 20 <= len(head) <= TITLE_MAX:
+            if head.lower() == brand:
+                continue                      # nothing but the brand — useless
+            if TITLE_MIN <= len(head) <= TITLE_MAX:
                 return head
     cut = title[:TITLE_MAX].rfind(" ")
-    return title[:cut].rstrip(" ,;:-–—|") if cut > 20 else title[:TITLE_MAX]
+    return title[:cut].rstrip(" ,;:-–—|&") if cut > 20 else title[:TITLE_MAX]
 
 
 def _clamp_description(desc: str) -> str:
@@ -119,6 +130,27 @@ def build_meta(request, *, title, description, path, image=None, robots="index, 
 
     full_title = _with_brand(_clamp_title(title))
     description = _clamp_description(description)
+
+    # Over-length snippets are clamped above, but a too-SHORT one can't be
+    # fixed automatically — you can't invent copy. Warn while the page is being
+    # written instead, so it never reaches production half-empty. (A bare
+    # "Contact Brockwell Healthcare" title and a location page clamped down to
+    # just the brand both shipped this way.)
+    if settings.DEBUG:
+        import warnings
+
+        if len(full_title) < TITLE_MIN:
+            warnings.warn(
+                f"SEO: title for {path} is {len(full_title)} chars "
+                f"(want >= {TITLE_MIN}): {full_title!r}",
+                stacklevel=2,
+            )
+        if len(description) < DESC_MIN:
+            warnings.warn(
+                f"SEO: description for {path} is {len(description)} chars "
+                f"(want >= {DESC_MIN})",
+                stacklevel=2,
+            )
 
     # ``image`` may be: a media/absolute URL (starts with "/" or "http", e.g. an
     # uploaded blog/event image) used as-is, a static-relative path prefixed with

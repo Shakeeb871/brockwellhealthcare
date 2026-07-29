@@ -25,7 +25,7 @@
     <div class="blog-main">
       <article class="blog-article">
         {% if post.image %}
-        <div class="blog-article__hero"><img src="{{ post.image.url }}" alt="{{ post.title }}" decoding="async"></div>
+        <div class="blog-article__hero"><img src="{{ post.image.url }}" {% img_dims post.image.url %} alt="{{ post.title }}" decoding="async"></div>
         {% endif %}
 
         <div class="blog-article__body">{{ post.body|safe }}</div>
@@ -44,13 +44,13 @@
           {% for p in related %}
           <article class="post">
             <a class="post__media" href="{{ p.get_absolute_url }}" tabindex="-1" aria-hidden="true">
-              {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}" loading="lazy">{% endif %}
+              {% if p.image %}<img src="{{ p.image.url }}" {% img_dims p.image.url %} alt="{{ p.title }}" loading="lazy">{% endif %}
               {% if p.category %}<span class="post__badge">{{ p.category.name }}</span>{% endif %}
             </a>
             <div class="post__body">
               <div class="post__meta"><span class="post__metaitem">{% icon 'calendar' 'ico' %} {{ p.published_at|date:"d M Y" }}</span></div>
               <h3 class="post__title"><a href="{{ p.get_absolute_url }}">{{ p.title }}</a></h3>
-              <a class="post__link" href="{{ p.get_absolute_url }}">Read More {% icon 'arrow' 'ico' %}</a>
+              <a class="post__link" href="{{ p.get_absolute_url }}" aria-label="Read more: {{ p.title }}">Read More {% icon 'arrow' 'ico' %}</a>
             </div>
           </article>
           {% endfor %}

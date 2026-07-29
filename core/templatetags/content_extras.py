@@ -19,6 +19,7 @@ from django import template
 from django.conf import settings
 from django.contrib.staticfiles import finders
 from django.templatetags.static import static
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 
@@ -32,11 +33,100 @@ register = template.Library()
 _STATIC_IMG = re.compile(r"/static/img/([^\"')\s]+)")
 
 
+# Editor-authored <img> tags carry no width/height, so every image inside a
+# rich-text body reflows the page as it loads. These add the real dimensions
+# after the region rewrite above has settled on the final URL.
+_IMG_TAG = re.compile(r"<img\b[^>]*>", re.I)
+_IMG_SRC = re.compile(r"""src\s*=\s*["']([^"']+)["']""", re.I)
+_HAS_SIZE = re.compile(r"\b(?:width|height)\s*=", re.I)
+
+
+_IMG_ALT = re.compile(r"""(alt\s*=\s*)(["'])(.*?)\2""", re.I | re.S)
+# Screen readers read alt text in one breath and search engines truncate it, so
+# ~100 characters is the practical ceiling.
+ALT_MAX = 100
+
+
+@register.filter
+def clamp_alt(value, limit=ALT_MAX):
+    """Trim alt text to ``limit`` characters without cutting mid-word.
+
+    Drops a trailing clause at a natural separator first ("… | Regenerative
+    Medicine", "… at Brockwell Healthcare"), because the descriptive part of an
+    alt is always at the front.
+    """
+    text = " ".join(str(value or "").split())
+    if len(text) <= limit:
+        return text
+    for sep in (" | ", " — ", " – ", " - "):
+        if sep in text:
+            head = text.split(sep)[0].strip()
+            if 20 <= len(head) <= limit:
+                return head
+    cut = text[:limit].rfind(" ")
+    if cut <= 20:
+        return text[:limit]
+    head = text[:cut].rstrip(" ,;:-–—|")
+    # A word-boundary cut can leave a dangling preposition ("… plan at"), which
+    # reads as a broken sentence to a screen reader. Drop trailing joining words.
+    while True:
+        word, _, last = head.rpartition(" ")
+        if word and last.lower() in _ALT_TRAILING_STOPWORDS:
+            head = word.rstrip(" ,;:-–—|")
+            continue
+        return head
+
+
+_ALT_TRAILING_STOPWORDS = {
+    "a", "an", "and", "as", "at", "by", "for", "from", "in", "into", "of",
+    "on", "or", "part", "the", "to", "with", "within",
+}
+
+
+def _size_content_images(html):
+    """Add width/height to any ``<img>`` lacking them, and cap over-long alts.
+
+    Editor-authored content is the only place these two problems arise, and the
+    content lives in the database (which is not deployed from git), so fixing it
+    here is what actually reaches production.
+    """
+    from .region_tags import _dimensions          # shared resolver + cache
+
+    def shorten_alt(m):
+        prefix, quote, text = m.group(1), m.group(2), m.group(3)
+        # Measure the decoded text — "&amp;" is one character to a reader.
+        decoded = html_lib.unescape(text)
+        if len(decoded) <= ALT_MAX:
+            return m.group(0)
+        return f"{prefix}{quote}{escape(clamp_alt(decoded))}{quote}"
+
+    def repl(m):
+        tag = _IMG_ALT.sub(shorten_alt, m.group(0))
+        if _HAS_SIZE.search(tag):
+            return tag
+        src = _IMG_SRC.search(tag)
+        if not src:
+            return tag
+        dims = _dimensions(src.group(1))
+        if not dims:
+            return tag
+        inner = tag[1:-1].rstrip()
+        if inner.endswith("/"):                   # <img … /> stays well-formed
+            inner = inner[:-1].rstrip()
+        return f'<{inner} width="{dims[0]}" height="{dims[1]}">'
+
+    return _IMG_TAG.sub(repl, html)
+
+
 @register.filter
 def region_media(value, region_code):
     """Rewrite ``/static/img/<path>`` URLs to a region's own override
     (``/static/img/<code>/<path>``) when that file exists, else keep the shared
-    path. Works on a full HTML block or a single URL string."""
+    path. Works on a full HTML block or a single URL string.
+
+    Also stamps intrinsic width/height onto any ``<img>`` in the block, since
+    editor content never has them and their absence shifts the layout as
+    images arrive."""
     if not value or not region_code:
         return value
 
@@ -44,7 +134,10 @@ def region_media(value, region_code):
         rel = region_asset_rel(region_code, m.group(1))
         return f"/static/{rel}" if rel else m.group(0)
 
-    return mark_safe(_STATIC_IMG.sub(repl, value))
+    out = _STATIC_IMG.sub(repl, value)
+    if "<img" in out:
+        out = _size_content_images(out)
+    return mark_safe(out)
 
 # Keyword → icon for content cards (first match on a whole word wins).
 # Lets the card grid show a relevant glyph without any admin-side setup.

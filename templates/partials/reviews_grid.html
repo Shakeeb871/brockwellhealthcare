@@ -34,9 +34,9 @@ is aria-hidden. Google logo + blue tick use Google's official brand colours.
         <p class="grev__text">{{ r.text }}</p>
       </article>
       {% endfor %}
-      {# The seamless-loop duplicate is cloned by JS (see base.html), so the
+      {% comment %}The seamless-loop duplicate is cloned by JS (see base.html), so the
          source HTML lists each review only once and reduced-motion users never
-         see them twice. #}
+         see them twice.{% endcomment %}
     </div>
   </div>
 </section>

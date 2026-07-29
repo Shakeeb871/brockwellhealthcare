@@ -1,4 +1,4 @@
-{% load static icons region_tags %}
+{% load static icons region_tags content_extras %}
 {% comment %} Renders a service's ordered content blocks (the whole page body).
 Context: `sections` (published PageSection list), `service`, `form`,
 `faqs`, `patient_reviews`. {% endcomment %}
@@ -43,7 +43,7 @@ Context: `sections` (published PageSection list), `service`, `form`,
         {% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}
         {% if sec.heading %}<h2 class="psec__title">{{ sec.heading }}</h2>{% endif %}
         {% if sec.body %}<div class="prose">{{ sec.body|safe }}</div>{% endif %}
-        {% if sec.image %}<img class="psec__img" src="{{ sec.image.url }}" alt="{{ sec.heading }}" loading="lazy" decoding="async">{% endif %}
+        {% if sec.image %}<img class="psec__img" src="{{ sec.image.url }}" {% img_dims sec.image.url %} alt="{{ sec.heading }}" loading="lazy" decoding="async">{% endif %}
       </div>
 
     {% elif sec.kind == "benefits" %}
@@ -59,7 +59,7 @@ Context: `sections` (published PageSection list), `service`, `form`,
       <div class="grid grid--3">
         {% for s in sec.service.category.published_services %}
         <article class="card">
-          <div class="card__media">{% if s.image %}<img src="{{ s.image.url }}" alt="{{ s.name }}" loading="lazy" decoding="async">{% endif %}</div>
+          <div class="card__media">{% if s.image %}<img src="{{ s.image.url }}" {% img_dims s.image.url %} alt="{{ s.name }}" loading="lazy" decoding="async">{% endif %}</div>
           <h3>{{ s.name }}</h3>
           <p>{{ s.summary }}</p>
           <a class="card__link" href="{{ s.get_absolute_url }}">Learn more {% icon 'arrow' 'ico' %}</a>
@@ -104,9 +104,15 @@ Context: `sections` (published PageSection list), `service`, `form`,
 
     {% elif sec.kind == "brands" %}
       {% if sec.eyebrow or sec.heading %}<header class="section__head">{% if sec.eyebrow %}<span class="eyebrow">{{ sec.eyebrow }}</span>{% endif %}{% if sec.heading %}<h2>{{ sec.heading }}</h2>{% endif %}</header>{% endif %}
+      {% comment %}Only render logos that actually exist. img/1.svg..6.svg were removed as
+         dead weight, and {% static %} on a missing file raises "Missing
+         staticfiles manifest entry" in production — so a hard-coded list would
+         500 this page the moment an editor picked this section kind.
+         region_img returns "" when the file isn't there.{% endcomment %}
       <div class="brand-strip">
         {% for n in "123456"|make_list %}
-        <img class="brand-strip__logo" src="{% static 'img/'|add:n|add:'.svg' %}" alt="Accreditation logo" loading="lazy">
+        {% region_img n|add:".svg" as logo %}
+        {% if logo %}<img class="brand-strip__logo" src="{{ logo }}" {% img_dims logo %} alt="{{ sec.heading|default:'Accreditation' }}" loading="lazy">{% endif %}
         {% endfor %}
       </div>
 

@@ -32,7 +32,7 @@ The circle shows the facility icon; add an "image" URL to show a photo instead.
           {% for f in why_choose %}
           <figure class="fac__media-item{% if forloop.first %} is-active{% endif %}" data-media="{{ forloop.counter0 }}">
             {% if f.image %}
-              <img src="{% static f.image %}" alt="{{ f.title }}" loading="lazy" decoding="async">
+              <img src="{% static f.image %}" {% img_dims f.image %} alt="{{ f.title }}" loading="lazy" decoding="async">
             {% else %}
               <span class="fac__media-ph">{% icon f.icon %}</span>
             {% endif %}

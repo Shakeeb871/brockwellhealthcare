@@ -21,8 +21,8 @@
           <article class="card">
             <div class="card__media">
               {% category_image c.slug as cat_img %}
-              {% if cat_img %}<img src="{{ cat_img }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
-              {% elif c.image %}<img src="{{ c.image.url }}" alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
+              {% if cat_img %}<img src="{{ cat_img }}" {% img_dims cat_img %} alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">
+              {% elif c.image %}<img src="{{ c.image.url }}" {% img_dims c.image.url %} alt="{{ c.name }} at {{ BRAND_NAME }}" loading="lazy" decoding="async">{% endif %}
             </div>
             <h3>{{ c.name }}</h3>
             <p>{{ c.summary }}</p>

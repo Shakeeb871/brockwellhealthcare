@@ -30,7 +30,11 @@
   <div class="mainbar">
     <div class="container mainbar__inner">
       <a class="brand" href="{% rurl 'core:home' %}" aria-label="{{ BRAND_NAME }} home">
-        <img class="brand__logo" src="{% static 'img/brockwell-healthcare-logo.png' %}" alt="{{ BRAND_NAME }}" width="180" height="44">
+        {% comment %}width/height are the file's real intrinsic size so the browser can
+           reserve the right box (CSS renders it at height:46px). The old
+           180x44 described a 4:1 shape the image never had, which reserved a
+           wrong-shaped box and shifted the header on load.{% endcomment %}
+        <img class="brand__logo" src="{% static 'img/brockwell-healthcare-logo.png' %}" alt="{{ BRAND_NAME }}" width="384" height="186" fetchpriority="high">
       </a>
 
       {% with ns=request.resolver_match.namespace un=request.resolver_match.url_name %}
