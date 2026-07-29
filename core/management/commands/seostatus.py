@@ -64,6 +64,23 @@ class Command(BaseCommand):
                 "  Nothing is indexable right now, so the sitemap index is empty."
             ))
 
+        # --- The big one: is the root domain itself indexable? ------------- #
+        # Googlebot enters at the root and crawls mostly from US IPs, so it is
+        # served the default region. If that region is de-indexed, Google's
+        # entry point says "noindex" and it deprioritises the whole host — the
+        # single most common reason a new site stays unindexed.
+        default = settings.DEFAULT_REGION
+        if not noindex and not region_indexable(default):
+            self.stdout.write("")
+            self.stdout.write(self.style.ERROR(
+                f"  ⚠  ROOT DOMAIN IS NOT INDEXABLE\n"
+                f"     https://{settings.SITE_DOMAIN}/ serves the '{default}' region, which is\n"
+                f"     not in SEO_INDEX_REGIONS, so Googlebot's entry point returns noindex.\n"
+                f"     Google crawls mostly from US IPs, so this is what it sees almost\n"
+                f"     every time — expect very slow or no indexing site-wide.\n"
+                f"     Fix: set SEO_INDEX_REGIONS={','.join(sorted({*allowed, default}))} in .env, then redeploy."
+            ))
+
         # --- Instant-indexing credentials -------------------------------- #
         from core import google_indexing, indexnow
 

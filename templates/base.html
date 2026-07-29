@@ -13,7 +13,11 @@
   {% if page_indexable %}
   <meta name="robots" content="{{ meta.robots|default:'index, follow' }}">
   {% else %}
-  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  {# `follow` on purpose: a de-indexed region must still pass crawlers on to
+     the rest of the site. `nofollow` here stops Google following any link from
+     the page — including from the root domain, which is where it enters — so
+     nothing else ever gets discovered. #}
+  <meta name="robots" content="noindex, follow">
   {% endif %}
 
   {# ---------- hreflang alternates (region targeting) ---------- #}

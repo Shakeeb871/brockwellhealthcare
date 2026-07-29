@@ -68,9 +68,19 @@ class RegionMiddleware:
 
         # A non-default, live region prefix (e.g. /uae/...): record it and strip.
         if first in settings.REGIONS and first != default and is_enabled(first):
+            # Keep the raw remainder ("" for /uae, "/" for /uae/) so the bare
+            # prefix is redirected too, not treated as already-canonical.
+            rest = path[len(first) + 1:]
+            canonical = _rejoin([s for s in rest.split("/") if s])
+            # Only ONE spelling of a URL may return 200. If the request is
+            # missing its trailing slash, 301 to the canonical form instead of
+            # silently rewriting it — otherwise /uae/services and
+            # /uae/services/ both answer 200 and Google sees duplicate pages.
+            if rest != canonical:
+                return redirect(f"/{first}{canonical}", permanent=True)
             request.region_code = first
             request.region = get_region(first)
-            request.path_info = _rejoin(segments[1:])
+            request.path_info = canonical
             return self.get_response(request)
 
         # The default region is served at the root, so its own prefix (/us/...)
@@ -169,5 +179,8 @@ class NoIndexMiddleware:
 
         code = getattr(request, "region_code", settings.DEFAULT_REGION)
         if not region_indexable(code):
-            response["X-Robots-Tag"] = "noindex, nofollow, noarchive, nosnippet"
+            # `follow`, not `nofollow`: crawlers must still be able to walk on to
+            # the indexable parts of the site. Googlebot enters at the root, so
+            # `nofollow` there would leave the whole site undiscoverable.
+            response["X-Robots-Tag"] = "noindex, follow"
         return response
