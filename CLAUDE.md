@@ -48,7 +48,8 @@ Crawling is always allowed (a `noindex` only works if the page can be fetched).
 
 Check the live state at any time:
 
-    python manage.py seostatus
+    bash ~/brockwellhealthcare/manage.sh seostatus   # on the server
+    python manage.py seostatus                       # locally
 
 ## Technical SEO endpoints
 

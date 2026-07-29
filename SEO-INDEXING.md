@@ -64,7 +64,7 @@ web. The home folder is the right place.
 10. Verify:
 
     ```bash
-    python manage.py seostatus
+    bash ~/brockwellhealthcare/manage.sh seostatus
     ```
 
     You want to see:
@@ -114,7 +114,7 @@ bash ~/brockwellhealthcare/deploy.sh
 Check it took effect:
 
 ```bash
-python manage.py seostatus
+bash ~/brockwellhealthcare/manage.sh seostatus
 ```
 
 ---
@@ -132,27 +132,38 @@ python manage.py seostatus
 
 ### From the command line
 
+On cPanel, run commands through the `manage.sh` wrapper — it cd's to the app
+folder and picks the virtualenv's python for you, so it works from anywhere:
+
 ```bash
 # everything in the sitemaps (respects Google's 200/day)
-python manage.py submiturls --all
+bash ~/brockwellhealthcare/manage.sh submiturls --all
 
 # only URLs never accepted by Google before — ideal for a daily cron
-python manage.py submiturls --all --new-only
+bash ~/brockwellhealthcare/manage.sh submiturls --all --new-only
 
 # specific URLs
-python manage.py submiturls /uae/services/ /uae/team/
+bash ~/brockwellhealthcare/manage.sh submiturls /uae/services/ /uae/team/
 
 # see the plan without sending anything
-python manage.py submiturls --all --dry-run
+bash ~/brockwellhealthcare/manage.sh submiturls --all --dry-run
 ```
+
+> `python manage.py ...` on its own fails from your home folder with
+> `can't open file '/home/USER/manage.py'` — because `manage.py` lives in the app
+> folder and the app has its own virtualenv. Use `manage.sh`, or `cd` into the
+> app folder first and call the virtualenv python directly.
 
 ### Daily cron (optional, keeps pushing new content)
 
 cPanel → *Cron Jobs* → daily:
 
 ```
-cd /home/USER/brockwellhealthcare && /home/USER/virtualenv/brockwellhealthcare/3.11/bin/python manage.py submiturls --all --new-only >> /home/USER/indexing.log 2>&1
+bash /home/USER/brockwellhealthcare/manage.sh submiturls --all --new-only >> /home/USER/indexing.log 2>&1
 ```
+
+(Replace `USER` with your cPanel username. The wrapper finds the virtualenv
+itself, so the cron line doesn't break if the Python version changes.)
 
 ---
 
