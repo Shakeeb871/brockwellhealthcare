@@ -120,7 +120,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"  {body}")
             for url in urls:
                 rows.append(IndexSubmission(
-                    url=url, engine="indexnow", http_code=status, response=(body or "")[:200],
+                    url=url, engine="indexnow", http_code=status, response=(body or "")[:400],
                     status=IndexSubmission.STATUS_OK if good else IndexSubmission.STATUS_FAIL,
                 ))
 

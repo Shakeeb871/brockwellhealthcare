@@ -142,7 +142,7 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
                         rows.append(IndexSubmission(
                             url=url, engine="indexnow",
                             status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
-                            http_code=status, response=(body or "")[:200],
+                            http_code=status, response=(body or "")[:400],
                             submitted_by=request.user if request.user.is_authenticated else None,
                         ))
 

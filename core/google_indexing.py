@@ -182,7 +182,7 @@ def _access_token() -> str | None:
             _token_cache[email] = (token, now + int(data.get("expires_in", 3600)))
         return token
     except urllib.error.HTTPError as exc:
-        log.warning("Google Indexing token error %s: %s", exc.code, exc.read()[:200])
+        log.warning("Google Indexing token error %s: %s", exc.code, exc.read()[:400])
     except Exception as exc:
         log.warning("Google Indexing token request failed: %s", exc)
     return None
@@ -214,18 +214,18 @@ def publish(url: str, deleted: bool = False) -> tuple[int, str]:
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
             body = r.read().decode("utf-8", "ignore")
-            return r.status, body[:200]
+            return r.status, body[:400]
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", "ignore")
         try:
             detail = json.loads(detail).get("error", {}).get("message", detail)
         except Exception:
             pass
-        log.warning("Google Indexing publish %s for %s: %s", exc.code, url, detail[:200])
-        return exc.code, detail[:200]
+        log.warning("Google Indexing publish %s for %s: %s", exc.code, url, detail[:400])
+        return exc.code, detail[:400]
     except Exception as exc:
         log.warning("Google Indexing publish failed for %s: %s", url, exc)
-        return 0, str(exc)[:200]
+        return 0, str(exc)[:400]
 
 
 def publish_many(urls: Iterable[str]) -> list[tuple[str, int, str]]:

@@ -27,7 +27,7 @@ class IndexSubmission(models.Model):
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     http_code = models.PositiveSmallIntegerField(default=0)
-    response = models.CharField(max_length=200, blank=True)
+    response = models.CharField(max_length=400, blank=True)
     submitted_at = models.DateTimeField(auto_now_add=True, db_index=True)
     submitted_by = models.ForeignKey(
         "auth.User", null=True, blank=True, on_delete=models.SET_NULL,
