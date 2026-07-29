@@ -14,6 +14,9 @@ form, and for a first push after launch.
 
     # see what would happen, send nothing
     python manage.py submiturls --all --dry-run
+
+By default BOTH targets are used. Restrict with --no-indexnow (Google only) or
+--no-google (IndexNow only).
 """
 
 from django.conf import settings
@@ -107,7 +110,9 @@ class Command(BaseCommand):
                 if not good:
                     self.stdout.write(f"        {msg}")
                 rows.append(IndexSubmission(
-                    url=url, engine="google", http_code=status, response=msg,
+                    url=url, engine=IndexSubmission.ENGINE_GOOGLE,
+                    source=IndexSubmission.SOURCE_CLI,
+                    http_code=status, response=msg,
                     status=IndexSubmission.STATUS_OK if good else IndexSubmission.STATUS_FAIL,
                 ))
 
@@ -120,7 +125,9 @@ class Command(BaseCommand):
                 self.stdout.write(f"  {body}")
             for url in urls:
                 rows.append(IndexSubmission(
-                    url=url, engine="indexnow", http_code=status, response=(body or "")[:400],
+                    url=url, engine=IndexSubmission.ENGINE_INDEXNOW,
+                    source=IndexSubmission.SOURCE_CLI,
+                    http_code=status, response=(body or "")[:400],
                     status=IndexSubmission.STATUS_OK if good else IndexSubmission.STATUS_FAIL,
                 ))
 

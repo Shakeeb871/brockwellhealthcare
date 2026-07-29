@@ -72,15 +72,25 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
     """
 
     change_list_template = "admin/core/indexsubmission/change_list.html"
-    list_display = ("url", "engine", "status_badge", "http_code", "submitted_at", "submitted_by")
-    list_filter = ("status", "engine", "submitted_at")
+    list_display = ("url", "engine_badge", "status_badge", "http_code",
+                    "source", "submitted_at", "submitted_by")
+    list_filter = ("engine", "status", "source", "submitted_at")
     search_fields = ("url", "response")
     date_hierarchy = "submitted_at"
-    readonly_fields = ("url", "engine", "status", "http_code", "response",
+    readonly_fields = ("url", "engine", "source", "status", "http_code", "response",
                        "submitted_at", "submitted_by")
 
     def has_add_permission(self, request):
         return False               # rows are only created by the submit page
+
+    @admin.display(description="Engine", ordering="engine")
+    def engine_badge(self, obj):
+        colour = {"google": "#1668c9", "indexnow": "#6b46c1"}.get(obj.engine, "#555")
+        return format_html(
+            '<span style="background:{};color:#fff;padding:2px 8px;border-radius:10px;'
+            'font-size:.78rem;font-weight:600;">{}</span>',
+            colour, obj.get_engine_display(),
+        )
 
     @admin.display(description="Status", ordering="status")
     def status_badge(self, obj):
@@ -110,8 +120,13 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
 
         if request.method == "POST":
             urls = _normalise_urls(request.POST.get("urls", ""), domain)
-            use_google = bool(request.POST.get("use_google")) and google_ready
-            use_indexnow = bool(request.POST.get("use_indexnow")) and key_configured
+            want_google = bool(request.POST.get("use_google"))
+            want_indexnow = bool(request.POST.get("use_indexnow"))
+            # Remember the operator's choice so the boxes come back the same way.
+            request.session["idx_use_google"] = want_google
+            request.session["idx_use_indexnow"] = want_indexnow
+            use_google = want_google and google_ready
+            use_indexnow = want_indexnow and key_configured
 
             if not urls:
                 messages.error(request, "No valid URLs found. Paste one URL per line.")
@@ -128,7 +143,8 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
                         ok = 200 <= status < 300
                         ok_count += ok
                         rows.append(IndexSubmission(
-                            url=url, engine="google",
+                            url=url, engine=IndexSubmission.ENGINE_GOOGLE,
+                            source=IndexSubmission.SOURCE_ADMIN,
                             status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
                             http_code=status, response=msg,
                             submitted_by=request.user if request.user.is_authenticated else None,
@@ -140,7 +156,8 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
                     ok = 200 <= status < 300
                     for url in urls:
                         rows.append(IndexSubmission(
-                            url=url, engine="indexnow",
+                            url=url, engine=IndexSubmission.ENGINE_INDEXNOW,
+                            source=IndexSubmission.SOURCE_ADMIN,
                             status=IndexSubmission.STATUS_OK if ok else IndexSubmission.STATUS_FAIL,
                             http_code=status, response=(body or "")[:400],
                             submitted_by=request.user if request.user.is_authenticated else None,
@@ -194,6 +211,10 @@ class IndexSubmissionAdmin(admin.ModelAdmin):
             "all_urls": all_urls,
             "url_count": len(all_urls),
             "prefilled": request.POST.get("urls", ""),
+            # Remembered choices — default to on when available, but respect the
+            # last thing the operator picked.
+            "google_checked": request.session.get("idx_use_google", True) and google_ready,
+            "indexnow_checked": request.session.get("idx_use_indexnow", True) and key_configured,
         }
         return render(request, "admin/core/indexsubmission/submit.html", ctx)
 

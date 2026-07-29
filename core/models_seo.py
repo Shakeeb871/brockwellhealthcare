@@ -20,10 +20,28 @@ class IndexSubmission(models.Model):
         (STATUS_SKIP, "Skipped (disabled)"),
     ]
 
+    ENGINE_GOOGLE = "google"
+    ENGINE_INDEXNOW = "indexnow"
+    ENGINE_CHOICES = [
+        (ENGINE_GOOGLE, "Google"),
+        (ENGINE_INDEXNOW, "IndexNow (Bing/Yandex/…)"),
+    ]
+
+    SOURCE_ADMIN = "admin"
+    SOURCE_CLI = "cli"
+    SOURCE_CHOICES = [
+        (SOURCE_ADMIN, "Admin page"),
+        (SOURCE_CLI, "Command line / cron"),
+    ]
+
     url = models.URLField(max_length=500, db_index=True)
     engine = models.CharField(
-        max_length=32, default="indexnow",
-        help_text="Which search endpoint accepted the ping.",
+        max_length=32, choices=ENGINE_CHOICES, default=ENGINE_INDEXNOW,
+        help_text="Which search endpoint the URL was sent to.",
+    )
+    source = models.CharField(
+        max_length=10, choices=SOURCE_CHOICES, default=SOURCE_ADMIN, db_index=True,
+        help_text="Where the submission was triggered from.",
     )
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     http_code = models.PositiveSmallIntegerField(default=0)

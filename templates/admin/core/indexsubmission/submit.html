@@ -101,11 +101,15 @@
   <form method="post" novalidate>
     {% csrf_token %}
 
+    <p style="font-size:.88rem;color:#5a6472;margin:18px 0 0">
+      <b>Only the ticked targets are used.</b> Untick one and it is not contacted at
+      all — your choice is remembered for next time.</p>
+
     <div class="targets">
       <div class="target {% if not google_ready %}off{% endif %}">
         <label>
           <input type="checkbox" name="use_google" value="1"
-                 {% if google_ready %}checked{% else %}disabled{% endif %}>
+                 {% if google_checked %}checked{% endif %}{% if not google_ready %} disabled{% endif %}>
           <span>Google Indexing API</span>
         </label>
         <p>Direct crawl request to Google. Fastest route — typically crawled within
@@ -114,7 +118,7 @@
       <div class="target {% if not key_configured %}off{% endif %}">
         <label>
           <input type="checkbox" name="use_indexnow" value="1"
-                 {% if key_configured %}checked{% else %}disabled{% endif %}>
+                 {% if indexnow_checked %}checked{% endif %}{% if not key_configured %} disabled{% endif %}>
           <span>IndexNow (Bing, Yandex, Seznam, Naver)</span>
         </label>
         <p>Instant push to the other engines, unlimited. Google also picks up

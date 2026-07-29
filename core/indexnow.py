@@ -5,9 +5,10 @@ Naver about new/changed URLs the moment they're published — no waiting for
 those engines to re-crawl. Google does NOT support it directly but reads Bing
 signals, and the other engines together are a meaningful traffic source.
 
-The site publishes a verification key at ``/<key>.txt`` and pings the shared
-IndexNow endpoint whenever content is saved. Set ``INDEXNOW_KEY`` in the
-environment to enable it; without a key we no-op silently.
+The site publishes a verification key at ``/<key>.txt``. Submissions are
+explicit — triggered from the admin submit page or ``manage.py submiturls`` —
+never automatic on save. Set ``INDEXNOW_KEY`` in the environment to enable it;
+without a key every call no-ops silently.
 """
 
 from __future__ import annotations
