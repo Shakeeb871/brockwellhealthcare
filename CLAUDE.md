@@ -91,3 +91,30 @@ clinic management backend: patients, appointments, encounters, invoices)
   overrides live in `static/img/<code>/` and fall back to the shared file.
 - Site buttons are square (`border-radius: 0`) — don't add pill radii.
 - Forms post via AJAX (`data-ajax`) and show toasts; no page reload.
+
+**Every `<img>` needs `width`/`height`.** Use `{% img_dims <src> %}` right after
+`src` — it reads the file's real intrinsic size (cached, works with hashed
+filenames) so the numbers can't rot when an image is replaced:
+
+    <img src="{{ p.image.url }}" {% img_dims p.image.url %} alt="…">
+    <img src="{% static 'img/x.webp' %}" {% img_dims 'img/x.webp' %} alt="…">
+
+Images inside rich-text bodies are handled automatically by `region_media`,
+which also caps alt text at 100 characters.
+
+**Two traps that have each shipped as a live bug — don't repeat them:**
+
+1. `{# … #}` comments **must stay on one line.** Django only strips them within
+   a single line, so a multi-line one is printed as visible page text. Use
+   `{% comment %}…{% endcomment %}` for anything longer. (`core/tests.py`
+   fails the build if one reappears.)
+2. `{% static %}` on a **missing** file raises `Missing staticfiles manifest
+   entry` under `ManifestStaticFilesStorage` — a 500 in production that looks
+   fine in development. Guard optional assets with `finders.find` (see
+   `_partners_with_logos`) or `{% region_img %}`, which returns `""` when the
+   file isn't there. (Also covered by a test.)
+
+Image budget: nothing in `static/img/` should exceed ~100 kb. Wide heroes cap at
+1920px, other art at 1100px, OG cards stay exactly 1200x630. Don't push WebP/JPEG
+quality below 70 to hit the budget — artefacts on clinical photography are worse
+than a few kb.
