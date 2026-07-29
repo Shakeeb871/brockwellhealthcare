@@ -1,138 +1,490 @@
-/* Brockwell Healthcare — elegant admin theme.
-   Loads after Django's base.css / dark_mode.css, so these variable overrides
-   win in both light and dark mode. Layout-preserving: we only re-skin the
-   brand accents (header, buttons, links) and refine a few components. Applies
-   to every admin panel (master + each region site). */
+/* =========================================================================
+   Brockwell Healthcare — modern SaaS admin theme.
+
+   Loads after Django's base.css / dark_mode.css / nav_sidebar.css, so the
+   variable overrides here win in both light and dark mode. Django's markup and
+   behaviour are untouched — this only re-skins it: a persistent left sidebar,
+   card surfaces, a grid dashboard and tabbed fieldsets.
+
+   Applies to every panel (master /admin/ and each region site).
+
+   Layout fixes below are load-bearing — read their comments before changing:
+   the min-width:0 rules stop the whole page scrolling sideways, and .module
+   must not get overflow:hidden or wide tables get clipped.
+   ========================================================================= */
 
 :root {
-  --primary: #2e7d46;          /* forest green — brand primary */
+  /* Brand */
+  --bw-green-900: #0c2616;
+  --bw-green-800: #12351f;
+  --bw-green-700: #1c4a2b;
+  --bw-green-600: #2e7d46;
+  --bw-green-500: #3f9a59;
+  --bw-mint: #eef4e3;
+
+  /* Neutrals */
+  --bw-bg: #f5f7f6;
+  --bw-surface: #ffffff;
+  --bw-line: #e2e8e4;
+  --bw-line-soft: #eef1ef;
+  --bw-ink: #17211b;
+  --bw-muted: #64786c;
+  --bw-radius: 12px;
+  --bw-radius-sm: 8px;
+  --bw-shadow: 0 1px 2px rgba(12,38,22,.05), 0 4px 14px rgba(12,38,22,.05);
+  --bw-shadow-lg: 0 8px 28px rgba(12,38,22,.10);
+
+  /* Django admin variable overrides */
+  --primary: var(--bw-green-600);
   --primary-fg: #ffffff;
-  --secondary: #12351f;        /* deep green */
-  --accent: #d9b45b;           /* warm gold accent */
+  --secondary: var(--bw-green-800);
+  --accent: var(--bw-green-500);
 
-  --header-bg: #12351f;
-  --header-color: #eaf3ea;
-  --header-branding-color: #ffffff;
-  --header-link-color: #ffffff;
+  --body-fg: var(--bw-ink);
+  --body-bg: var(--bw-bg);
+  --body-quiet-color: var(--bw-muted);
+  --body-loud-color: var(--bw-green-900);
 
-  --breadcrumbs-bg: #1c4a2b;
-  --breadcrumbs-fg: #cfe3d3;
-  --breadcrumbs-link-fg: #ffffff;
+  --header-bg: #ffffff;
+  --header-color: var(--bw-ink);
+  --header-branding-color: var(--bw-green-800);
+  --header-link-color: var(--bw-green-700);
 
-  --link-fg: #2e7d46;
-  --link-hover-color: #256339;
-  --link-selected-fg: #12351f;
+  --breadcrumbs-bg: transparent;
+  --breadcrumbs-fg: var(--bw-muted);
+  --breadcrumbs-link-fg: var(--bw-green-600);
 
-  --button-bg: #2e7d46;
-  --button-hover-bg: #3f9a59;
+  --link-fg: var(--bw-green-600);
+  --link-hover-color: var(--bw-green-700);
+  --link-selected-fg: var(--bw-green-800);
+
+  --button-bg: var(--bw-green-600);
+  --button-hover-bg: var(--bw-green-700);
   --button-fg: #ffffff;
-  --default-button-bg: #12351f;
-  --default-button-hover-bg: #1c4a2b;
+  --default-button-bg: var(--bw-green-800);
+  --default-button-hover-bg: var(--bw-green-900);
+  --close-button-bg: #7b8a80;
+  --close-button-hover-bg: #616e65;
+  --delete-button-bg: #c0392b;
+  --delete-button-hover-bg: #a4241a;
 
-  --object-tools-bg: #12351f;
-  --object-tools-hover-bg: #2e7d46;
+  --object-tools-bg: var(--bw-green-700);
+  --object-tools-hover-bg: var(--bw-green-600);
 
-  --selected-row: #eef4e3;
-  --close-button-bg: #6b7280;
-
-  --border-radius: 8px;
+  --border-color: var(--bw-line);
+  --darkened-bg: var(--bw-line-soft);
+  --selected-bg: var(--bw-mint);
+  --selected-row: #fdf6dd;
+  --border-radius: var(--bw-radius-sm);
 }
 
-/* ---- Header / branding ------------------------------------------------- */
-#header { padding: 14px 40px; box-shadow: 0 2px 10px rgba(0,0,0,.12); }
-#branding h1 { font-weight: 700; letter-spacing: .2px; }
-#branding h1 a:link, #branding h1 a:visited { color: #ffffff; }
-div.breadcrumbs { padding: 11px 40px; font-size: .8rem; }
-
-/* ---- Buttons: softer, rounded, brand-consistent ----------------------- */
-.button, input[type=submit], input[type=button], .submit-row input, a.button {
-  border-radius: 8px; font-weight: 600; letter-spacing: .2px;
-  transition: background .15s ease, box-shadow .15s ease;
+body {
+  background: var(--bw-bg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  color: var(--bw-ink);
 }
-.submit-row input.default { box-shadow: 0 3px 10px rgba(46,125,70,.25); }
-.object-tools a { border-radius: 8px; font-weight: 600; }
 
-/* ---- Cards / modules: gentle elevation & rounding --------------------- */
-/* No overflow:hidden — it would clip (and block scrolling of) wide changelist
-   tables on small screens. Corners are rounded on the headers instead. */
-.module { border-radius: 12px; box-shadow: 0 1px 4px rgba(18,53,31,.06); }
-/* Section headers: branded green with white text so they're always legible. */
-.module caption, .module > caption,
-.inline-group h2, fieldset.module h2, .module h2 {
-  background: #1c4a2b; color: #ffffff; font-weight: 700;
-  letter-spacing: .3px; text-transform: none; font-size: .82rem;
-  padding: 10px 14px; border-bottom: none;
-  border-top-left-radius: 12px; border-top-right-radius: 12px;
+/* ------------------------------------------------------------------ header */
+#header {
+  background: #fff; color: var(--bw-ink);
+  border-bottom: 1px solid var(--bw-line);
+  padding: 13px 26px; box-shadow: 0 1px 3px rgba(12,38,22,.04);
+  align-items: center;
+}
+#branding h1, #site-name { margin: 0; font-size: 1rem; font-weight: 700; letter-spacing: -.01em; }
+#branding h1 a:link, #branding h1 a:visited, #site-name a { color: var(--bw-green-800); }
+#user-tools { font-size: .8rem; text-transform: none; letter-spacing: 0; color: var(--bw-muted); font-weight: 500; }
+#user-tools a {
+  border-bottom: 0; color: var(--bw-green-700); font-weight: 600;
+  padding: 5px 10px; border-radius: 6px; transition: background .15s ease;
+}
+#user-tools a:hover { background: var(--bw-mint); color: var(--bw-green-800); }
+
+div.breadcrumbs {
+  background: transparent; border-bottom: 1px solid var(--bw-line);
+  padding: 11px 26px; font-size: .82rem; color: var(--bw-muted);
+}
+div.breadcrumbs a { color: var(--bw-green-600); font-weight: 500; }
+
+/* --------------------------------------------------------- left sidebar nav */
+#nav-sidebar {
+  background: var(--bw-green-900); border-right: 0;
+  padding: 14px 10px 30px; width: 258px;
+}
+/* Everything inside the sidebar sits on the dark surface — Django styles the
+   app list as a table with light .module/th/td backgrounds, so clear them. */
+#nav-sidebar .module,
+#nav-sidebar table,
+#nav-sidebar caption,
+#nav-sidebar tbody tr,
+#nav-sidebar tbody th,
+#nav-sidebar tbody td {
+  background: transparent; border: 0; box-shadow: none;
+}
+#nav-sidebar .module { margin: 0 0 6px; border-radius: 0; }
+#nav-sidebar .module caption {
+  color: #7f9c8a; padding: 12px 12px 6px;
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+#nav-sidebar .module caption a:link, #nav-sidebar .module caption a:visited { color: #7f9c8a; }
+#nav-sidebar table { width: 100%; }
+
+/* Each row is "model name … Add". Laying the row out with flex (instead of
+   letting th/td be block-level) keeps the two cells from overlapping. */
+#nav-sidebar tbody tr { display: flex; align-items: stretch; gap: 4px; }
+#nav-sidebar tbody th { flex: 1 1 auto; min-width: 0; padding: 0; width: auto; }
+#nav-sidebar tbody td { flex: 0 0 auto; padding: 0; }
+#nav-sidebar tbody th a {
+  display: block; padding: 9px 12px; margin: 1px 0; border-radius: var(--bw-radius-sm);
+  font-size: .875rem; font-weight: 500; line-height: 1.3; color: #cfe0d5;
+  overflow-wrap: anywhere; transition: background .15s ease, color .15s ease;
+}
+#nav-sidebar tbody th a:hover { background: rgba(255,255,255,.09); color: #fff; }
+/* The "Add" shortcut stays a small, quiet affordance beside the name. */
+#nav-sidebar tbody td a.addlink {
+  display: block; margin: 1px 0; padding: 9px 10px; border-radius: var(--bw-radius-sm);
+  font-size: .72rem; font-weight: 600; color: #7f9c8a; background: none;
+  transition: background .15s ease, color .15s ease;
+}
+#nav-sidebar tbody td a.addlink:hover { background: rgba(255,255,255,.12); color: #fff; }
+
+/* Active model: highlight the link only. Django tints the whole row with
+   --selected-row (a light cream) which reads as a smudge on a dark sidebar. */
+#nav-sidebar tbody tr.current-model,
+#nav-sidebar tbody tr.current-model th,
+#nav-sidebar tbody tr.current-model td { background: transparent; }
+#nav-sidebar tbody tr.current-model th a { background: var(--bw-green-600); color: #fff; font-weight: 600; }
+
+/* Current app heading: Django colours it with --header-color, which we've made
+   dark for the (light) top bar — invisible here. Force a light tone, with
+   enough specificity to beat `#nav-sidebar .current-app .section:link`. */
+#nav-sidebar .current-app caption a.section:link,
+#nav-sidebar .current-app caption a.section:visited { color: #dbe9e0; }
+#nav-filter {
+  width: calc(100% - 20px); margin: 4px 10px 12px; padding: 9px 12px;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+  border-radius: var(--bw-radius-sm); color: #fff; font-size: .84rem;
+}
+#nav-filter::placeholder { color: #7f9c8a; }
+#nav-filter:focus { outline: 0; border-color: var(--bw-green-500); background: rgba(255,255,255,.13); }
+#toggle-nav-sidebar {
+  background: var(--bw-green-800); border-right: 1px solid rgba(255,255,255,.12); color: #cfe0d5;
+}
+#toggle-nav-sidebar:hover { background: var(--bw-green-700); }
+
+/* ---------------------------------------------------------------- content */
+#content { padding: 24px 26px 40px; }
+h1 { font-weight: 700; letter-spacing: -.02em; color: var(--bw-green-900); }
+#content > h1 { font-size: 1.5rem; margin-bottom: 18px; }
+
+/* Modules become card surfaces.
+   NOTE: never add overflow:hidden here — it clips (and blocks scrolling of)
+   wide changelist tables. Round the header corners instead. */
+.module {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow); margin-bottom: 20px;
+}
+.module > h2, .module caption, .inline-group h2, fieldset.module h2 {
+  background: linear-gradient(180deg, #fbfdfb, #fff); color: var(--bw-green-900);
+  border-bottom: 1px solid var(--bw-line);
+  font-size: .78rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; padding: 13px 17px;
+  border-radius: var(--bw-radius) var(--bw-radius) 0 0;
 }
 .module caption a, .module caption a:link, .module caption a:visited,
-.module h2 a { color: #ffffff; }
+.module h2 a { color: var(--bw-green-800); }
 .module h2 a.collapse-toggle, fieldset.collapsed h2 a.collapse-toggle {
-  color: #d9e8dc; font-weight: 600;
+  color: var(--bw-green-600); font-weight: 600;
+}
+fieldset .description { margin: 4px 0 14px; color: var(--bw-muted); }
+
+/* ------------------------------------------------------------- change list */
+#changelist { background: transparent; }
+#changelist .results {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+}
+#changelist table { border: 0; }
+#changelist table thead th {
+  background: #fafbfa; border-bottom: 1px solid var(--bw-line);
+  font-size: .71rem; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; padding: 12px 14px;
+}
+#changelist table thead th, #changelist table thead th a { color: var(--bw-muted); }
+#changelist tbody td, #changelist tbody th {
+  padding: 12px 14px; border-bottom: 1px solid var(--bw-line-soft); font-size: .9rem;
+}
+#changelist tbody tr:hover > * { background: #f7faf8; }
+#toolbar {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); padding: 12px 14px; margin-bottom: 14px;
+}
+#toolbar form #searchbar {
+  border: 1px solid var(--bw-line); border-radius: var(--bw-radius-sm);
+  padding: 9px 12px; font-size: .9rem; min-width: 240px;
+}
+/* Django ships the Search / Go submits with a grey inset-shadow look. Selectors
+   here mirror changelists.css (#changelist .actions .button) so they win on
+   specificity as well as load order. */
+#toolbar form input[type=submit],
+#changelist .actions .button,
+#changelist .actions button, #changelist .actions input[type=submit] {
+  background: var(--bw-green-600); color: #fff; border: 1px solid transparent;
+  border-radius: var(--bw-radius-sm); padding: 8px 16px; height: auto; line-height: 1.2;
+  font-weight: 600; font-size: .84rem; cursor: pointer; box-shadow: none;
+}
+#toolbar form input[type=submit]:hover, #toolbar form input[type=submit]:focus,
+#changelist .actions .button:hover, #changelist .actions .button:focus {
+  background: var(--bw-green-700); border-color: transparent; color: #fff;
+}
+#changelist .actions select {
+  border: 1px solid var(--bw-line); border-radius: var(--bw-radius-sm);
+  padding: 7px 10px; height: auto; font-size: .88rem;
+}
+#changelist-filter {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+}
+#changelist-filter h2 {
+  background: transparent; border-bottom: 1px solid var(--bw-line);
+  color: var(--bw-green-900); font-size: .72rem; letter-spacing: .08em;
+}
+#changelist-filter li.selected { border-left-color: var(--bw-green-600); }
+.paginator {
+  background: var(--bw-surface); border: 1px solid var(--bw-line); border-top: 0;
+  border-radius: 0 0 var(--bw-radius) var(--bw-radius); padding: 12px 14px; font-size: .86rem;
+}
+.actions {
+  background: #fafbfa; border-bottom: 1px solid var(--bw-line);
+  padding: 10px 14px; border-radius: var(--bw-radius) var(--bw-radius) 0 0;
 }
 
-/* ---- Forms: comfortable inputs ---------------------------------------- */
-input[type=text], input[type=email], input[type=url], input[type=number],
-input[type=password], textarea, select, .vTextField {
-  border-radius: 8px; border: 1px solid #ccd6c9;
+/* ------------------------------------------------------------------ forms */
+.form-row { padding: 14px 17px; border-bottom: 1px solid var(--bw-line-soft); }
+.aligned label { font-weight: 600; font-size: .84rem; color: var(--bw-ink); }
+input[type=text], input[type=password], input[type=email], input[type=url],
+input[type=number], input[type=tel], textarea, select, .vTextField {
+  border: 1px solid var(--bw-line); border-radius: var(--bw-radius-sm);
+  padding: 9px 12px; font-size: .92rem; background: #fff; color: var(--bw-ink);
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 input:focus, textarea:focus, select:focus, .vTextField:focus {
-  border-color: var(--primary); outline: 2px solid rgba(46,125,70,.18); outline-offset: 0;
+  outline: 0; border-color: var(--bw-green-500);
+  box-shadow: 0 0 0 3px rgba(63,154,89,.16);
 }
-.help, .helptext, p.help { color: #5b6b5e; }
+.help, .helptext, p.help, div.help { color: var(--bw-muted); font-size: .8rem; }
 
-/* ---- Fieldset help panel (our content guide) -------------------------- */
-fieldset .description { margin: 4px 0 14px; }
+.submit-row {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+  padding: 14px 17px; margin: 18px 0 0;
+}
+.button, input[type=submit], input[type=button], .submit-row input, a.button {
+  border-radius: var(--bw-radius-sm); padding: 10px 18px;
+  font-weight: 600; font-size: .9rem; border: 0;
+  transition: background .15s ease, transform .15s ease;
+}
+.button:hover, input[type=submit]:hover, .submit-row input:hover { transform: translateY(-1px); }
+.submit-row input.default { box-shadow: 0 3px 10px rgba(46,125,70,.22); }
+.object-tools a {
+  border-radius: 999px; font-size: .77rem; font-weight: 600;
+  letter-spacing: .02em; padding: 8px 16px;
+}
 
-/* ---- Inlines: clear ADD + REMOVE controls ----------------------------- */
-/* "Add another …" → prominent green pill */
+/* --------------------------------------------------------------- inlines */
+.inline-group {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+}
+.inline-related { border-radius: 10px; }
+.inline-related h3 {
+  background: #fafbfa; border-bottom: 1px solid var(--bw-line);
+  font-size: .8rem; padding: 10px 14px; color: var(--bw-green-800);
+}
+/* "Add another …" → prominent pill */
 .add-row a {
-  display: inline-block; padding: 8px 14px 8px 34px; border-radius: 8px;
-  background: #eef4e3 no-repeat 12px center; color: #256339; font-weight: 600;
+  display: inline-block; padding: 8px 14px 8px 34px; border-radius: var(--bw-radius-sm);
+  background: var(--bw-mint) no-repeat 12px center; color: #256339; font-weight: 600;
   border: 1px solid #cfe0c4;
 }
-.add-row a:hover { background-color: #e2eed3; color: #12351f; }
-
+.add-row a:hover { background-color: #e2eed3; color: var(--bw-green-800); }
 /* Saved-row delete checkbox → boxed & labelled so it's easy to spot */
 .inline-related .delete {
   float: right; background: #fbeeee; border: 1px solid #f0cccc; border-radius: 6px;
   padding: 3px 10px; color: #a41515; font-weight: 600;
 }
 .inline-related .delete label { color: #a41515; }
-
 /* New-row "Remove" link (added by Django's inline JS) → visible red pill.
    Django hides the text (text-indent) and shows a tiny icon; we reveal the
-   label and skin it. !important + extra specificity beat widgets.css load order. */
+   label and skin it. !important + extra specificity beat widgets.css order. */
 .inline-group .inline-deletelink,
 .inline-related .inline-deletelink,
 a.inline-deletelink {
-  float: right;
-  text-indent: 0 !important;
+  float: right; text-indent: 0 !important;
   width: auto !important; height: auto !important;
   background: #c0392b !important; background-image: none !important;
-  color: #ffffff !important; font-weight: 600; font-size: .75rem; line-height: 1.3;
-  padding: 4px 12px !important; border-radius: 8px !important;
+  color: #fff !important; font-weight: 600; font-size: .75rem; line-height: 1.3;
+  padding: 4px 12px !important; border-radius: var(--bw-radius-sm) !important;
   text-decoration: none; margin-top: 2px;
 }
 .inline-group .inline-deletelink:hover,
 .inline-related .inline-deletelink:hover,
 a.inline-deletelink:hover { background: #a93226 !important; cursor: pointer; }
-
-/* Each inline card visually separated */
-.inline-related { border-radius: 10px; }
 .inline-group .tabular td.delete, .inline-group .tabular td.delete input { text-align: center; }
 
-/* ---- Selected / hover rows in changelists ----------------------------- */
-#changelist tbody tr:hover > * { background: #f6faf3; }
+/* -------------------------------------------------------------- messages */
+ul.messagelist li {
+  border-radius: var(--bw-radius-sm); font-size: .9rem; padding: 12px 16px 12px 44px;
+  box-shadow: var(--bw-shadow); border: 1px solid var(--bw-line);
+}
+ul.messagelist li.success { background: #eaf6ee; border-color: #bfe2cb; color: #14663a; }
+ul.messagelist li.warning { background: #fff6e6; border-color: #f0d9a8; color: #7a5200; }
+ul.messagelist li.error   { background: #fdecec; border-color: #f2c2bd; color: #a4241a; }
 
-/* ---- Login screen ----------------------------------------------------- */
-body.login #container { border-radius: 14px; box-shadow: 0 12px 40px rgba(18,53,31,.14); overflow: hidden; }
+/* ----------------------------------------------------------------- login */
+body.login #container {
+  border-radius: 14px; box-shadow: var(--bw-shadow-lg); overflow: hidden;
+  border: 1px solid var(--bw-line);
+}
 body.login #header { border-radius: 0; }
 body.login .submit-row input { width: 100%; }
 
-/* ---- Messages --------------------------------------------------------- */
-ul.messagelist li.success { background-color: #eaf5ec; color: #1c4a2b; }
+/* ============================ Dashboard grid ============================ */
+.bw-dash__head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 18px; flex-wrap: wrap; margin-bottom: 22px;
+}
+.bw-dash__title { font-size: 1.6rem; margin: 0 0 4px; color: var(--bw-green-900); }
+.bw-dash__sub { margin: 0; color: var(--bw-muted); font-size: .92rem; }
+.bw-btn {
+  display: inline-block; border-radius: var(--bw-radius-sm); padding: 9px 16px;
+  font-size: .86rem; font-weight: 600; text-decoration: none;
+  background: var(--bw-green-600); color: #fff;
+}
+.bw-btn--ghost { background: #fff; color: var(--bw-green-700); border: 1px solid var(--bw-line); }
+.bw-btn--ghost:hover { background: var(--bw-mint); }
 
-/* ---- Responsive ------------------------------------------------------- */
+/* Dashboard: cards take the space, activity panel is a fixed rail beside them.
+   Django's dashboard stylesheet caps #content at 600px and floats
+   #content-main; undo both so the grid can use the full width. */
+.bw-dashboard #content { width: auto; max-width: 100%; }
+.bw-dashboard #content-main { float: none; width: 100%; }
+
+.bw-dash__body { display: flex; align-items: flex-start; gap: 20px; }
+.bw-dash__main { flex: 1 1 auto; min-width: 0; }
+.bw-dash__aside { flex: 0 0 300px; }
+
+/* align-items: start so a short card doesn't stretch to the tallest in its row. */
+.bw-grid {
+  display: grid; gap: 18px; align-items: start;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+}
+.bw-card {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+  display: flex; flex-direction: column;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+.bw-card:hover { box-shadow: var(--bw-shadow-lg); transform: translateY(-2px); }
+.bw-card__head {
+  display: flex; align-items: center; gap: 11px; padding: 15px 17px;
+  border-bottom: 1px solid var(--bw-line);
+  background: linear-gradient(180deg, #fbfdfb, #fff);
+  border-radius: var(--bw-radius) var(--bw-radius) 0 0;
+}
+.bw-card__ico { flex: none; width: 34px; height: 34px; border-radius: 9px; background: var(--bw-mint); position: relative; }
+.bw-card__ico::after {
+  content: ""; position: absolute; inset: 9px; border-radius: 3px;
+  background: var(--bw-green-600); opacity: .85;
+}
+.bw-card__ico[data-app="clinic"]::after, .bw-card__ico[data-app="team"]::after { border-radius: 50%; }
+.bw-card__ico[data-app="locations"]::after { clip-path: polygon(50% 0,100% 62%,50% 100%,0 62%); }
+.bw-card__ico[data-app="blog"]::after, .bw-card__ico[data-app="core"]::after { border-radius: 2px 6px 6px 2px; }
+.bw-card__ico[data-app="events"]::after { clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); }
+.bw-card__ico[data-app="payments"]::after { clip-path: polygon(0 18%,100% 18%,100% 82%,0 82%); }
+.bw-card__title { margin: 0; font-size: .97rem; font-weight: 700; letter-spacing: -.01em; flex: 1; text-transform: none; }
+.bw-card__title a { color: var(--bw-green-900); text-decoration: none; }
+.bw-card__title a:hover { color: var(--bw-green-600); }
+.bw-card__count {
+  flex: none; background: var(--bw-mint); color: var(--bw-green-700);
+  font-size: .73rem; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+}
+.bw-card__list { list-style: none; margin: 0; padding: 6px 0; flex: 1; }
+.bw-row {
+  display: flex; align-items: center; gap: 10px; justify-content: space-between;
+  padding: 8px 17px; transition: background .12s ease;
+}
+.bw-row:hover { background: #f7faf8; }
+.bw-row__name {
+  font-size: .89rem; font-weight: 500; color: var(--bw-ink); text-decoration: none;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bw-row__name:hover { color: var(--bw-green-600); }
+.bw-row__actions { display: flex; gap: 6px; flex: none; }
+.bw-chip {
+  font-size: .71rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+  text-decoration: none; background: var(--bw-line-soft); color: var(--bw-muted);
+  transition: background .12s ease, color .12s ease;
+}
+.bw-chip:hover { background: var(--bw-green-700); color: #fff; }
+.bw-chip--add { background: var(--bw-mint); color: var(--bw-green-700); }
+.bw-chip--add:hover { background: var(--bw-green-600); color: #fff; }
+.bw-empty { color: var(--bw-muted); }
+
+.bw-aside { width: 300px; }
+.bw-panel {
+  background: var(--bw-surface); border: 1px solid var(--bw-line);
+  border-radius: var(--bw-radius); box-shadow: var(--bw-shadow);
+}
+.bw-panel__title {
+  margin: 0; padding: 15px 17px; border-bottom: 1px solid var(--bw-line);
+  font-size: .76rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--bw-green-900); background: linear-gradient(180deg, #fbfdfb, #fff);
+  border-radius: var(--bw-radius) var(--bw-radius) 0 0;
+}
+.bw-panel__empty { margin: 0; padding: 16px 17px; color: var(--bw-muted); font-size: .86rem; }
+.bw-log { list-style: none; margin: 0; padding: 6px 0; }
+.bw-log__item { padding: 9px 17px 9px 30px; position: relative; }
+.bw-log__item::before {
+  content: ""; position: absolute; left: 17px; top: 14px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--bw-green-500);
+}
+.bw-log__item.is-change::before { background: #d9a02b; }
+.bw-log__item.is-delete::before { background: #c0392b; }
+.bw-log__obj {
+  display: block; font-size: .88rem; font-weight: 500; color: var(--bw-ink);
+  text-decoration: none; line-height: 1.35;
+}
+.bw-log__obj:hover { color: var(--bw-green-600); }
+.bw-log__meta { display: block; font-size: .74rem; color: var(--bw-muted); margin-top: 2px; }
+
+/* ======================= Tabbed fieldsets (change form) ================== */
+.bw-tabs {
+  display: flex; gap: 4px; flex-wrap: wrap; margin: 0 0 16px;
+  border-bottom: 1px solid var(--bw-line);
+}
+/* Specificity via .bw-tabs so Django's generic button styles don't add a border
+   box around the active tab. */
+.bw-tabs .bw-tab {
+  background: transparent; border: 0; border-bottom: 2px solid transparent;
+  box-shadow: none; outline: none; text-transform: none; letter-spacing: 0;
+  padding: 10px 15px; font-size: .87rem; font-weight: 600; cursor: pointer;
+  color: var(--bw-muted); border-radius: var(--bw-radius-sm) var(--bw-radius-sm) 0 0;
+  transition: color .15s ease, background .15s ease, border-color .15s ease;
+}
+.bw-tabs .bw-tab:hover { color: var(--bw-green-700); background: #f2f7f3; transform: none; }
+.bw-tabs .bw-tab.is-active {
+  color: var(--bw-green-800); border-bottom-color: var(--bw-green-600); background: #fff;
+}
+/* Keyboard focus reads as a tab (underline + tint) rather than a floating box —
+   a full outline looks like a rendering bug when the tab is focused on load. */
+.bw-tabs .bw-tab:focus-visible {
+  outline: none; background: #f2f7f3;
+  border-bottom-color: var(--bw-green-500); color: var(--bw-green-800);
+}
+[data-bw-hidden="1"] { display: none !important; }
+
+/* ==================== Layout fixes (load-bearing) ======================= */
 /* Root cause of the "page scrolls right / buttons off-screen" bug: Django's
    #content is a flex child (next to the sticky nav sidebar). Flex children
    default to min-width:auto, so a wide descendant (editor, table, long button
@@ -149,34 +501,67 @@ ul.messagelist li.success { background-color: #eaf5ec; color: #1c4a2b; }
 .object-tools li { float: none; margin: 0; }
 
 /* Wide data tables (changelist + tabular inlines) scroll inside their own box. */
-#changelist .results,
-.inline-group .tabular { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+#changelist .results, .inline-group .tabular { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 #changelist .results > table { min-width: 100%; }
 
 /* Rich-text editor & form rows never wider than their column. */
 .tox-tinymce { max-width: 100%; }
 .form-row, fieldset.module { max-width: 100%; box-sizing: border-box; }
 
+/* ------------------------------------------------------------- responsive */
+@media (max-width: 1100px) {
+  .bw-dash__body { flex-direction: column; }
+  .bw-dash__aside { flex: 1 1 auto; width: 100%; }
+  .colMS #content-related { float: none; width: auto; margin: 20px 0 0; }
+}
 @media (max-width: 767px) {
-  #header { padding: 14px 20px; }
-  div.breadcrumbs { padding: 10px 20px; }
-  #content { padding: 16px 20px; }
-  /* Comfortable tap targets for the inline add/remove controls */
+  #header { padding: 12px 18px; }
+  div.breadcrumbs { padding: 10px 18px; }
+  #content { padding: 16px 18px; }
+  .bw-grid { grid-template-columns: 1fr; }
   .inline-group .inline-deletelink,
   .inline-related .inline-deletelink,
   a.inline-deletelink { padding: 6px 14px !important; font-size: .8rem; }
   .add-row a { display: block; text-align: center; }
   .inline-related .delete { float: none; display: inline-block; margin-top: 6px; }
-  /* Object-tools (Add / History / View on site) wrap and sit left on mobile */
   .object-tools { float: none; margin: 8px 0 0; padding: 0; }
   .object-tools li { display: inline-block; float: none; margin: 0 6px 6px 0; }
-  /* TinyMCE never wider than the screen */
   .tox-tinymce { max-width: 100%; }
 }
-
-/* Small phones: stack the search box + submit neatly */
 @media (max-width: 480px) {
   #changelist-search input[type=text] { width: 100%; box-sizing: border-box; }
-  #changelist-search .quick-element,
-  #toolbar form input[type=submit] { margin-top: 8px; }
+  #changelist-search .quick-element, #toolbar form input[type=submit] { margin-top: 8px; }
+}
+
+/* ------------------------------------------------------------- dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bw-bg: #101612;
+    --bw-surface: #18211b;
+    --bw-line: #2a352d;
+    --bw-line-soft: #222c25;
+    --bw-ink: #e7efe9;
+    --bw-muted: #93a89a;
+    --bw-mint: #1f3326;
+    --body-bg: var(--bw-bg);
+    --body-fg: var(--bw-ink);
+    --header-bg: var(--bw-surface);
+    --header-color: var(--bw-ink);
+    --header-branding-color: #e7efe9;
+    --darkened-bg: var(--bw-line-soft);
+    --selected-row: #33301c;
+  }
+  #header, .bw-btn--ghost { background: var(--bw-surface); }
+  #branding h1 a:link, #branding h1 a:visited, #site-name a { color: #e7efe9; }
+  #changelist table thead th, .actions, .inline-related h3 { background: #1c261f; }
+  .bw-card__head, .bw-panel__title, .module > h2, .module caption,
+  .inline-group h2, fieldset.module h2 { background: #1c261f; color: #e7efe9; }
+  .module caption a, .module h2 a { color: #e7efe9; }
+  #changelist tbody tr:hover > *, .bw-row:hover { background: #1f2a22; }
+  .bw-card__title a, .bw-log__obj { color: #e7efe9; }
+  input[type=text], input[type=password], input[type=email], input[type=url],
+  input[type=number], input[type=tel], textarea, select, .vTextField {
+    background: #131b16; color: var(--bw-ink);
+  }
+  .bw-tab.is-active { background: var(--bw-surface); }
 }

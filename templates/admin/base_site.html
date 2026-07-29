@@ -3,7 +3,14 @@
 
 {% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/brockwell-admin.css' %}">{% endblock %}
+{% comment %}
+Our theme goes in `extrahead`, not `extrastyle`, on purpose: base.html renders
+extrahead AFTER extrastyle, and page templates add their own stylesheets in
+extrastyle (change_list.html pulls in changelists.css, which uses selectors
+identical to ours). Loading last means our rules win without needing
+!important or inflated selectors.
+{% endcomment %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="{% static 'admin/css/brockwell-admin.css' %}">{% endblock %}
 
 {% block branding %}
 <div id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></div>
@@ -13,3 +20,66 @@
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
+
+{% block footer %}{{ block.super }}
+<script>
+  /* Turn a change form's fieldsets into tabs.
+     Only kicks in with 3+ named, non-collapsed fieldsets, so short forms are
+     left alone. Progressive: without JS every fieldset just stays visible. */
+  (function () {
+    var form = document.querySelector('#content-main form');
+    if (!form) return;
+
+    var sets = Array.prototype.filter.call(
+      form.querySelectorAll('fieldset.module'),
+      function (fs) {
+        return fs.querySelector('h2') && !fs.classList.contains('collapse');
+      }
+    );
+    if (sets.length < 3) return;
+
+    var bar = document.createElement('div');
+    bar.className = 'bw-tabs';
+    bar.setAttribute('role', 'tablist');
+
+    function show(i) {
+      sets.forEach(function (fs, n) {
+        fs.setAttribute('data-bw-hidden', n === i ? '0' : '1');
+      });
+      Array.prototype.forEach.call(bar.children, function (btn, n) {
+        btn.classList.toggle('is-active', n === i);
+        btn.setAttribute('aria-selected', n === i ? 'true' : 'false');
+      });
+      try { sessionStorage.setItem('bwTab:' + location.pathname, String(i)); } catch (e) {}
+    }
+
+    sets.forEach(function (fs, i) {
+      var h2 = fs.querySelector('h2');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bw-tab';
+      btn.setAttribute('role', 'tab');
+      btn.textContent = (h2.textContent || ('Section ' + (i + 1))).trim();
+      btn.addEventListener('click', function () { show(i); });
+      bar.appendChild(btn);
+      h2.style.display = 'none';          // the tab label replaces the heading
+    });
+
+    sets[0].parentNode.insertBefore(bar, sets[0]);
+
+    /* Open the tab containing the first error, so validation messages are
+       never hidden behind another tab; otherwise restore the last tab used. */
+    var bad = form.querySelector('.errorlist, .errors');
+    var start = 0;
+    if (bad) {
+      sets.forEach(function (fs, i) { if (fs.contains(bad)) start = i; });
+    } else {
+      try {
+        var saved = parseInt(sessionStorage.getItem('bwTab:' + location.pathname), 10);
+        if (!isNaN(saved) && saved >= 0 && saved < sets.length) start = saved;
+      } catch (e) {}
+    }
+    show(start);
+  })();
+</script>
+{% endblock %}

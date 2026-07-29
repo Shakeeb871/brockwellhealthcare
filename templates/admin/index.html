@@ -1,0 +1,106 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static admin_urls log %}
+
+{% comment %}
+Dashboard, re-done as a SaaS-style card grid.
+
+Two things differ from Django's own index.html:
+  * it blanks the nav sidebar — we keep it, so the left nav is on every page;
+  * it renders apps as one long single-column list — we use a responsive grid.
+
+We also use a single-column `colM` body and lay out the grid + activity panel
+ourselves, so the cards get the full width instead of Django's floated
+300px-aside split.
+{% endcomment %}
+
+{% block coltype %}colM{% endblock %}
+{# Deliberately NOT adding Django's `dashboard` class: its stylesheet caps
+   #content at 600px, which would squeeze the card grid. We style it here. #}
+{% block bodyclass %}{{ block.super }} bw-dashboard{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+
+{# Django's own <h1> would duplicate the dashboard heading below. #}
+{% block content_title %}{% endblock %}
+
+{# Keep the sidebar here too (Django hides it on the dashboard). #}
+{% block nav-sidebar %}
+  {% if not is_popup and is_nav_sidebar_enabled %}
+    {% include "admin/nav_sidebar.html" %}
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="content-main" class="bw-dash">
+
+  <header class="bw-dash__head">
+    <div>
+      <h1 class="bw-dash__title">{{ index_title|default:_('Dashboard') }}</h1>
+      <p class="bw-dash__sub">Everything you manage on the website, grouped by area.</p>
+    </div>
+    <a class="bw-btn bw-btn--ghost" href="/" target="_blank" rel="noopener">View site ↗</a>
+  </header>
+
+  <div class="bw-dash__body">
+    <div class="bw-dash__main">
+      {% if app_list %}
+      <div class="bw-grid">
+        {% for app in app_list %}
+        <section class="bw-card">
+          <header class="bw-card__head">
+            <span class="bw-card__ico" aria-hidden="true" data-app="{{ app.app_label }}"></span>
+            <h2 class="bw-card__title"><a href="{{ app.app_url }}">{{ app.name }}</a></h2>
+            <span class="bw-card__count">{{ app.models|length }}</span>
+          </header>
+          <ul class="bw-card__list" role="list">
+            {% for model in app.models %}
+            <li class="bw-row">
+              {% if model.admin_url %}
+                <a class="bw-row__name" href="{{ model.admin_url }}">{{ model.name }}</a>
+              {% else %}
+                <span class="bw-row__name">{{ model.name }}</span>
+              {% endif %}
+              <span class="bw-row__actions">
+                {% if model.add_url %}<a class="bw-chip bw-chip--add" href="{{ model.add_url }}">{% translate 'Add' %}</a>{% endif %}
+                {% if model.admin_url %}
+                  <a class="bw-chip" href="{{ model.admin_url }}">{% if model.view_only %}{% translate 'View' %}{% else %}{% translate 'Manage' %}{% endif %}</a>
+                {% endif %}
+              </span>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endfor %}
+      </div>
+      {% else %}
+        <p class="bw-empty">{% translate "You don't have permission to view or edit anything." %}</p>
+      {% endif %}
+    </div>
+
+    <aside class="bw-dash__aside">
+      <section class="bw-panel">
+        <h2 class="bw-panel__title">Recent activity</h2>
+        {% get_admin_log 12 as admin_log for_user user %}
+        {% if not admin_log %}
+          <p class="bw-panel__empty">Nothing yet — changes you make will appear here.</p>
+        {% else %}
+          <ol class="bw-log" role="list">
+            {% for entry in admin_log %}
+            <li class="bw-log__item{% if entry.is_deletion %} is-delete{% elif entry.is_addition %} is-add{% else %} is-change{% endif %}">
+              {% if entry.is_deletion or not entry.get_admin_url %}
+                <span class="bw-log__obj">{{ entry.object_repr }}</span>
+              {% else %}
+                <a class="bw-log__obj" href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+              {% endif %}
+              <span class="bw-log__meta">
+                {% if entry.content_type %}{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}{% else %}{% translate 'Unknown content' %}{% endif %}
+                · {{ entry.action_time|date:"j M, H:i" }}
+              </span>
+            </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+      </section>
+    </aside>
+  </div>
+</div>
+{% endblock %}
