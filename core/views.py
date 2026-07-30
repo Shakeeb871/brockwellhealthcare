@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.staticfiles import finders
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.html import strip_tags
@@ -644,6 +645,49 @@ not a substitute for individual clinical advice.
 
 def healthz(request):
     return _text_response("ok")
+
+
+def favicon_ico(request):
+    """Redirect /favicon.ico to the hashed static icon.
+
+    Browsers request this path themselves regardless of the <link rel="icon">
+    tags, so leaving it unrouted meant a 404 on essentially every visit. A
+    permanent redirect lets the real file keep its far-future cache headers
+    instead of being served fresh from here each time.
+    """
+    return redirect(staticfiles_storage.url("img/favicon.ico"), permanent=True)
+
+
+def site_webmanifest(request):
+    """Serve the web app manifest.
+
+    Rendered rather than shipped as a static file because the icon URLs are
+    content-hashed by ManifestStaticFilesStorage, so they can't be hard-coded.
+
+    Host-level, like robots.txt — browsers fetch one manifest per origin, so it
+    starts at the root and lets RegionMiddleware geo-route from there rather
+    than pinning an installed app to a single market.
+    """
+    manifest = {
+        "name": settings.BRAND_NAME,
+        "short_name": settings.BRAND_NAME.split()[0],
+        "description": settings.BRAND_TAGLINE,
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "theme_color": "#12351f",
+        "background_color": "#ffffff",
+        "lang": settings.REGIONS[settings.DEFAULT_REGION].get("locale", "en"),
+        "icons": [
+            {"src": staticfiles_storage.url("img/favicon-192.png"),
+             "sizes": "192x192", "type": "image/png"},
+            {"src": staticfiles_storage.url("img/favicon-512.png"),
+             "sizes": "512x512", "type": "image/png"},
+            {"src": staticfiles_storage.url("img/favicon-512.png"),
+             "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+        ],
+    }
+    return JsonResponse(manifest, content_type="application/manifest+json")
 
 
 def indexnow_key(request, key):

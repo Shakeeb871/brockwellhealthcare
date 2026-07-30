@@ -22,7 +22,12 @@
   --google-gold: #fbbc04;
   --ink:      #1a1c20;  /* professional near-black body text */
   --slate-600:#4d545c;  /* neutral grey — secondary text */
-  --slate-400:#8b929c;  /* neutral grey — muted / placeholders */
+  /* Muted grey for meta text, labels and placeholders. Darkened from #8b929c,
+     which was 3.14:1 on white and failed WCAG AA (4.5:1) everywhere it carried
+     real text — post dates, review timestamps, doc-fact labels, input
+     placeholders. Same hue and saturation, only lighter->darker, so the muted
+     look is unchanged. */
+  --slate-400:#6e7581;  /* neutral grey — muted / placeholders (4.64:1 on white) */
   --line:     #e4ebe2;
   --bg:       #ffffff;
   --bg-soft:  #f6f7f9;   /* neutral light grey (not green-tinted) */
@@ -185,7 +190,17 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .mobile-menu { display: none; }
 
 /* Category bar */
-.catbar { background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.catbar {
+  background: var(--bg-soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  /* The dropdowns are absolutely positioned and centred under their item,
+     and they occupy layout space even while hidden. Once the row wraps,
+     the rightmost item of a row is not :last-child, so its dropdown is not
+     pinned to the right edge and pushed the DOCUMENT 15px wider at 1024px —
+     the whole page scrolled sideways. `clip` on the x axis alone stops that;
+     unlike hidden/auto it does NOT blockify the other axis, so the panels
+     still drop below the bar normally. */
+  overflow-x: clip; overflow-y: visible;
+}
 .catbar__inner {
   max-width: 1400px; margin-inline: auto; padding-inline: 26px;
   display: flex; align-items: stretch; justify-content: center;
@@ -390,7 +405,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* Booking block (page-builder) — centred card. */
 .psec-booking { max-width: 620px; margin-inline: auto; }
 
-.why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.4rem; }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 1.4rem; }
 .why-card {
   background: var(--white); border: 1px solid var(--line); border-radius: 7px;
   padding: 1.6rem; box-shadow: var(--shadow); transition: box-shadow .2s ease, transform .2s ease;
@@ -543,7 +558,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .svc-panel__summary { margin: .4rem 0 0; color: var(--slate-600); max-width: 60ch; }
 
 .svc-sub-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.1rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 1.1rem;
 }
 .svc-sub {
   display: flex; flex-direction: column;
@@ -665,7 +680,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
    "Title + paragraph" blocks (e.g. "Types of …") into these cards.
    Matches the site's service grid (icon box + hover), just with icons. */
 .info-cards {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
   gap: 1.1rem; margin: 1.6rem 0 2rem;
 }
 .info-card {
@@ -723,8 +738,13 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 /* Main columns */
 .site-footer__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.8fr; gap: 2.5rem; padding-block: 3rem 2.5rem; }
 /* Footer column headings are <h2> (they sit below the page h1, so h4 would
-   skip a level); this keeps their original compact look. */
-.site-footer__col h2, .site-footer .footwide__h2, .site-footer h4 { color: var(--white); font-family: var(--font-sans); font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.1rem; }
+   skip a level); this keeps their original compact look.
+   Matches EVERY footer heading rather than an enumerated list of classes —
+   the old `.site-footer__col h2, .site-footer .footwide__h2, .site-footer h4`
+   missed the unclassed `<h2>Recent Posts</h2>` in .footwide, which then fell
+   back to the dark body colour and rendered near-invisible on the dark footer.
+   The newsletter strip keeps its own display size. */
+.site-footer :is(h2, h3, h4):not(.newsletter__title) { color: var(--white); font-family: var(--font-sans); font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 1.1rem; }
 .site-footer__col { display: grid; gap: .6rem; align-content: start; }
 .site-footer__col a { color: var(--mint-50); transition: color .2s ease, padding-left .2s ease; }
 .site-footer__col a:hover { color: var(--teal-400); padding-left: .25rem; }
@@ -811,8 +831,13 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .catbar__link { padding: .7rem .85rem; font-size: .82rem; }
 }
 
-@media (max-width: 720px) {
-  body { font-size: 16px; }
+/* The desktop header (brand + 8-link pill + search box) stops fitting at
+   about 900px: at 768px — iPad portrait, one of the most common widths —
+   it pushed the logo right off the left edge and made the whole page
+   scroll sideways by 128px. So the switch to the hamburger header happens
+   here, not at 720px, and the slide-down menu is defined here too or it
+   would have nothing to open between 721px and 900px. */
+@media (max-width: 900px) {
   .nav-toggle {
     display: inline-grid; place-items: center; width: 44px; height: 44px;
     background: transparent; border: 1px solid var(--line); border-radius: 10px; cursor: pointer;
@@ -822,18 +847,9 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   }
   .nav-toggle__bar::before { position: absolute; top: -6px; }
   .nav-toggle__bar::after { position: absolute; top: 6px; }
-  /* Header: condense top bar, hide category bar, menu drops under main bar */
-  .topbar__inner { min-height: 42px; }
-  .topbar__contacts { gap: 1rem; }
-  .topbar__item--addr, .topbar__txt small { display: none; }
-  .topbar__txt b { font-size: .8rem; }
-  .topbar__social { display: none; }
-  .mainbar__inner { min-height: 64px; }
-  .brand__logo { height: 38px; }
   .navpill { display: none; }
   .mainbar__right .search { display: none; }
   .icon-btn { display: inline-grid; }
-  .catbar { display: none; }
   /* Mobile slide-down menu */
   .mobile-menu {
     display: none; position: absolute; top: 100%; left: 0; right: 0;
@@ -857,6 +873,19 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
   .mobile-menu__social a { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: var(--mint-50); color: var(--teal-600); transition: background .2s ease, color .2s ease; }
   .mobile-menu__social a:hover { background: var(--teal-600); color: #fff; }
   .mobile-menu__social svg { width: 18px; height: 18px; }
+}
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  /* Header: condense top bar, hide category bar, menu drops under main bar */
+  .topbar__inner { min-height: 42px; }
+  .topbar__contacts { gap: 1rem; }
+  .topbar__item--addr, .topbar__txt small { display: none; }
+  .topbar__txt b { font-size: .8rem; }
+  .topbar__social { display: none; }
+  .mainbar__inner { min-height: 64px; }
+  .brand__logo { height: 38px; }
+  .catbar { display: none; }
   .grid--3, .grid--2, .steps, .site-footer__grid { grid-template-columns: 1fr; }
   .cta-band { padding: 2.2rem 1.4rem; }
 }
@@ -1059,7 +1088,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .chip:hover { background: var(--mint-50); border-color: var(--teal-400); color: var(--teal-600); transform: translateY(-2px); }
 
 /* ---------------------------------------------- Team grid (Our Team page) */
-.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.75rem; }
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: 1.75rem; }
 .team-card {
   display: flex; flex-direction: column;
   background: var(--bg-soft); border: 1px solid var(--line); border-radius: 7px;
@@ -1971,7 +2000,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .abt-step p { margin: 0; color: var(--slate-600); font-size: .92rem; line-height: 1.6; }
 
 /* Services grid (core categories) */
-.abt-svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.3rem; }
+.abt-svc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 1.3rem; }
 .abt-svc {
   display: flex; flex-direction: column; overflow: hidden;
   background: var(--white); border: 1px solid var(--line); border-radius: 7px;
@@ -2005,7 +2034,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .abt-founder__photo--ph svg { width: 72px; height: 72px; }
 
 /* Our Specialists */
-.abt-spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; max-width: 900px; margin-inline: auto; }
+.abt-spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 1.5rem; max-width: 900px; margin-inline: auto; }
 .abt-spec { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: var(--ink); }
 .abt-spec__media { width: 100%; aspect-ratio: 4 / 5; border-radius: 7px; overflow: hidden; background: var(--mint-50); box-shadow: var(--shadow); margin-bottom: 1rem; display: grid; place-items: center; transition: box-shadow .2s ease, transform .2s ease; }
 .abt-spec:hover .abt-spec__media { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
@@ -2219,14 +2248,14 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .evt-ov__badge .ico { width: 18px; height: 18px; color: var(--teal-600); }
 
 /* --- What you will learn — feature grid --- */
-.evt-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; }
+.evt-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr)); gap: 1.2rem; }
 .evt-feature { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem 1.5rem; display: flex; flex-direction: column; gap: .9rem; box-shadow: var(--shadow); }
 .evt-feature__ico { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--mint-50); color: var(--teal-600); }
 .evt-feature__ico .ico { width: 24px; height: 24px; }
 .evt-feature p { margin: 0; font-weight: 500; color: var(--ink); line-height: 1.55; }
 
 /* --- Why attend --- */
-.evt-why__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem; }
+.evt-why__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1.4rem; }
 .evt-wcard { padding: 1.8rem 1.6rem; border-radius: var(--radius); background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--teal-500); box-shadow: var(--shadow); }
 .evt-wcard__ico { width: 46px; height: 46px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--mint-50); color: var(--teal-600); margin-bottom: 1rem; }
 .evt-wcard__ico .ico { width: 22px; height: 22px; }
@@ -2234,7 +2263,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .evt-wcard p { margin: 0; color: var(--slate-600); line-height: 1.6; }
 
 /* --- Faculty — speaker photo cards (Our-Team style, shorter, uncropped) --- */
-.evt-fac__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.5rem; }
+.evt-fac__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); gap: 1.5rem; }
 .evt-fac { display: flex; flex-direction: column; background: var(--bg-soft); border: 1px solid var(--line); border-radius: 7px; padding: 1rem 1rem 0; transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease; }
 .evt-fac:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: var(--teal-400); }
 /* Portrait headshots shown in full — object-fit: contain so nothing is cut. A
@@ -2248,7 +2277,7 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .evt-fac__tag { font-size: .9rem; color: var(--slate-600); line-height: 1.55; margin: 0; }
 
 /* --- Pricing / packages --- */
-.evt-price__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; align-items: stretch; }
+.evt-price__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1.5rem; align-items: stretch; }
 .evt-price { position: relative; display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem 1.7rem; box-shadow: var(--shadow); }
 .evt-price--featured { border: 2px solid var(--teal-500); box-shadow: var(--shadow-lg); }
 .evt-price__ribbon { position: absolute; top: -.85rem; left: 50%; transform: translateX(-50%); background: var(--teal-500); color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .35rem .9rem; border-radius: 999px; white-space: nowrap; }
@@ -2309,7 +2338,10 @@ form.evt-price { margin: 0; }
 .loc-group__head { margin-bottom: 1.4rem; }
 
 .loc-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: grid;
+  /* min() so the 300px floor can never exceed the container: at a 320px
+     viewport the column was 300px inside a 276px space, overflowing the page. */
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
   gap: 1.6rem;
 }
 .loc-card {
@@ -2357,7 +2389,7 @@ form.evt-price { margin: 0; }
 .loc-hero__cta { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 1.2rem; }
 
 /* Detail info cards */
-.loc-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem; margin-bottom: 3rem; }
+.loc-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 1.4rem; margin-bottom: 3rem; }
 .loc-info__card { background: var(--bg-soft); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.6rem; }
 .loc-info__ic { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: var(--mint-50); color: var(--teal-600); margin-bottom: .8rem; }
 .loc-info__ic svg { width: 24px; height: 24px; }

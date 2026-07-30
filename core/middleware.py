@@ -27,6 +27,9 @@ EXEMPT_EXACT = {
     "/robots.txt",
     "/llms.txt",
     "/favicon.ico",
+    # Host-level, like robots.txt: browsers fetch it from the root, so it must
+    # not be geo-redirected to /uae/site.webmanifest (which would 404).
+    "/site.webmanifest",
     "/healthz",
 }
 
@@ -130,8 +133,10 @@ class SecurityHeadersMiddleware:
         "frame-ancestors 'none'; "
         "form-action 'self'; "
         "img-src 'self' data:; "
-        "font-src 'self' https://fonts.gstatic.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        # Fonts and their stylesheet are self-hosted now, so no Google origin
+        # needs to be allow-listed for either.
+        "font-src 'self'; "
+        "style-src 'self' 'unsafe-inline'; "
         "script-src 'self' 'unsafe-inline' https://analytics.ahrefs.com; "
         "connect-src 'self' https://analytics.ahrefs.com; "
         "manifest-src 'self'; "

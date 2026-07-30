@@ -77,6 +77,14 @@ urlpatterns = [
     path("robots.txt", core_views.robots_txt, name="robots"),
     path("llms.txt", core_views.llms_txt, name="llms"),
     path("healthz", core_views.healthz, name="healthz"),
+    # Browsers request /favicon.ico on their own, whatever the <link> tags say,
+    # so without this every visit logged a 404. RegionMiddleware already treats
+    # the path as region-exempt; only the route was missing.
+    path("favicon.ico", core_views.favicon_ico, name="favicon"),
+    # Web app manifest. The CSP already allows `manifest-src 'self'`, and the
+    # theme-color meta and 192px icon were both in place — this was the only
+    # missing piece.
+    path("site.webmanifest", core_views.site_webmanifest, name="webmanifest"),
     # IndexNow verification file — must be reachable at /<key>.txt.
     re_path(r"^(?P<key>[A-Za-z0-9-]{8,128})\.txt$", core_views.indexnow_key, name="indexnow-key"),
     # Stripe calls this directly, without a region prefix.
