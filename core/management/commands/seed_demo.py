@@ -102,7 +102,6 @@ SERVICE_SUMMARIES = {
 DOCTORS = [
     ("Dr. Hasnain Haider-Shah", "/static/img/dr-shah-brockwell-health-care.webp"),
     ("Dr. Nigel Beejay", ""),
-    ("Dr. Adeel Khan, MD", ""),
     ("Dr. Sabine Hazan, MD", ""),
     ("Dr. Salman Gilani", ""),
     ("Shirley D'Souza", ""),

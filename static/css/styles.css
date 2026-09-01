@@ -2034,7 +2034,11 @@ strong, b { font-weight: 600; }   /* Poppins 600 — bold text */
 .abt-founder__photo--ph svg { width: 72px; height: 72px; }
 
 /* Our Specialists */
-.abt-spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 1.5rem; max-width: 900px; margin-inline: auto; }
+/* auto-FIT with a capped track and centred content, so the row stays centred
+   under the centred heading whatever the number of specialists. auto-fill kept
+   three tracks alive and left two specialists hugging the left edge; plain
+   auto-fit with 1fr tracks would instead stretch two cards to 450px each. */
+.abt-spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 280px)); justify-content: center; gap: 1.5rem; max-width: 900px; margin-inline: auto; }
 .abt-spec { display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: var(--ink); }
 .abt-spec__media { width: 100%; aspect-ratio: 4 / 5; border-radius: 7px; overflow: hidden; background: var(--mint-50); box-shadow: var(--shadow); margin-bottom: 1rem; display: grid; place-items: center; transition: box-shadow .2s ease, transform .2s ease; }
 .abt-spec:hover .abt-spec__media { box-shadow: var(--shadow-lg); transform: translateY(-3px); }

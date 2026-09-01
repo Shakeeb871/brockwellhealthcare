@@ -403,8 +403,9 @@ def search(request):
 
 # Specialists highlighted on the About page (name/role as approved; photo + URL
 # pulled from the Doctor records by slug).
+# This lookup does not filter on is_published, so a doctor removed from the team
+# has to come out of this list too — unpublishing alone would leave them here.
 ABOUT_SPECIALISTS = [
-    {"slug": "dr-adeel-khan-md", "name": "Dr. Adeel Khan", "role": "Regenerative Medicine & Longevity Physician"},
     {"slug": "shirley-dsouza", "name": "Dr. Shirley D’Souza", "role": "Precision Nutritionist"},
     {"slug": "dr-sabine-hazan-md", "name": "Dr. Sabine Hazan", "role": "Diagnostics Director"},
 ]
